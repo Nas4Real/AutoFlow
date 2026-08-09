@@ -46,7 +46,7 @@ function loadProjectServices(context) {
   ].forEach((relativePath) => loadScript(context, relativePath));
 }
 
-function run() {
+async function run() {
   const context = createContext();
   loadProjectServices(context);
 
@@ -113,6 +113,41 @@ function run() {
   assert.equal(startImageMessage.settings.aspectRatio, "IMAGE_ASPECT_RATIO_SQUARE");
   assert.equal(startImageMessage.settings.imageCount, 4);
   assert.equal(startImageMessage.settings.speedMode, "balanced");
+
+  let uploadedReferences = 0;
+  const preparedReferences = await context.TFProjectImageGeneration.prepareReferenceMedia({
+    project: {
+      assets: [
+        {
+          asset_id: "asset_1",
+          display_name: "Jack",
+          primary_file_id: "file_1",
+          files: [
+            {
+              asset_file_id: "file_1",
+              file_name: "Jack.png",
+              mime_type: "image/png",
+              data_url: "data:image/png;base64,SmFjaw==",
+              is_primary: true,
+            },
+          ],
+        },
+      ],
+    },
+    descriptor: imageDescriptor,
+    flowProjectId: "flow_project_1",
+    async uploadImage(file) {
+      uploadedReferences += 1;
+      assert.equal(file.base64Data, "SmFjaw==");
+      return { ok: true, mediaId: "flow_media_jack" };
+    },
+  });
+  assert.equal(uploadedReferences, 1);
+  assert.deepEqual(toPlain(preparedReferences.descriptor.settings.perPromptReferences), {
+    0: ["flow_media_jack"],
+  });
+  assert.equal(preparedReferences.assets[0].flow_upload_state, "ready");
+  assert.equal(preparedReferences.assets[0].flow_project_id, "flow_project_1");
 
   const envelope = context.TFProjectSchema.normalizeEnvelope({
     schema_version: 1,
@@ -203,4 +238,7 @@ function run() {
   console.log("project services contract smoke tests passed");
 }
 
-run();
+run().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

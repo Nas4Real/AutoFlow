@@ -13,6 +13,13 @@ const queueSource = fs.readFileSync(
   path.resolve(__dirname, "../src/sidepanel/app/05c-queue-ui-actions.js"),
   "utf8",
 );
+const imageGenerationSource = fs.readFileSync(
+  path.resolve(
+    __dirname,
+    "../src/shared/project-services/image-generation-contracts.js",
+  ),
+  "utf8",
+);
 
 async function run() {
   const project = {
@@ -175,6 +182,9 @@ async function run() {
     addEventListener() {},
   });
   context.globalThis = context;
+  vm.runInContext(imageGenerationSource, context, {
+    filename: "image-generation-contracts.js",
+  });
   vm.runInContext(source, context, { filename: "08-generate-surface.js" });
   vm.runInContext(queueSource, context, { filename: "05c-queue-ui-actions.js" });
   context.Sn = () => {};

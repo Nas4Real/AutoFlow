@@ -88,7 +88,11 @@
 
   function promptAssetIds(record) {
     const assetIds = (Array.isArray(record?.references) ? record.references : [])
-      .filter((reference) => reference?.resolution_status === "resolved")
+      .filter(
+        (reference) =>
+          reference?.asset_id &&
+          (!reference.resolution_status || reference.resolution_status === "resolved"),
+      )
       .map((reference) => String(reference?.asset_id || "").trim())
       .filter(Boolean);
     return Array.from(new Set(assetIds));
@@ -194,6 +198,106 @@
     };
   }
 
+  function primaryAssetFile(asset) {
+    const files = Array.isArray(asset?.files) ? asset.files.filter(isObject) : [];
+    return (
+      files.find((file) => file.asset_file_id === asset?.primary_file_id) ||
+      files.find((file) => file.is_primary || file.role === "primary") ||
+      files[0] ||
+      null
+    );
+  }
+
+  function dataUrlBase64(dataUrl) {
+    const value = String(dataUrl || "");
+    const commaIndex = value.indexOf(",");
+    return commaIndex >= 0 ? value.slice(commaIndex + 1) : value;
+  }
+
+  async function prepareReferenceMedia(input) {
+    const source = isObject(input) ? input : {};
+    const project = isObject(source.project) ? source.project : {};
+    const descriptor = JSON.parse(JSON.stringify(source.descriptor || {}));
+    const settings = isObject(descriptor.settings) ? descriptor.settings : {};
+    descriptor.settings = settings;
+    const assetMap = isObject(settings.perPromptAssetIds) ? settings.perPromptAssetIds : {};
+    const assetIds = Array.from(
+      new Set(
+        Object.values(assetMap)
+          .flat()
+          .map((value) => String(value || "").trim())
+          .filter(Boolean),
+      ),
+    );
+    const assets = (Array.isArray(project.assets) ? project.assets : []).map((asset) =>
+      Object.assign({}, asset),
+    );
+    if (!assetIds.length) {
+      return { assets, descriptor, reference_count: 0, uploaded_count: 0 };
+    }
+    if (typeof source.uploadImage !== "function") {
+      throw new Error("Reference upload service is unavailable.");
+    }
+
+    const flowProjectId = String(source.flowProjectId || "").trim();
+    const mediaByAssetId = new Map();
+    let uploadedCount = 0;
+    for (const assetId of assetIds) {
+      const assetIndex = assets.findIndex((asset) => asset.asset_id === assetId);
+      const asset = assetIndex >= 0 ? assets[assetIndex] : null;
+      const file = primaryAssetFile(asset);
+      if (!asset || !file?.data_url) {
+        throw new Error(`Reference ${asset?.display_name || assetId} has no stored image file.`);
+      }
+
+      let mediaId =
+        asset.flow_upload_state === "ready" &&
+        asset.flow_project_id === flowProjectId &&
+        asset.flow_asset_file_id === file.asset_file_id
+          ? String(asset.flow_media_id || "")
+          : "";
+      if (!mediaId) {
+        const response = await source.uploadImage({
+          assetId,
+          base64Data: dataUrlBase64(file.data_url),
+          fileName: file.file_name || `${asset.display_name || "reference"}.png`,
+          mimeType: file.mime_type || "image/png",
+        });
+        if (!response?.ok || !response?.mediaId) {
+          throw new Error(response?.error || `Could not upload ${asset.display_name || assetId}.`);
+        }
+        mediaId = String(response.mediaId);
+        uploadedCount += 1;
+        assets[assetIndex] = Object.assign({}, asset, {
+          flow_upload_state: "ready",
+          flow_project_id: flowProjectId,
+          flow_media_id: mediaId,
+          flow_asset_file_id: file.asset_file_id,
+          flow_uploaded_at: new Date().toISOString(),
+        });
+      }
+      mediaByAssetId.set(assetId, mediaId);
+    }
+
+    const perPromptReferences = {};
+    Object.keys(assetMap).forEach((promptIndex) => {
+      const mediaIds = (assetMap[promptIndex] || [])
+        .map((assetId) => mediaByAssetId.get(String(assetId || "").trim()))
+        .filter(Boolean);
+      if (mediaIds.length) perPromptReferences[promptIndex] = mediaIds;
+    });
+    settings.referenceMode = "mapped";
+    settings.perPromptReferences = perPromptReferences;
+    settings.perPromptThumbnails = {};
+    settings.imageReferenceMediaIds = [];
+    return {
+      assets,
+      descriptor,
+      reference_count: assetIds.length,
+      uploaded_count: uploadedCount,
+    };
+  }
+
   const api = Object.freeze({
     DEFAULT_MODEL,
     DEFAULT_RATIO,
@@ -202,6 +306,7 @@
     cleanDownloadPath,
     normalizeSettings,
     prefixDownloadPath,
+    prepareReferenceMedia,
     promptAssetIds,
     safeFolderName,
   });

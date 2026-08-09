@@ -83,6 +83,10 @@ function createContext(storage, runtimeMessages) {
       runtime: {
         async sendMessage(message) {
           runtimeMessages.push(JSON.parse(JSON.stringify(message)));
+          if (message.type === "UPLOAD_IMAGE") {
+            assert.equal(message.base64Data, "SmFjaw==");
+            return { ok: true, mediaId: "flow-media-jack-reference" };
+          }
           return { ok: true };
         },
       },
@@ -207,6 +211,13 @@ async function run() {
   assert.equal(startImageMessage.settings.aspectRatio, "IMAGE_ASPECT_RATIO_SQUARE");
   assert.equal(startImageMessage.settings.imageCount, 3);
   assert.equal(startImageMessage.settings.speedMode, "balanced");
+  assert.deepEqual(startImageMessage.settings.perPromptReferences, {
+    0: ["flow-media-jack-reference"],
+  });
+  assert.equal(
+    studio.getState().activeProject.assets[0].flow_media_id,
+    "flow-media-jack-reference",
+  );
 
   assert.equal(
     await studio.handleVideoRuntimeMessage({

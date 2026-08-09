@@ -2845,7 +2845,7 @@
     });
     const video = getProjectVideos(project).find((item) => item.video_id === videoKey) || null;
     const projectName = String(project.display_name || "Imported video").trim() || "Imported video";
-    const descriptor = imageGeneration.buildImageBatchDescriptor({
+    const baseDescriptor = imageGeneration.buildImageBatchDescriptor({
       projectId: project.project_id,
       projectName,
       projectFolder: imageGeneration.safeFolderName(projectName, "turboflow"),
@@ -2853,6 +2853,22 @@
       records: requestItems,
       settings: generationSettings,
     });
+    const preparedReferences = await imageGeneration.prepareReferenceMedia({
+      project,
+      descriptor: baseDescriptor,
+      flowProjectId:
+        studioState.flowContext?.project_id || project.flow_context?.project_id || "",
+      uploadImage: async (file) => {
+        const response = await root.chrome?.runtime?.sendMessage?.({
+          type: "UPLOAD_IMAGE",
+          base64Data: file.base64Data,
+          fileName: file.fileName,
+          mimeType: file.mimeType,
+        });
+        return response || { ok: false, error: "Flow reference upload is unavailable." };
+      },
+    });
+    const descriptor = preparedReferences.descriptor;
     const runRecord = {
       image_run_id: imageRunId,
       video_id: videoKey,
@@ -2881,6 +2897,7 @@
     });
 
     await updateActiveProject({
+      assets: preparedReferences.assets,
       settings: Object.assign({}, settings, {
         image_model: generationSettings.imageModel,
         image_ratio: generationSettings.imageRatio,
