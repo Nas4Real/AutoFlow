@@ -598,10 +598,15 @@ try {
 function pr(e = 0) {
   s?.token ? ke() : e < 3 ? setTimeout(() => pr(e + 1), 2e3) : ke();
 }
+function tfRequireRuntimeState(value) {
+  if (!value) throw new Error("Generation state unavailable");
+  return value;
+}
 async function mr() {
   try {
-    const e = await chrome.runtime.sendMessage({ type: "GET_FULL_STATE" });
-    if (!e) return;
+    const e = tfRequireRuntimeState(
+      await chrome.runtime.sendMessage({ type: "GET_FULL_STATE" }),
+    );
     let t = l.batches.find((e) => "running" === e.status);
     if (
       (t ||

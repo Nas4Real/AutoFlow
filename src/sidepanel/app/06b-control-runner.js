@@ -158,14 +158,20 @@ function zn(e) {
     "function" == typeof Ba && Ba());
 }
 function Yn() {
-  let consecutivePollFailures = 0;
+  let consecutivePollFailures = 0,
+    pollInFlight = false;
   (m && clearInterval(m),
     (m = setInterval(async () => {
+      if (pollInFlight) return;
+      pollInFlight = true;
       try {
         const e = await chrome.runtime.sendMessage({ type: "GET_STATS" });
         if (!e?.stats) throw new Error("Generation status unavailable");
         if (consecutivePollFailures >= 3) {
-          De("Running", "badge badge-running");
+          De(
+            e.isRunning ? "Running" : "Connected",
+            e.isRunning ? "badge badge-running" : "badge badge-connected",
+          );
           Te("Generation status connection restored.", "success");
         }
         consecutivePollFailures = 0;
@@ -380,6 +386,8 @@ function Yn() {
           De("Connection lost", "badge badge-disconnected");
           Te("Unable to read generation status. Retrying...", "warn");
         }
+      } finally {
+        pollInFlight = false;
       }
     }, 2e3)));
 }
