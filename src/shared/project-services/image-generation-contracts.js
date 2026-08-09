@@ -78,8 +78,10 @@
         String(source.imageRatio || source.aspectRatio || source.image_ratio || DEFAULT_RATIO).trim() ||
         DEFAULT_RATIO,
       imageCount,
-      speedMode: ["fast", "balanced", "slow"].includes(source.speedMode)
-        ? source.speedMode
+      speedMode: ["fast", "balanced", "slow"].includes(
+        source.speedMode || source.speed_mode || source.image_speed_mode,
+      )
+        ? source.speedMode || source.speed_mode || source.image_speed_mode
         : "fast",
     };
   }

@@ -55,7 +55,7 @@ class FakeFileReader {
   }
 }
 
-function createContext(storage) {
+function createContext(storage, runtimeMessages) {
   let id = 0;
   const context = vm.createContext({
     Array,
@@ -81,7 +81,8 @@ function createContext(storage) {
     setTimeout,
     chrome: {
       runtime: {
-        async sendMessage() {
+        async sendMessage(message) {
+          runtimeMessages.push(JSON.parse(JSON.stringify(message)));
           return { ok: true };
         },
       },
@@ -107,7 +108,8 @@ function createContext(storage) {
 
 async function run() {
   const storage = createStorage();
-  const context = createContext(storage);
+  const runtimeMessages = [];
+  const context = createContext(storage, runtimeMessages);
   const domain = context.TFProjectDomain;
   const importer = context.TFProjectPromptImport;
   const studio = context.TFProjectStudioState;
@@ -182,12 +184,29 @@ async function run() {
   assert.equal(secondVideoGate.ready_count, 1);
   assert.equal(secondVideoGate.items[0].prompt_id, secondImport.records[0].prompt_id);
 
-  const imageRun = await studio.startImageGenerationRun(firstVideoId);
+  const imageRun = await studio.startImageGenerationRun(firstVideoId, {
+    imageModel: "GEM_PIX_2",
+    imageRatio: "IMAGE_ASPECT_RATIO_SQUARE",
+    imageCount: 3,
+    speedMode: "balanced",
+  });
   assert.equal(imageRun.run.video_id, firstVideoId);
+  assert.equal(imageRun.run.image_count, 3);
   assert.deepEqual(
     Array.from(imageRun.run.request_items, (item) => item.prompt_id),
     firstImport.records.map((record) => record.prompt_id),
   );
+  const startImageMessage = runtimeMessages.find((message) => message.type === "START_BATCH");
+  assert.ok(startImageMessage);
+  assert.equal(startImageMessage.batchId, imageRun.run.image_run_id);
+  assert.deepEqual(startImageMessage.prompts, [
+    "Jack checks his budget",
+    "A clean budget chart",
+  ]);
+  assert.equal(startImageMessage.settings.imageModel, "GEM_PIX_2");
+  assert.equal(startImageMessage.settings.aspectRatio, "IMAGE_ASPECT_RATIO_SQUARE");
+  assert.equal(startImageMessage.settings.imageCount, 3);
+  assert.equal(startImageMessage.settings.speedMode, "balanced");
   const firstCacheKey = `sha256:${"b".repeat(64)}`;
   const recorded = await studio.recordImageGenerationRunVariants(imageRun.run.image_run_id, [
     {

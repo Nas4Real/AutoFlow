@@ -2563,7 +2563,7 @@
     };
   }
 
-  async function startImageGenerationRun(videoId) {
+  async function startImageGenerationRun(videoId, requestedSettings) {
     /** @type {any} */
     const project = studioState.activeProject;
     if (!project) {
@@ -2576,11 +2576,36 @@
       throw new Error("No Ready prompts are eligible for image generation.");
     }
 
+    const activeImageRun = getProjectImageGenerationRuns(project).find(
+      (run) => String(run.status || "").toLowerCase() === "generating",
+    );
+    const activeVideoJob = getProjectVideoJobs(project).find(
+      (job) => normalizeVideoJobStatus(job) === "running",
+    );
+    if (activeImageRun || activeVideoJob) {
+      throw new Error("Another image or video generation run is already active.");
+    }
+
+    const imageGeneration = root.TFProjectImageGeneration;
+    if (!imageGeneration?.buildImageBatchDescriptor || !imageGeneration?.buildStartBatchMessage) {
+      throw new Error("Image generation service is unavailable.");
+    }
+
     const timestamp = new Date().toISOString();
     const imageRunId = createImageRunId();
     const projectSettings = Object(project).settings;
     const settings = isObject(projectSettings) ? projectSettings : {};
-    const imageCount = Number(settings.image_count || settings.imageCount || 2);
+    const generationSettings = imageGeneration.normalizeSettings(
+      Object.assign(
+        {
+          imageModel: settings.image_model || settings.imageModel,
+          imageRatio: settings.image_ratio || settings.imageRatio,
+          imageCount: settings.image_count || settings.imageCount,
+          speedMode: settings.image_speed_mode || settings.speedMode,
+        },
+        isObject(requestedSettings) ? requestedSettings : {},
+      ),
+    );
     const requestItems = gate.included.map((item, index) => {
       return {
         prompt_id: item.prompt_id,
@@ -2590,11 +2615,25 @@
         references: item.references.map((reference) => Object.assign({}, reference)),
       };
     });
+    const video = getProjectVideos(project).find((item) => item.video_id === videoKey) || null;
+    const projectName = String(project.display_name || "Imported video").trim() || "Imported video";
+    const descriptor = imageGeneration.buildImageBatchDescriptor({
+      projectId: project.project_id,
+      projectName,
+      projectFolder: imageGeneration.safeFolderName(projectName, "turboflow"),
+      sourceImportName: video?.source_name || video?.display_name || "imported-json",
+      records: requestItems,
+      settings: generationSettings,
+    });
     const runRecord = {
       image_run_id: imageRunId,
       video_id: videoKey,
       status: "generating",
-      image_count: imageCount > 0 ? imageCount : 2,
+      image_model: generationSettings.imageModel,
+      image_ratio: generationSettings.imageRatio,
+      image_count: generationSettings.imageCount,
+      speed_mode: generationSettings.speedMode,
+      output_folder: descriptor.folder,
       prompt_count: requestItems.length,
       excluded_prompt_count: gate.blocked.length,
       request_items: requestItems,
@@ -2613,13 +2652,55 @@
     });
 
     await updateActiveProject({
+      settings: Object.assign({}, settings, {
+        image_model: generationSettings.imageModel,
+        image_ratio: generationSettings.imageRatio,
+        image_count: generationSettings.imageCount,
+        image_speed_mode: generationSettings.speedMode,
+      }),
       prompt_records: promptRecords,
       image_generation_runs: getProjectImageGenerationRuns(project).concat(runRecord),
     });
 
+    const startMessage = imageGeneration.buildStartBatchMessage(descriptor, imageRunId, {
+      speedMode: generationSettings.speedMode,
+    });
+    try {
+      const response = await root.chrome?.runtime?.sendMessage?.(startMessage);
+      if (!response?.ok) {
+        throw new Error(response?.error || "Flow did not accept the image generation run.");
+      }
+    } catch (error) {
+      const failedAt = new Date().toISOString();
+      const failedProject = studioState.activeProject || project;
+      await updateActiveProject({
+        image_generation_runs: getProjectImageGenerationRuns(failedProject).map((run) =>
+          run.image_run_id === imageRunId
+            ? Object.assign({}, run, {
+                status: "failed",
+                error_message: error?.message || String(error),
+                failed_at: failedAt,
+                updated_at: failedAt,
+              })
+            : run,
+        ),
+        prompt_records: getProjectPromptRecords(failedProject).map((record) =>
+          includedPromptIds.has(record.prompt_id)
+            ? Object.assign({}, record, {
+                image_generation_state: "failed",
+                image_generation_error: error?.message || String(error),
+                updated_at: failedAt,
+              })
+            : record,
+        ),
+      });
+      throw error;
+    }
+
     return {
       run: runRecord,
       gate,
+      message: startMessage,
     };
   }
 
