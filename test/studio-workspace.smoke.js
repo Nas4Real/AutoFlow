@@ -169,7 +169,24 @@ async function run() {
   const firstPromptId = firstImport.records[0].prompt_id;
   const secondPromptId = firstImport.records[1].prompt_id;
   await studio.loadProjectState();
-  const imageRun = await studio.startImageGenerationRun();
+  const firstVideoGate = studio.getImageGenerationGate(project, firstVideoId);
+  const secondVideoGate = studio.getImageGenerationGate(project, secondVideoId);
+  assert.equal(firstVideoGate.prompt_count, 2);
+  assert.equal(firstVideoGate.ready_count, 2);
+  assert.deepEqual(
+    Array.from(firstVideoGate.items, (item) => item.prompt_id),
+    firstImport.records.map((record) => record.prompt_id),
+  );
+  assert.equal(secondVideoGate.prompt_count, 1);
+  assert.equal(secondVideoGate.ready_count, 1);
+  assert.equal(secondVideoGate.items[0].prompt_id, secondImport.records[0].prompt_id);
+
+  const imageRun = await studio.startImageGenerationRun(firstVideoId);
+  assert.equal(imageRun.run.video_id, firstVideoId);
+  assert.deepEqual(
+    Array.from(imageRun.run.request_items, (item) => item.prompt_id),
+    firstImport.records.map((record) => record.prompt_id),
+  );
   const firstCacheKey = `sha256:${"b".repeat(64)}`;
   const recorded = await studio.recordImageGenerationRunVariants(imageRun.run.image_run_id, [
     {

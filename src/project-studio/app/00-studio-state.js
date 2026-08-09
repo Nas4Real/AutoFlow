@@ -703,9 +703,12 @@
     };
   }
 
-  function getImageGenerationGate(project) {
+  function getImageGenerationGate(project, videoId) {
     const sourceProject = project || studioState.activeProject;
-    const promptRecords = getProjectPromptRecords(sourceProject);
+    const videoKey = String(videoId || "").trim();
+    const promptRecords = videoKey
+      ? getVideoPromptRecords(sourceProject, videoKey)
+      : getProjectPromptRecords(sourceProject);
     const assets = getProjectAssets(sourceProject);
     const items = promptRecords.map((record) => buildImageGateItem(record, assets));
     const included = items.filter((item) => item.can_generate && item.state === "ready");
@@ -2560,14 +2563,15 @@
     };
   }
 
-  async function startImageGenerationRun() {
+  async function startImageGenerationRun(videoId) {
     /** @type {any} */
     const project = studioState.activeProject;
     if (!project) {
       throw new Error("No active YouTube Channel selected.");
     }
 
-    const gate = getImageGenerationGate(project);
+    const videoKey = String(videoId || "").trim();
+    const gate = getImageGenerationGate(project, videoKey);
     if (!gate.included.length) {
       throw new Error("No Ready prompts are eligible for image generation.");
     }
@@ -2588,6 +2592,7 @@
     });
     const runRecord = {
       image_run_id: imageRunId,
+      video_id: videoKey,
       status: "generating",
       image_count: imageCount > 0 ? imageCount : 2,
       prompt_count: requestItems.length,
