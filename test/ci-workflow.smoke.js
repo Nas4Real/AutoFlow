@@ -9,8 +9,8 @@ const root = path.resolve(__dirname, "..");
 const workflowPath = path.join(root, ".github/workflows/ci.yml");
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
-const checkoutRevision = "11d5960a326750d5838078e36cf38b85af677262";
-const setupNodeRevision = "49933ea5288caeca8642d1e84afbd3f7d6820020";
+const checkoutRevision = "3d3c42e5aac5ba805825da76410c181273ba90b1";
+const setupNodeRevision = "820762786026740c76f36085b0efc47a31fe5020";
 
 assert.ok(fs.existsSync(workflowPath), "GitHub Actions CI workflow is missing");
 
