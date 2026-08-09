@@ -5,6 +5,7 @@
   "scripts": {
     "build:studio": "node scripts/build-studio.mjs",
     "architecture:check": "node scripts/check-architecture-budgets.mjs",
+    "test:build": "node test/studio-build.smoke.js",
     "test:contracts": "node test/project-services-contracts.smoke.js && node test/runtime-events.smoke.js && node test/loader-order.smoke.js && node test/source-encoding.smoke.js",
     "test": "node test/project-prompt-import.smoke.js && node test/generate-surface.smoke.js && node test/studio-workspace.smoke.js && npm run test:contracts"
   },
