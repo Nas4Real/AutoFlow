@@ -235,7 +235,7 @@ function Aa(e) {
   n && (n.textContent = "📎 Start Frames Ready");
   const o = ve(e[0].mediaId),
     s = o
-      ? `<img class="mapping-preview-thumb" src="${o}" alt="frame">`
+      ? `<img class="mapping-preview-thumb" src="${TFHtmlSafety.safeMediaUrl(o)}" alt="frame">`
       : '<span class="mapping-preview-icon">🖼</span>';
   a.innerHTML = `\n        <div class="mapping-preview-row mapping-preview-row-compact">\n            ${s}\n            <span class="mapping-preview-count">${e.length} start frame${e.length > 1 ? "s" : ""} ready — type your prompt above</span>\n        </div>\n    `;
 }

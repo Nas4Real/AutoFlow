@@ -48,6 +48,7 @@ function run() {
 
   assertOrder(read("src/sidepanel/index.html"), [
     ...sharedOrder,
+    "app/00-html-safety.js",
     "app/00-state-storage.js",
     "app/00a-project-studio-link.js",
   ], "side panel");

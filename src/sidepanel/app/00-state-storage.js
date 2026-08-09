@@ -394,8 +394,7 @@ async function oe() {
     (K = e.turboflowMapperImages);
 }
 function se(e) {
-  const t = document.createElement("div");
-  return ((t.textContent = e), t.innerHTML);
+  return globalThis.TFHtmlSafety.escapeHtml(e);
 }
 function tfSafeFolderName(e, t = "turboflow") {
   const a = String(e || "")

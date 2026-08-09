@@ -375,14 +375,14 @@ function ka() {
         if (o) {
           const e = l.promptStartFrameMap[t],
             n = e ? ve(e) : null;
-          return `\n                <div class="mapping-preview-row">\n                    <span class="mapping-preview-num">${t + 1}.</span>\n                    ${n ? `<img class="mapping-preview-thumb" src="${n}" alt="frame">` : e ? '<span class="mapping-preview-icon">🖼</span>' : '<span class="mapping-preview-shared">(no frame)</span>'}\n                    <span class="mapping-preview-prompt">${se(a)}</span>\n                </div>\n            `;
+          return `\n                <div class="mapping-preview-row">\n                    <span class="mapping-preview-num">${t + 1}.</span>\n                    ${n ? `<img class="mapping-preview-thumb" src="${TFHtmlSafety.safeMediaUrl(n)}" alt="frame">` : e ? '<span class="mapping-preview-icon">🖼</span>' : '<span class="mapping-preview-shared">(no frame)</span>'}\n                    <span class="mapping-preview-prompt">${se(a)}</span>\n                </div>\n            `;
         }
         if (s) {
           const e = l.promptStartFrameMap[t],
             n = l.promptEndFrameMap[t],
             r = e ? ve(e) : null,
             o = n ? ve(n) : null;
-          return `\n                <div class="mapping-preview-row">\n                    <span class="mapping-preview-num">${t + 1}.</span>\n                    ${r ? `<img class="mapping-preview-thumb" src="${r}" alt="start">` : e ? '<span class="mapping-preview-icon">🖼</span>' : '<span class="mapping-preview-shared">(no start)</span>'}\n                    <span class="mapping-preview-arrow">→</span>\n                    ${o ? `<img class="mapping-preview-thumb" src="${o}" alt="end">` : n ? '<span class="mapping-preview-icon">🖼</span>' : '<span class="mapping-preview-shared">(no end)</span>'}\n                    <span class="mapping-preview-prompt">${se(a)}</span>\n                </div>\n            `;
+          return `\n                <div class="mapping-preview-row">\n                    <span class="mapping-preview-num">${t + 1}.</span>\n                    ${r ? `<img class="mapping-preview-thumb" src="${TFHtmlSafety.safeMediaUrl(r)}" alt="start">` : e ? '<span class="mapping-preview-icon">🖼</span>' : '<span class="mapping-preview-shared">(no start)</span>'}\n                    <span class="mapping-preview-arrow">→</span>\n                    ${o ? `<img class="mapping-preview-thumb" src="${TFHtmlSafety.safeMediaUrl(o)}" alt="end">` : n ? '<span class="mapping-preview-icon">🖼</span>' : '<span class="mapping-preview-shared">(no end)</span>'}\n                    <span class="mapping-preview-prompt">${se(a)}</span>\n                </div>\n            `;
         }
         {
           const e = l.promptReferenceMap[t] || [];
@@ -390,7 +390,7 @@ function ka() {
             .map((e) => {
               const t = ve(e);
               return t
-                ? `<img class="mapping-preview-thumb" src="${t}" alt="ref">`
+                ? `<img class="mapping-preview-thumb" src="${TFHtmlSafety.safeMediaUrl(t)}" alt="ref">`
                 : '<span class="mapping-preview-icon">🖼</span>';
             })
             .join(

@@ -148,7 +148,7 @@ function xn(e, t) {
         ) {
           const t = e.settings.perPromptStartFrames[a],
             n = e.settings.perPromptThumbnails[t];
-          n && (o = `<img class="bp-ref-thumb" src="${n}" alt="frame">`);
+          n && (o = `<img class="bp-ref-thumb" src="${TFHtmlSafety.safeMediaUrl(n)}" alt="frame">`);
         }
         return `\n            <div class="bp-row" data-bid="${e.id}" data-pi="${a}">\n                <span class="bp-num">${a + 1}.</span>\n                ${o ? `<span class="bp-refs">${o}</span>` : ""}\n                <span class="bp-text" style="color:#9aa0a6">Frame ${a + 1}</span>\n                <span class="bp-status ${n}" title="${se(i)}">${se(r)}</span>\n                <div class="bp-actions">\n                    ${"failed" === t.status ? `\n                        <button class="bpa-btn" data-act="retry-prompt" data-bid="${e.id}" data-pi="${a}" title="Retry">\n                            <span class="material-symbols-outlined">refresh</span>\n                        </button>` : ""}\n                </div>\n            </div>\n        `;
       })
@@ -285,12 +285,12 @@ function Sn() {
                             n = e.settings.perPromptEndFrames?.[a],
                             r = t ? e.settings.perPromptThumbnails?.[t] : null,
                             o = n ? e.settings.perPromptThumbnails?.[n] : null;
-                          s = `${r ? `<img class="bp-ref-thumb" src="${r}" alt="start">` : t ? '<span class="bp-ref-icon">🖼</span>' : ""}${o ? `<img class="bp-ref-thumb" src="${o}" alt="end">` : n ? '<span class="bp-ref-icon">🖼</span>' : ""}`;
+                          s = `${r ? `<img class="bp-ref-thumb" src="${TFHtmlSafety.safeMediaUrl(r)}" alt="start">` : t ? '<span class="bp-ref-icon">🖼</span>' : ""}${o ? `<img class="bp-ref-thumb" src="${TFHtmlSafety.safeMediaUrl(o)}" alt="end">` : n ? '<span class="bp-ref-icon">🖼</span>' : ""}`;
                         } else if (e.settings.perPromptStartFrames?.[a]) {
                           const t = e.settings.perPromptStartFrames[a],
                             n = e.settings.perPromptThumbnails?.[t];
                           s = n
-                            ? `<img class="bp-ref-thumb" src="${n}" alt="frame">`
+                            ? `<img class="bp-ref-thumb" src="${TFHtmlSafety.safeMediaUrl(n)}" alt="frame">`
                             : '<span class="bp-ref-icon">🖼</span>';
                         } else
                           e.settings.perPromptReferences?.[a] &&
@@ -298,7 +298,7 @@ function Sn() {
                               .map((t) => {
                                 const a = e.settings.perPromptThumbnails?.[t];
                                 return a
-                                  ? `<img class="bp-ref-thumb" src="${a}" alt="ref">`
+                                  ? `<img class="bp-ref-thumb" src="${TFHtmlSafety.safeMediaUrl(a)}" alt="ref">`
                                   : '<span class="bp-ref-icon">🖼</span>';
                               })
                               .join(""));
