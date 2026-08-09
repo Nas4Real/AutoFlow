@@ -37,6 +37,9 @@ function run() {
     ...sharedOrder,
     "runtime/contracts/runtime-events.js",
     "runtime/00-state-connection.js",
+    "runtime/03-downloads-cache.js",
+    "runtime/03b-intercept-security.js",
+    "runtime/04-message-router.js",
   ], "background runtime");
 
   const studioHtml = read("src/project-studio/index.html");

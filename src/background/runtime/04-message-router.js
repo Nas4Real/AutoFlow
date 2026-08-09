@@ -896,26 +896,11 @@
       )
         return;
       if (void 0 !== w?.videoRatio && f) return;
-      if (
-        "WORKFLOW_UPDATE" === e.eventType &&
-        e.data?.metadata?.primaryMediaId
-      ) {
-        const t = e.data.metadata.primaryMediaId,
-          a = e.data.metadata.batchId;
-        if (a && t && !K.has(t)) {
-          const e = Y.get(t);
-          (e && "video" === e.type) || kt(t, a);
+      for (const { batchId, mediaId } of tfInterceptedMediaPairs(e, a)) {
+        if (Y.get(mediaId)?.type === "image") {
+          kt(mediaId, batchId);
         }
       }
-      if ("BATCH_GENERATE_RESPONSE" === e.eventType && e.data?.workflows)
-        for (const t of e.data.workflows) {
-          const e = t?.metadata?.batchId,
-            a = t?.metadata?.primaryMediaId;
-          if (e && a && !K.has(a)) {
-            const t = Y.get(a);
-            (t && "video" === t.type) || kt(a, e);
-          }
-        }
     }
     return !1;
   }),

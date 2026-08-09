@@ -98,6 +98,7 @@ async function Pt(e, t, a) {
                   }
                 const previewFileName = tfExactDownloadName(w, a, "", "png", o);
                 (Y.set(i, {
+                  batchId: n,
                   fifeUrl: r,
                   prompt: e,
                   promptIndex: a,
@@ -434,6 +435,7 @@ async function Mt(e, t, a, r, o) {
                 }
               const previewFileName = tfExactDownloadName(w, l, "", "png", m);
               (Y.set(r, {
+                batchId: flowBatchId,
                 fifeUrl: e,
                 prompt: o,
                 promptIndex: l,

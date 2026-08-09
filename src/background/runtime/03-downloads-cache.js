@@ -310,14 +310,37 @@ function tfExactDownloadName(e, t, a, r, o = null) {
   return (i.push(`${u}.${r}`), i.join("/"));
 }
 function kt(e, t) {
-  if (K.has(e)) return;
-  K.add(e);
-  const a = V.get(t);
+  if (
+    typeof e !== "string" ||
+    e.length === 0 ||
+    e.length > TF_MAX_INTERCEPT_ID_LENGTH ||
+    typeof t !== "string" ||
+    t.length === 0 ||
+    t.length > TF_MAX_INTERCEPT_ID_LENGTH
+  )
+    return;
+  const a = V.get(t),
+    c = Y.get(e);
   if (void 0 === a)
     return void zt("LOG", {
       message: `⚠️ Unknown batchId ${t.substring(0, 8)}... — skipping`,
       type: "error",
     });
+  if (!c || "image" !== c.type || c.batchId !== t)
+    return void zt("LOG", {
+      message: `⚠️ Uncorrelated mediaId ${e.substring(0, 8)}... — skipping`,
+      type: "error",
+    });
+  if (K.has(e)) return;
+  if (
+    K.size >= TF_MAX_CAPTURED_MEDIA ||
+    (_ && W.length >= TF_MAX_DOWNLOAD_QUEUE)
+  )
+    return void zt("LOG", {
+      message: "⚠️ Captured media queue limit reached — skipping",
+      type: "error",
+    });
+  K.add(e);
   z.has(a) || z.set(a, []);
   const r = z.get(a),
     o = r.length;
@@ -332,7 +355,6 @@ function kt(e, t) {
       E.downloaded++,
       void zt("IMAGE_READY", { message: `🖼 #${s} generated`, stats: { ...E } })
     );
-  const c = Y.get(e);
   (W.push({
     mediaId: e,
     promptIndex: a,
@@ -340,7 +362,7 @@ function kt(e, t) {
     fileSuffix: i,
     type: "image",
     status: "pending",
-    prompt: c?.prompt || "",
+    prompt: c.prompt || "",
     namingSettings: w,
     fileName: tfExactDownloadName(w, a, i, "png", o),
   }),

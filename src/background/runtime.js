@@ -15,5 +15,6 @@
   "runtime/02b-image-generation.js",
   "runtime/02c-video-generation.js",
   "runtime/03-downloads-cache.js",
+  "runtime/03b-intercept-security.js",
   "runtime/04-message-router.js",
 );

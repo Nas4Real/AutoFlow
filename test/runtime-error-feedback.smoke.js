@@ -48,7 +48,7 @@ function createPollingHarness(sendMessage) {
   return { badges, tick: intervalCallbacks[0], toasts };
 }
 
-function extractFunction(source, name) {
+function extractFunctionSource(source, name) {
   const start = source.indexOf(`function ${name}(`);
   assert.notEqual(start, -1, `${name} is missing`);
   const bodyStart = source.indexOf("{", start);
@@ -57,14 +57,18 @@ function extractFunction(source, name) {
     if (source[index] === "{") depth += 1;
     if (source[index] === "}") depth -= 1;
     if (depth === 0) {
-      const snippet = source.slice(start, index + 1);
-      const context = vm.createContext({});
-      context.globalThis = context;
-      vm.runInContext(`${snippet}\nglobalThis.__extracted = ${name};`, context);
-      return context.__extracted;
+      return source.slice(start, index + 1);
     }
   }
   assert.fail(`${name} has an unterminated body`);
+}
+
+function extractRuntimeRecovery(source) {
+  const start = source.indexOf("async function mr()");
+  assert.notEqual(start, -1, "mr is missing");
+  const end = source.indexOf("\n(setTimeout(", start);
+  assert.notEqual(end, -1, "mr terminator is missing");
+  return source.slice(start, end);
 }
 
 async function run() {
@@ -121,19 +125,51 @@ async function run() {
   });
   await Promise.all([firstPoll, overlappingPoll]);
 
-  const requireRuntimeState = extractFunction(runtimeBoot, "tfRequireRuntimeState");
-  assert.throws(
-    () => requireRuntimeState(undefined),
-    /Generation state unavailable/,
-    "empty startup responses must enter the visible recovery failure path",
+  const recoveryMessages = [];
+  const recoveryToasts = [];
+  const recoveryWarnings = [];
+  const recoveryContext = vm.createContext({
+    chrome: {
+      runtime: {
+        async sendMessage(message) {
+          recoveryMessages.push(message);
+          return undefined;
+        },
+      },
+    },
+    console: {
+      warn(...args) {
+        recoveryWarnings.push(args);
+      },
+    },
+    Te(message, level) {
+      recoveryToasts.push({ level, message });
+    },
+  });
+  recoveryContext.globalThis = recoveryContext;
+  vm.runInContext(
+    `${extractFunctionSource(runtimeBoot, "tfRequireRuntimeState")}\n${extractRuntimeRecovery(
+      runtimeBoot,
+    )}\nglobalThis.__restoreRuntimeState = mr;`,
+    recoveryContext,
+    { filename: path.relative(root, runtimeBootPath) },
   );
-  const availableState = { items: [], running: false };
-  assert.equal(requireRuntimeState(availableState), availableState);
-  assert.match(
-    runtimeBoot,
-    /tfRequireRuntimeState\(\s*await chrome\.runtime\.sendMessage/,
-    "startup restoration must validate the runtime response before using it",
+  await recoveryContext.__restoreRuntimeState();
+  assert.equal(recoveryMessages.length, 1);
+  assert.equal(recoveryMessages[0].type, "GET_FULL_STATE");
+  assert.deepEqual(
+    recoveryToasts,
+    [
+      {
+        level: "warn",
+        message:
+          "Could not restore the previous generation state. Reopen the panel to try again.",
+      },
+    ],
+    "an empty startup response must execute the visible recovery warning path",
   );
+  assert.equal(recoveryWarnings.length, 1, "startup recovery failure should be diagnosable");
+  assert.match(String(recoveryWarnings[0][1]), /Generation state unavailable/);
 
   console.log("Runtime error feedback smoke tests passed");
 }
