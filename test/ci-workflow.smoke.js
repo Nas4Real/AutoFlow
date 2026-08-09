@@ -50,6 +50,7 @@ assert.deepEqual(commands, [
   "npm test",
   "npm run test:build",
   "npm run build:studio",
+  "git diff --exit-code -- src/project-studio/generated",
   "npm run architecture:check",
   "npm audit --audit-level=high",
 ]);
@@ -59,10 +60,7 @@ assert.equal(
   "^22.0.0 || ^24.0.0",
   "package metadata must declare the supported Node LTS lines",
 );
-assert.ok(
-  readme.indexOf("npm run build:studio") < readme.indexOf('Click "Load unpacked"'),
-  "fresh-checkout instructions must build ignored Studio assets before Chrome loads them",
-);
+assert.match(readme, /fresh checkout can be loaded directly in Chrome without a local build/);
 assert.match(readme, /Node\.js 22 or 24 LTS/);
 assert.match(
   readme,
