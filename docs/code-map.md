@@ -31,7 +31,7 @@ Numeric prefixes are part of the classic-script architecture. Preserve global ex
 | `src/project-studio/react/studio.jsx` | Maintained React/HeroUI Studio shell, navigation, workspace views, dialogs, and state-facade integration. |
 | `src/project-studio/react/studio-app.css` | Maintained Studio layout and component styling. |
 | `src/project-studio/react/studio-tailwind.css` | Tailwind entrypoint used to generate the packaged Studio stylesheet. |
-| `src/project-studio/generated/` | Ignored build outputs produced by `npm run build:studio`; package them, but never edit them directly. |
+| `src/project-studio/generated/` | Versioned build outputs produced by `npm run build:studio`; commit rebuilds, but never edit them directly. |
 
 ## Side Panel JS
 

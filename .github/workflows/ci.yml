@@ -52,6 +52,9 @@ jobs:
       - name: Build packaged Studio assets
         run: npm run build:studio
 
+      - name: Verify packaged Studio assets are current
+        run: git diff --exit-code -- src/project-studio/generated
+
       - name: Report architecture budgets
         run: npm run architecture:check
 

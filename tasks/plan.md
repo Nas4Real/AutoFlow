@@ -50,7 +50,7 @@ Harden AutoFlow without redesigning its side panel or Project Studio. Work proce
 
 - [x] CI passes from a clean checkout on the supported Node LTS release.
 - [x] Architecture debt remains visible without blocking unrelated baseline fixes.
-- [x] Generated Studio assets remain ignored and reproducible.
+- [x] Generated Studio assets remain versioned and reproducible so a clean checkout is directly loadable.
 
 ### Phase 4: Final Review And Handoff
 
@@ -70,7 +70,7 @@ Harden AutoFlow without redesigning its side panel or Project Studio. Work proce
 - [x] [Review][Patch] Hide decorative TurboFlow brand icons from assistive technology [src/sidepanel/index.html:12]
 - [x] [Review][Patch] Assert that Project Studio loads only the generated active stylesheet [test/studio-workspace.smoke.js:394]
 - [x] [Review][Patch] Harden build and syntax-check process error paths, empty output arguments, and the no-shell regression guard [scripts/build-studio.mjs:11]
-- [x] [Review][Patch] Make the fresh-checkout install sequence build ignored Studio assets before loading the extension [README.md:5]
+- [x] [Review][Patch] Package required Studio assets in Git so a fresh checkout opens without a local build [README.md:5]
 - [x] [Review][Patch] Disable persisted checkout credentials in pull-request CI [/.github/workflows/ci.yml:23]
 - [x] [Review][Patch] Pin third-party GitHub Actions to immutable commit SHAs [/.github/workflows/ci.yml:24]
 - [x] [Review][Patch] Parse the CI workflow and assert its effective jobs, permissions, runtime, and commands [test/ci-workflow.smoke.js:12]

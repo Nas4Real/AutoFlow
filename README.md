@@ -4,12 +4,7 @@ TurboFlow is a Chrome MV3 extension for batch image and video generation on Goog
 
 ## Install
 
-Use Node.js 22 or 24 LTS. From a fresh checkout, build the ignored Project Studio assets before loading the extension:
-
-```powershell
-npm ci --ignore-scripts
-npm run build:studio
-```
+The repository includes the packaged Project Studio assets, so a fresh checkout can be loaded directly in Chrome without a local build.
 
 1. Open `chrome://extensions`.
 2. Remove any old TurboFlow build.
@@ -40,7 +35,7 @@ src/
     index.html              React Studio extension-page shell
     app/                    Bootstrap and classic state compatibility facade
     react/                  Maintained React Studio source and styles
-    generated/              Ignored local bundles produced before packaging
+    generated/              Versioned loadable bundles produced from maintained sources
   shared/
     project-domain/         DOM-free project storage and JSON contracts
     project-services/       Shared schemas, adapters, and read-model contracts
@@ -57,7 +52,7 @@ Start future edits with [`docs/code-map.md`](docs/code-map.md), then open only t
 
 ## Development
 
-Install the pinned dependencies with `npm ci`, then use these repository checks:
+Use Node.js 22 or 24 LTS. Install the pinned dependencies with `npm ci --ignore-scripts`, then use these repository checks:
 
 | Command | Purpose |
 | --- | --- |
@@ -67,7 +62,7 @@ Install the pinned dependencies with `npm ci`, then use these repository checks:
 | `npm run build:studio` | Generate the local React Studio JavaScript and CSS bundles. |
 | `npm run architecture:check` | Report source and generated-asset architecture budgets. |
 
-Project Studio generated assets are intentionally ignored by Git. Run `npm run build:studio` before loading the extension from a fresh checkout. On Windows, run `scripts/build-extension.ps1` to build and package the complete extension.
+Project Studio generated assets are committed so a clean checkout is loadable. Run `npm run build:studio` after changing maintained Studio sources and commit the resulting bundle updates; CI rejects stale generated assets. On Windows, run `scripts/build-extension.ps1` to build and package the complete extension.
 
 ## Prompt Index JSON
 

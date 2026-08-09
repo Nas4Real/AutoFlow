@@ -45,7 +45,7 @@ Project Studio extension page
 - `src/project-studio/app/00-studio-state.js`: compatibility facade between the React surface, shared project domain, Chrome storage, and side-panel/background runtime contracts.
 - `src/project-studio/react/studio.jsx`: maintained React/HeroUI Studio shell and workspace views.
 - `src/project-studio/react/studio-app.css` and `src/project-studio/react/studio-tailwind.css`: maintained Studio styling inputs.
-- `src/project-studio/generated/`: ignored JavaScript, CSS, and font build outputs produced by `npm run build:studio`; these files must exist in the packaged extension.
+- `src/project-studio/generated/`: versioned JavaScript, CSS, and font build outputs produced by `npm run build:studio`; keeping them committed makes a clean checkout loadable as an unpacked extension.
 - `assets/icons/`: browser extension icons referenced by `manifest.json`.
 - `docs/code-map.md`: primary low-token edit map.
 - `docs/research-notes.md`: source notes behind the split-file architecture.
@@ -68,4 +68,4 @@ Project Studio extension page
 
 ## Naming Rule
 
-Use descriptive role-based names for future files, such as `batch-runner.js`, `download-manager.js`, or `prompt-mapper.js`. Hashed or generated names belong only under ignored build-output directories and must be produced by the repository build.
+Use descriptive role-based names for future files, such as `batch-runner.js`, `download-manager.js`, or `prompt-mapper.js`. Hashed or generated names belong only under designated build-output directories and must be produced by the repository build.
