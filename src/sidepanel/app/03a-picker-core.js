@@ -283,7 +283,7 @@ function Ht() {
     a = t?.thumbnail || "",
     n = t?.fileName || "Start Frame";
   ((e.className = "upload-preview has-image"),
-    (e.innerHTML = `\n        ${a ? `<img src="${TFHtmlSafety.safeMediaUrl(a)}" alt="Start frame">` : ""}\n        <div class="upload-info">\n            <div class="filename">${se(n)}</div>\n            <div class="media-id">${l.startFrameMediaId.substring(0, 16)}...</div>\n        </div>\n        <button class="btn-remove" id="btn-change-start">Change</button>\n        <button class="btn-remove" id="btn-remove-start">✕</button>\n    `),
+    (e.innerHTML = `\n        ${a ? `<img src="${TFHtmlSafety.safeMediaUrl(a)}" alt="Start frame">` : ""}\n        <div class="upload-info">\n            <div class="filename">${se(n)}</div>\n            <div class="media-id">${se(l.startFrameMediaId.substring(0, 16))}...</div>\n        </div>\n        <button class="btn-remove" id="btn-change-start">Change</button>\n        <button class="btn-remove" id="btn-remove-start">✕</button>\n    `),
     e.querySelector("#btn-change-start")?.addEventListener("click", Ut),
     e.querySelector("#btn-remove-start")?.addEventListener("click", () => {
       ((l.startFrameMediaId = null), Ht(), J());
@@ -303,7 +303,7 @@ function Qt() {
     a = t?.thumbnail || "",
     n = t?.fileName || "End Frame";
   ((e.className = "upload-preview has-image"),
-    (e.innerHTML = `\n        ${a ? `<img src="${TFHtmlSafety.safeMediaUrl(a)}" alt="End frame">` : ""}\n        <div class="upload-info">\n            <div class="filename">${se(n)}</div>\n            <div class="media-id">${l.endFrameMediaId.substring(0, 16)}...</div>\n        </div>\n        <button class="btn-remove" id="btn-change-end">Change</button>\n        <button class="btn-remove" id="btn-remove-end">✕</button>\n    `),
+    (e.innerHTML = `\n        ${a ? `<img src="${TFHtmlSafety.safeMediaUrl(a)}" alt="End frame">` : ""}\n        <div class="upload-info">\n            <div class="filename">${se(n)}</div>\n            <div class="media-id">${se(l.endFrameMediaId.substring(0, 16))}...</div>\n        </div>\n        <button class="btn-remove" id="btn-change-end">Change</button>\n        <button class="btn-remove" id="btn-remove-end">✕</button>\n    `),
     e.querySelector("#btn-change-end")?.addEventListener("click", Bt),
     e.querySelector("#btn-remove-end")?.addEventListener("click", () => {
       ((l.endFrameMediaId = null), Qt(), J());

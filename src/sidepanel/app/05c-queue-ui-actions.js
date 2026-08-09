@@ -1,6 +1,20 @@
 ﻿// TurboFlow shard: Queue stats, queue rendering, row actions, batch action dispatcher, undo toast
 // Loaded in numeric order; depends on earlier shards sharing globals.
 
+function tfQueueBatchStatusToken(value) {
+  return TFHtmlSafety.allowlistedToken(
+    value,
+    ["pending", "running", "done", "failed", "partial"],
+    "pending",
+  );
+}
+function tfQueuePromptStatusToken(value) {
+  return TFHtmlSafety.allowlistedToken(
+    value,
+    ["pending", "running", "submitted", "done", "failed"],
+    "pending",
+  );
+}
 function Ln() {
   const e = r("#queue-stats-bar");
   if (!e) return;
@@ -123,22 +137,24 @@ function tfQueueEmptyMarkup() {
 }
 function xn(e, t) {
   const a = e.prompts[0]?.text || "",
-    n = tfQueuePromptEntries(e);
+    n = tfQueuePromptEntries(e),
+    batchId = se(e.id);
   return (
-    `\n        <div class="bp-row" style="background:rgba(168,199,250,0.04);border-bottom:1px solid rgba(168,199,250,0.1)">\n            <span class="bp-num">📝</span>\n            <span class="bp-text ${t ? "bp-editable" : ""}" data-bid="${e.id}" data-pi="0"\n                  title="${se(a)}"\n                  style="font-style:italic;color:#a8c7fa">${se(a)}</span>\n            <span class="bp-status" style="background:rgba(168,199,250,0.1);color:#a8c7fa">applies to all</span>\n        </div>\n    ` +
+    `\n        <div class="bp-row" style="background:rgba(168,199,250,0.04);border-bottom:1px solid rgba(168,199,250,0.1)">\n            <span class="bp-num">📝</span>\n            <span class="bp-text ${t ? "bp-editable" : ""}" data-bid="${batchId}" data-pi="0"\n                  title="${se(a)}"\n                  style="font-style:italic;color:#a8c7fa">${se(a)}</span>\n            <span class="bp-status" style="background:rgba(168,199,250,0.1);color:#a8c7fa">applies to all</span>\n        </div>\n    ` +
     n
       .map(({ prompt: t, index: a }) => {
-        let n = "submitted" === t.status ? "bps-done" : `bps-${t.status}`;
+        const promptStatus = tfQueuePromptStatusToken(t.status);
+        let n = "submitted" === promptStatus ? "bps-done" : `bps-${promptStatus}`;
         let r =
             {
               pending: "⏳ Waiting",
               running: "⚡ Generating",
               submitted: "✅ Generated",
               failed: "❌ Failed",
-            }[t.status] || t.status;
+            }[promptStatus] || promptStatus;
         const i = tfPromptFailureReason(t),
           c = tfShortPromptFailure(t);
-        "failed" === t.status && c && (r = `Failed: ${c}`);
+        "failed" === promptStatus && c && (r = `Failed: ${c}`);
         tfQueuePromptIsMissingMedia(e, t, a) &&
           ((n = "bps-failed"), (r = "Missing media"));
         let o = "";
@@ -150,7 +166,7 @@ function xn(e, t) {
             n = e.settings.perPromptThumbnails[t];
           n && (o = `<img class="bp-ref-thumb" src="${TFHtmlSafety.safeMediaUrl(n)}" alt="frame">`);
         }
-        return `\n            <div class="bp-row" data-bid="${e.id}" data-pi="${a}">\n                <span class="bp-num">${a + 1}.</span>\n                ${o ? `<span class="bp-refs">${o}</span>` : ""}\n                <span class="bp-text" style="color:#9aa0a6">Frame ${a + 1}</span>\n                <span class="bp-status ${n}" title="${se(i)}">${se(r)}</span>\n                <div class="bp-actions">\n                    ${"failed" === t.status ? `\n                        <button class="bpa-btn" data-act="retry-prompt" data-bid="${e.id}" data-pi="${a}" title="Retry">\n                            <span class="material-symbols-outlined">refresh</span>\n                        </button>` : ""}\n                </div>\n            </div>\n        `;
+        return `\n            <div class="bp-row" data-bid="${batchId}" data-pi="${a}">\n                <span class="bp-num">${a + 1}.</span>\n                ${o ? `<span class="bp-refs">${o}</span>` : ""}\n                <span class="bp-text" style="color:#9aa0a6">Frame ${a + 1}</span>\n                <span class="bp-status ${n}" title="${se(i)}">${se(r)}</span>\n                <div class="bp-actions">\n                    ${"failed" === promptStatus ? `\n                        <button class="bpa-btn" data-act="retry-prompt" data-bid="${batchId}" data-pi="${a}" title="Retry">\n                            <span class="material-symbols-outlined">refresh</span>\n                        </button>` : ""}\n                </div>\n            </div>\n        `;
       })
       .join("")
   );
@@ -166,7 +182,9 @@ function Sn() {
       ? ((e.innerHTML = tfRepairQueueMarkup(
           a
           .map((e) => {
-            const a =
+            const batchStatus = tfQueueBatchStatusToken(e.status),
+              batchId = se(e.id),
+              a =
                 !t ||
                 e.name.toLowerCase().includes(t) ||
                 e.folder.toLowerCase().includes(t) ||
@@ -179,7 +197,7 @@ function Sn() {
               ).length,
               o = e.prompts.filter((e) => "failed" === e.status).length,
               s = n > 0 ? Math.round(((r + o) / n) * 100) : 0,
-              i = `bs-${e.status}`,
+              i = `bs-${batchStatus}`,
               l =
                 {
                   pending: "QUEUED",
@@ -187,13 +205,13 @@ function Sn() {
                   done: "COMPLETE",
                   failed: "FAILED",
                   partial: "INCOMPLETE",
-                }[e.status] || e.status.toUpperCase(),
+                }[batchStatus] || batchStatus.toUpperCase(),
               d =
-                "done" === e.status
+                "done" === batchStatus
                   ? "pf-done"
-                  : "running" === e.status
+                  : "running" === batchStatus
                     ? "pf-running"
-                    : "failed" === e.status || "partial" === e.status
+                    : "failed" === batchStatus || "partial" === batchStatus
                       ? "pf-failed"
                       : "",
               c = [];
@@ -240,42 +258,43 @@ function Sn() {
                 !0 === e.settings.singlePromptBatch ||
                 (p && "mapped" === e.settings.referenceMode);
             m && c.push(`1 prompt x ${e.prompts.length} videos`);
-            const u = "running" === e.status ? In(e) : null,
-              g = "pending" === e.status,
-              f = "pending" === e.status,
+            const u = "running" === batchStatus ? In(e) : null,
+              g = "pending" === batchStatus,
+              f = "pending" === batchStatus,
               h = e.prompts.some(
                 (prompt, promptIndex) =>
                   "failed" === prompt.status ||
                   tfQueuePromptIsMissingMedia(e, prompt, promptIndex),
               ),
               b =
-                "running" !== e.status &&
-                "pending" !== e.status &&
+                "running" !== batchStatus &&
+                "pending" !== batchStatus &&
                 e.prompts.some(
                   (e) => "pending" === e.status || "running" === e.status,
                 ),
-              v = ["running", "done", "partial", "failed"].includes(e.status),
+              v = ["running", "done", "partial", "failed"].includes(batchStatus),
               y = m
                 ? xn(e, g)
                 : tfQueuePromptEntries(e)
                     .map(({ prompt: t, index: a }) => {
+                      const promptStatus = tfQueuePromptStatusToken(t.status);
                       let n =
-                        "submitted" === t.status
+                        "submitted" === promptStatus
                           ? "bps-done"
-                          : `bps-${t.status}`;
+                          : `bps-${promptStatus}`;
                       let r =
                           {
                             pending: "Waiting",
                             running: "Generating",
                             submitted: "Generated",
                             failed: "Failed",
-                          }[t.status] || t.status;
+                          }[promptStatus] || promptStatus;
                       const i = tfPromptFailureReason(t),
                         c = tfShortPromptFailure(t),
                         o = g ? "bp-editable" : "";
-                      "failed" === t.status && c && (r = `Failed: ${c}`);
+                      "failed" === promptStatus && c && (r = `Failed: ${c}`);
                       const missingMedia = tfQueuePromptIsMissingMedia(e, t, a);
-                      const retryable = "failed" === t.status || missingMedia;
+                      const retryable = "failed" === promptStatus || missingMedia;
                       missingMedia &&
                         ((n = "bps-failed"), (r = "Missing media"));
                       let s = "";
@@ -302,10 +321,10 @@ function Sn() {
                                   : '<span class="bp-ref-icon">🖼</span>';
                               })
                               .join(""));
-                      return `\n                <div class="bp-row" data-bid="${e.id}" data-pi="${a}">\n                    <span class="bp-num">${a + 1}.</span>\n                    ${s ? `<span class="bp-refs">${s}</span>` : ""}\n                    <span class="bp-text ${o}" data-bid="${e.id}" data-pi="${a}"\n                          title="${se(t.text)}">${se(t.text)}</span>\n                    <span class="bp-status ${n}" title="${se(i)}">${se(r)}</span>\n                    <div class="bp-actions">\n                        ${retryable ? `\n                            <button class="bpa-btn" data-act="retry-prompt" data-bid="${e.id}" data-pi="${a}" title="Retry now">\n                                <span class="material-symbols-outlined">refresh</span>\n                            </button>` : ""}\n                        ${"running" !== e.status ? `\n                            <button class="bpa-btn bpa-danger" data-act="delete-prompt" data-bid="${e.id}" data-pi="${a}" title="Remove">\n                                <span class="material-symbols-outlined">close</span>\n                            </button>` : ""}\n                    </div>\n                </div>\n            `;
+                      return `\n                <div class="bp-row" data-bid="${batchId}" data-pi="${a}">\n                    <span class="bp-num">${a + 1}.</span>\n                    ${s ? `<span class="bp-refs">${s}</span>` : ""}\n                    <span class="bp-text ${o}" data-bid="${batchId}" data-pi="${a}"\n                          title="${se(t.text)}">${se(t.text)}</span>\n                    <span class="bp-status ${n}" title="${se(i)}">${se(r)}</span>\n                    <div class="bp-actions">\n                        ${retryable ? `\n                            <button class="bpa-btn" data-act="retry-prompt" data-bid="${batchId}" data-pi="${a}" title="Retry now">\n                                <span class="material-symbols-outlined">refresh</span>\n                            </button>` : ""}\n                        ${"running" !== batchStatus ? `\n                            <button class="bpa-btn bpa-danger" data-act="delete-prompt" data-bid="${batchId}" data-pi="${a}" title="Remove">\n                                <span class="material-symbols-outlined">close</span>\n                            </button>` : ""}\n                    </div>\n                </div>\n            `;
                     })
                     .join("");
-            return `\n            <div class="batch-card ${e.collapsed ? "" : "expanded"} bc-${e.status} ${a}" data-bid="${e.id}">\n                <div class="batch-hdr" data-bid="${e.id}">\n                    <span class="material-symbols-outlined batch-chevron">chevron_right</span>\n                    <div class="batch-hdr-info">\n                        <div class="batch-hdr-top">\n                            <span class="batch-name-edit" contenteditable="${g}" spellcheck="false"\n                                  data-bid="${e.id}">${se(e.name)}</span>\n                            <span class="batch-count">${r}/${n}</span>\n                            <span class="bs-badge ${i}">${l}</span>\n                            ${u ? `<span class="batch-eta">${u}</span>` : ""}\n                        </div>\n                        <div class="batch-hdr-meta">\n                            ${c.map((e) => `<span class="batch-tag">${e}</span>`).join("")}\n                            <span class="batch-tag">📁 ${se(e.folder)}</span>\n                        </div>\n                    </div>\n                    <div class="batch-hdr-actions">\n                        ${"running" === e.status ? `\n                            <button class="ba-btn ba-danger" data-act="stop-batch" data-bid="${e.id}" title="Stop">\n                                <span class="material-symbols-outlined">stop_circle</span>\n                            </button>` : ""}\n                        ${f ? `\n                            <button class="ba-btn" data-act="run-batch" data-bid="${e.id}" title="Run now">\n                                <span class="material-symbols-outlined">play_arrow</span>\n                            </button>` : ""}\n                        <button class="ba-btn" data-act="duplicate-batch" data-bid="${e.id}" title="Duplicate">\n                            <span class="material-symbols-outlined">content_copy</span>\n                        </button>\n                        <button class="ba-btn ba-danger" data-act="delete-batch" data-bid="${e.id}" title="Delete">\n                            <span class="material-symbols-outlined">delete</span>\n                        </button>\n                    </div>\n                </div>\n\n                ${v ? `\n                    <div class="batch-progress">\n                        <div class="batch-pbar">\n                            <div class="batch-pfill ${d}" style="width:${s}%"></div>\n                        </div>\n                    </div>` : ""}\n\n                <div class="batch-body">\n                    <div class="bp-list">${y}</div>\n                    <div class="batch-footer">\n                        <div style="display:flex;gap:2px">\n                            ${h ? `\n                                <button class="bf-btn bf-primary" data-act="retry-failed" data-bid="${e.id}">\n                                    <span class="material-symbols-outlined">refresh</span>\n                                    Retry Failed\n                                </button>` : ""}\n                            ${b ? `\n                                <button class="bf-btn bf-primary" data-act="sweep-stuck" data-bid="${e.id}" title="Some items are stuck — mark them as failed so you can retry">\n                                    <span class="material-symbols-outlined">cleaning_services</span>\n                                    Sweep Stuck\n                                </button>` : ""}\n                        </div>\n                        <div style="display:flex;gap:2px">\n                            <button class="bf-btn" data-act="duplicate-batch" data-bid="${e.id}">\n                                <span class="material-symbols-outlined">content_copy</span>\n                                Clone\n                            </button>\n                            <button class="bf-btn bf-danger" data-act="delete-batch" data-bid="${e.id}">\n                                <span class="material-symbols-outlined">delete</span>\n                                Delete\n                            </button>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        `;
+            return `\n            <div class="batch-card ${e.collapsed ? "" : "expanded"} bc-${batchStatus} ${a}" data-bid="${batchId}">\n                <div class="batch-hdr" data-bid="${batchId}">\n                    <span class="material-symbols-outlined batch-chevron">chevron_right</span>\n                    <div class="batch-hdr-info">\n                        <div class="batch-hdr-top">\n                            <span class="batch-name-edit" contenteditable="${g}" spellcheck="false"\n                                  data-bid="${batchId}">${se(e.name)}</span>\n                            <span class="batch-count">${r}/${n}</span>\n                            <span class="bs-badge ${i}">${l}</span>\n                            ${u ? `<span class="batch-eta">${u}</span>` : ""}\n                        </div>\n                        <div class="batch-hdr-meta">\n                            ${c.map((e) => `<span class="batch-tag">${se(e)}</span>`).join("")}\n                            <span class="batch-tag">📁 ${se(e.folder)}</span>\n                        </div>\n                    </div>\n                    <div class="batch-hdr-actions">\n                        ${"running" === batchStatus ? `\n                            <button class="ba-btn ba-danger" data-act="stop-batch" data-bid="${batchId}" title="Stop">\n                                <span class="material-symbols-outlined">stop_circle</span>\n                            </button>` : ""}\n                        ${f ? `\n                            <button class="ba-btn" data-act="run-batch" data-bid="${batchId}" title="Run now">\n                                <span class="material-symbols-outlined">play_arrow</span>\n                            </button>` : ""}\n                        <button class="ba-btn" data-act="duplicate-batch" data-bid="${batchId}" title="Duplicate">\n                            <span class="material-symbols-outlined">content_copy</span>\n                        </button>\n                        <button class="ba-btn ba-danger" data-act="delete-batch" data-bid="${batchId}" title="Delete">\n                            <span class="material-symbols-outlined">delete</span>\n                        </button>\n                    </div>\n                </div>\n\n                ${v ? `\n                    <div class="batch-progress">\n                        <div class="batch-pbar">\n                            <div class="batch-pfill ${d}" style="width:${s}%"></div>\n                        </div>\n                    </div>` : ""}\n\n                <div class="batch-body">\n                    <div class="bp-list">${y}</div>\n                    <div class="batch-footer">\n                        <div style="display:flex;gap:2px">\n                            ${h ? `\n                                <button class="bf-btn bf-primary" data-act="retry-failed" data-bid="${batchId}">\n                                    <span class="material-symbols-outlined">refresh</span>\n                                    Retry Failed\n                                </button>` : ""}\n                            ${b ? `\n                                <button class="bf-btn bf-primary" data-act="sweep-stuck" data-bid="${batchId}" title="Some items are stuck — mark them as failed so you can retry">\n                                    <span class="material-symbols-outlined">cleaning_services</span>\n                                    Sweep Stuck\n                                </button>` : ""}\n                        </div>\n                        <div style="display:flex;gap:2px">\n                            <button class="bf-btn" data-act="duplicate-batch" data-bid="${batchId}">\n                                <span class="material-symbols-outlined">content_copy</span>\n                                Clone\n                            </button>\n                            <button class="bf-btn bf-danger" data-act="delete-batch" data-bid="${batchId}">\n                                <span class="material-symbols-outlined">delete</span>\n                                Delete\n                            </button>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        `;
           })
           .join(""),
         )),
