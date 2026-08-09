@@ -201,7 +201,7 @@ async function St(e, t, a = null) {
     }));
   const l = "video" === n,
     p = l ? t.videoCount || 1 : t.imageCount || 1,
-    m = p > 1 ? ` Ã— ${p}` : "",
+    m = p > 1 ? ` × ${p}` : "",
     g = e.length * p;
   if (
     (Kt(
