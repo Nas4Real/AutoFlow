@@ -2779,7 +2779,7 @@
     };
   }
 
-  async function startImageGenerationRun(videoId, requestedSettings) {
+  async function startImageGenerationRun(videoId, requestedSettings, options) {
     /** @type {any} */
     const project = studioState.activeProject;
     if (!project) {
@@ -2788,9 +2788,21 @@
 
     const videoKey = String(videoId || "").trim();
     const gate = getImageGenerationGate(project, videoKey);
-    if (!gate.included.length) {
+    const requestedPromptIds = new Set(
+      (Array.isArray(options?.promptIds) ? options.promptIds : [])
+        .map((value) => String(value || "").trim())
+        .filter(Boolean),
+    );
+    const included = requestedPromptIds.size
+      ? gate.included.filter((item) => requestedPromptIds.has(item.prompt_id))
+      : gate.included;
+    if (!included.length) {
       throw new Error("No Ready prompts are eligible for image generation.");
     }
+    const effectiveGate = Object.assign({}, gate, {
+      included,
+      ready_count: included.length,
+    });
 
     const activeImageRun = getProjectImageGenerationRuns(project).find(
       (run) => String(run.status || "").toLowerCase() === "generating",
@@ -2822,7 +2834,7 @@
         isObject(requestedSettings) ? requestedSettings : {},
       ),
     );
-    const requestItems = gate.included.map((item, index) => {
+    const requestItems = included.map((item, index) => {
       return {
         prompt_id: item.prompt_id,
         source_index: index,
@@ -2844,6 +2856,7 @@
     const runRecord = {
       image_run_id: imageRunId,
       video_id: videoKey,
+      retry_of_image_run_id: String(options?.retryOfRunId || "").trim(),
       status: "generating",
       image_model: generationSettings.imageModel,
       image_ratio: generationSettings.imageRatio,
@@ -2851,7 +2864,7 @@
       speed_mode: generationSettings.speedMode,
       output_folder: descriptor.folder,
       prompt_count: requestItems.length,
-      excluded_prompt_count: gate.blocked.length,
+      excluded_prompt_count: gate.prompt_count - requestItems.length,
       request_items: requestItems,
       created_at: timestamp,
       updated_at: timestamp,
@@ -2915,9 +2928,92 @@
 
     return {
       run: runRecord,
-      gate,
+      gate: effectiveGate,
       message: startMessage,
     };
+  }
+
+  async function stopImageGenerationRun(imageRunId) {
+    const project = studioState.activeProject;
+    if (!project) throw new Error("No active YouTube Channel selected.");
+    const runKey = String(imageRunId || "").trim();
+    const runRecord = findImageGenerationRun(project, runKey);
+    if (!runRecord) throw new Error(`Image generation run not found: ${runKey}.`);
+    if (String(runRecord.status || "").toLowerCase() !== "generating") {
+      throw new Error("Only a generating image run can be stopped.");
+    }
+
+    const response = await root.chrome?.runtime?.sendMessage?.({ type: "STOP_BATCH" });
+    if (response && response.ok === false) {
+      throw new Error(response.error || "Flow did not stop the image generation run.");
+    }
+    const timestamp = new Date().toISOString();
+    const promptIds = new Set(
+      (Array.isArray(runRecord.request_items) ? runRecord.request_items : [])
+        .map((item) => String(item?.prompt_id || "").trim())
+        .filter(Boolean),
+    );
+    const stoppedRun = Object.assign({}, runRecord, {
+      status: "stopped",
+      error_message: "Stopped by user.",
+      stopped_at: timestamp,
+      completed_at: timestamp,
+      updated_at: timestamp,
+    });
+    await updateActiveProject({
+      image_generation_runs: getProjectImageGenerationRuns(project).map((run) =>
+        run.image_run_id === runKey ? stoppedRun : run,
+      ),
+      prompt_records: getProjectPromptRecords(project).map((record) =>
+        promptIds.has(record.prompt_id) && record.active_image_run_id === runKey
+          ? Object.assign({}, record, {
+              image_generation_state: "failed",
+              image_generation_error: "Stopped by user.",
+              updated_at: timestamp,
+            })
+          : record,
+      ),
+    });
+    return stoppedRun;
+  }
+
+  async function retryImageGenerationRun(imageRunId) {
+    const project = studioState.activeProject;
+    if (!project) throw new Error("No active YouTube Channel selected.");
+    const runKey = String(imageRunId || "").trim();
+    const runRecord = findImageGenerationRun(project, runKey);
+    if (!runRecord) throw new Error(`Image generation run not found: ${runKey}.`);
+    if (!["failed", "partial", "stopped"].includes(String(runRecord.status || "").toLowerCase())) {
+      throw new Error("Only failed, partial, or stopped image runs can be retried.");
+    }
+
+    const promptRecords = new Map(
+      getProjectPromptRecords(project).map((record) => [record.prompt_id, record]),
+    );
+    const variants = getProjectImageVariants(project);
+    const promptStatuses = isObject(runRecord.prompt_statuses) ? runRecord.prompt_statuses : {};
+    const promptIds = (Array.isArray(runRecord.request_items) ? runRecord.request_items : [])
+      .map((item) => String(item?.prompt_id || "").trim())
+      .filter((promptId) => {
+        if (!promptId) return false;
+        if (promptStatuses[promptId]?.status === "failed") return true;
+        if (promptRecords.get(promptId)?.image_generation_state === "failed") return true;
+        return !variants.some(
+          (variant) => variant.image_run_id === runKey && variant.prompt_id === promptId,
+        );
+      });
+    if (!promptIds.length) throw new Error("This image run has no failed prompts to retry.");
+
+    return startImageGenerationRun(
+      runRecord.video_id,
+      {
+        imageModel: runRecord.image_model,
+        imageRatio: runRecord.image_ratio,
+        imageCount: runRecord.image_count,
+        speedMode: runRecord.speed_mode,
+      },
+      { promptIds, retryOfRunId: runKey },
+    );
   }
 
   async function recordImageGenerationRunVariants(imageRunId, completionItems) {
@@ -3753,6 +3849,8 @@
     selectImageVariant,
     sceneTitleFromFileName,
     startImageGenerationRun,
+    stopImageGenerationRun,
+    retryImageGenerationRun,
     runVideoJob,
     syncProjectMediaFromFiles,
     stopVideoJob,

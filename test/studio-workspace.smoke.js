@@ -270,6 +270,20 @@ async function run() {
     ).status,
     "partial",
   );
+  const retryRun = await studio.retryImageGenerationRun(imageRun.run.image_run_id);
+  assert.equal(retryRun.run.retry_of_image_run_id, imageRun.run.image_run_id);
+  assert.equal(retryRun.run.video_id, firstVideoId);
+  assert.deepEqual(
+    Array.from(retryRun.run.request_items, (item) => item.prompt_id),
+    [secondPromptId],
+  );
+  const retryStartMessage = runtimeMessages.filter(
+    (message) => message.type === "START_BATCH",
+  )[1];
+  assert.deepEqual(retryStartMessage.prompts, ["A clean budget chart"]);
+  const stoppedRetry = await studio.stopImageGenerationRun(retryRun.run.image_run_id);
+  assert.equal(stoppedRetry.status, "stopped");
+  assert.equal(runtimeMessages.at(-1).type, "STOP_BATCH");
   const firstCacheKey = `sha256:${"b".repeat(64)}`;
   const recorded = await studio.recordImageGenerationRunVariants(imageRun.run.image_run_id, [
     {
