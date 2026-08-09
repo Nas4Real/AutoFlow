@@ -14,6 +14,7 @@ const sharedOrder = [
   "project-services/command-result.js",
   "project-services/read-model-contracts.js",
   "project-services/media-link-contracts.js",
+  "project-services/image-generation-contracts.js",
   "project-services/migration-shims.js",
   "project-services/legacy-project-normalizer.js",
 ];

@@ -100,6 +100,7 @@ function createContext(storage) {
   loadScript(context, "src/shared/project-domain/02-project-prompt-import.js");
   loadScript(context, "src/shared/project-services/project-schema.js");
   loadScript(context, "src/shared/project-services/media-link-contracts.js");
+  loadScript(context, "src/shared/project-services/image-generation-contracts.js");
   loadScript(context, "src/project-studio/app/00-studio-state.js");
   return context;
 }

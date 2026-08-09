@@ -163,17 +163,6 @@
     );
   }
 
-  function promptAssetIds(record) {
-    return Array.from(
-      new Set(
-        (Array.isArray(record?.references) ? record.references : [])
-          .filter((reference) => reference?.resolution_status === "resolved")
-          .map((reference) => String(reference?.asset_id || "").trim())
-          .filter(Boolean),
-      ),
-    );
-  }
-
   function dataUrlBase64(dataUrl) {
     const value = String(dataUrl || "");
     const commaIndex = value.indexOf(",");
@@ -819,59 +808,26 @@
   async function createBatchFromReady() {
     const records = readyRecords();
     if (!records.length) return null;
-    const importName = currentImportName(),
-      batchName = tfBatchNameFromFile(importName || "imported-json"),
-      projectFolder = queueFolderName(),
-      firstFile = tfCleanDownloadPath(records[0]?.file_name || "media/item.png", "png"),
-      mediaFolder = tfFolderFromPath(firstFile),
-      perPromptFileNames = {};
-
-    records.forEach((record, index) => {
-      perPromptFileNames[index] = tfPrefixDownloadPath(
-        tfCleanDownloadPath(record.file_name, "png"),
-        projectFolder,
-      );
-    });
-
-    const perPromptAssetIds = {};
-    const perPromptIds = {};
-    records.forEach((record, index) => {
-      const assetIds = promptAssetIds(record);
-      if (assetIds.length) perPromptAssetIds[index] = assetIds;
-      perPromptIds[index] = record.prompt_id;
-    });
-    const hasReferences = Object.keys(perPromptAssetIds).length > 0;
-    const batch = tfCreatePromptIndexBatch({
-      name: `${projectName(state.activeProject)} - images`,
-      folder: `${projectFolder}/${mediaFolder}`,
-      prompts: records.map((record) => ({ text: record.image_prompt })),
-      projectName: projectName(state.activeProject),
-      projectFolder,
-      batchKind: "images",
-      settings: {
-        mode: "image",
-        imageModel: l.settings.imageModel,
-        imageRatio: l.settings.imageRatio || "IMAGE_ASPECT_RATIO_LANDSCAPE",
-        imageCount: l.settings.imageCount || 2,
-        imageReferenceMediaIds: [],
-        requiresJackReference: !1,
+    const imageGeneration = root.TFProjectImageGeneration;
+    if (!imageGeneration?.buildImageBatchDescriptor) {
+      throw new Error("Image generation service is unavailable.");
+    }
+    const activeProjectName = projectName(state.activeProject);
+    const batch = tfCreatePromptIndexBatch(
+      imageGeneration.buildImageBatchDescriptor({
         projectId: state.activeProject.project_id,
-        perPromptIds,
-        perPromptAssetIds,
-        perPromptReferences: null,
-        perPromptThumbnails: {},
-        naming: "numbered",
-        namingPrefix: "",
-        namingSeparator: "-",
-        startNumber: 1,
-        perPromptFileNames,
-        referenceMode: hasReferences ? "mapped" : "shared",
-        projectName: projectName(state.activeProject),
-        projectFolder,
-        batchKind: "images",
-        sourceImportName: batchName,
-      },
-    });
+        projectName: activeProjectName,
+        projectFolder: queueFolderName(),
+        sourceImportName: tfBatchNameFromFile(currentImportName() || "imported-json"),
+        records,
+        settings: {
+          imageModel: l.settings.imageModel,
+          imageRatio: l.settings.imageRatio,
+          imageCount: l.settings.imageCount,
+          speedMode: l.speedMode,
+        },
+      }),
+    );
     X();
     Sn();
     return batch;

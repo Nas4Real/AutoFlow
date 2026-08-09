@@ -12,6 +12,10 @@ function loadScript(context, relativePath) {
   vm.runInContext(source, context, { filename: relativePath });
 }
 
+function toPlain(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
 function createContext() {
   const context = vm.createContext({
     console,
@@ -36,6 +40,7 @@ function loadProjectServices(context) {
     "src/shared/project-services/command-result.js",
     "src/shared/project-services/read-model-contracts.js",
     "src/shared/project-services/media-link-contracts.js",
+    "src/shared/project-services/image-generation-contracts.js",
     "src/shared/project-services/migration-shims.js",
     "src/shared/project-services/legacy-project-normalizer.js",
   ].forEach((relativePath) => loadScript(context, relativePath));
@@ -49,6 +54,65 @@ function run() {
   assert.equal(context.TFProjectSchema.STORAGE_KEY, "autoflowProjectStateV1");
   assert.equal(context.TFProjectServices.projectSchema, context.TFProjectSchema);
   assert.equal(context.TFProjectServices.commandResult, context.TFCommandResult);
+  assert.equal(context.TFProjectServices.imageGeneration, context.TFProjectImageGeneration);
+
+  const imageDescriptor = context.TFProjectImageGeneration.buildImageBatchDescriptor({
+    projectId: "project_1",
+    projectName: "Finance Channel",
+    projectFolder: "Finance Channel",
+    sourceImportName: "budget-basics",
+    records: [
+      {
+        prompt_id: "prompt_1",
+        file_name: "../scenes/first?.jpg",
+        image_prompt: "First scene",
+        references: [
+          { asset_id: "asset_1", resolution_status: "resolved" },
+          { asset_id: "asset_1", resolution_status: "resolved" },
+        ],
+      },
+      {
+        prompt_id: "prompt_2",
+        file_name: "scenes/second.png",
+        image_prompt: "Second scene",
+        references: [],
+      },
+    ],
+    settings: {
+      imageModel: "GEM_PIX_2",
+      imageRatio: "IMAGE_ASPECT_RATIO_SQUARE",
+      imageCount: 9,
+    },
+  });
+  assert.equal(imageDescriptor.folder, "Finance Channel/scenes");
+  assert.deepEqual(toPlain(imageDescriptor.prompts), [
+    { text: "First scene" },
+    { text: "Second scene" },
+  ]);
+  assert.equal(imageDescriptor.settings.imageCount, 4);
+  assert.equal(imageDescriptor.settings.imageRatio, "IMAGE_ASPECT_RATIO_SQUARE");
+  assert.deepEqual(toPlain(imageDescriptor.settings.perPromptIds), {
+    0: "prompt_1",
+    1: "prompt_2",
+  });
+  assert.deepEqual(toPlain(imageDescriptor.settings.perPromptAssetIds), { 0: ["asset_1"] });
+  assert.deepEqual(toPlain(imageDescriptor.settings.perPromptFileNames), {
+    0: "Finance Channel/scenes/first-.png",
+    1: "Finance Channel/scenes/second.png",
+  });
+
+  const startImageMessage = context.TFProjectImageGeneration.buildStartBatchMessage(
+    imageDescriptor,
+    "image_run_1",
+    { speedMode: "balanced" },
+  );
+  assert.equal(startImageMessage.type, "START_BATCH");
+  assert.equal(startImageMessage.batchId, "image_run_1");
+  assert.deepEqual(toPlain(startImageMessage.prompts), ["First scene", "Second scene"]);
+  assert.deepEqual(toPlain(startImageMessage.promptIndexMap), [0, 1]);
+  assert.equal(startImageMessage.settings.aspectRatio, "IMAGE_ASPECT_RATIO_SQUARE");
+  assert.equal(startImageMessage.settings.imageCount, 4);
+  assert.equal(startImageMessage.settings.speedMode, "balanced");
 
   const envelope = context.TFProjectSchema.normalizeEnvelope({
     schema_version: 1,
