@@ -48,7 +48,7 @@ Harden AutoFlow without redesigning its side panel or Project Studio. Work proce
 
 ### Checkpoint: Automated Baseline
 
-- [ ] CI passes from a clean checkout on the supported Node LTS release.
+- [x] CI passes from a clean checkout on the supported Node LTS release.
 - [x] Architecture debt remains visible without blocking unrelated baseline fixes.
 - [x] Generated Studio assets remain ignored and reproducible.
 
@@ -57,7 +57,7 @@ Harden AutoFlow without redesigning its side panel or Project Studio. Work proce
 - [x] Run adversarial code-quality and security reviews against the branch diff.
 - [x] Address all confirmed high/medium findings or document an explicit deferral.
 - [x] Repeat browser verification, full tests, build, static checks, and dependency audit.
-- [ ] Push the atomic commit series and provide the exact verification evidence.
+- [x] Push the atomic commit series and provide the exact verification evidence.
 
 ### Review Findings
 
@@ -89,6 +89,7 @@ Harden AutoFlow without redesigning its side panel or Project Studio. Work proce
 - Architecture: generated bundles are within baseline growth budgets; existing large-file debt remains report-only and visible.
 - Browser: extension-context side panel and local Project Studio were visually checked without paid generation; Project Studio had zero console warnings or errors and exposed named controls/headings in the accessibility snapshot.
 - Reviews: independent code-quality and security re-reviews approved the final changes with no required findings.
+- GitHub Actions: pull-request run `31331045894` passed on Ubuntu and Windows with Node-24-native action releases and no deprecation annotation.
 
 ## Risks And Mitigations
 
