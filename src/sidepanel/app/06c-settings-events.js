@@ -72,7 +72,7 @@
             ? a || (n = "Lower Priority mode requires Google AI Ultra plan")
             : (n =
                 "Lower Priority mode requires a supported Google account tier"),
-          Te("ðŸ”’ " + n, "warn"),
+          Te("🔒 " + n, "warn"),
           void (l.settings.videoQuality = e.target.value)
         );
       }
@@ -89,7 +89,7 @@
               (n = "Lite Lower Priority mode requires Google AI Ultra plan")
             : (n =
                 "Lite Lower Priority mode requires a supported Google account tier"),
-          Te("ðŸ”’ " + n, "warn"),
+          Te("🔒 " + n, "warn"),
           void (l.settings.videoQuality = e.target.value)
         );
       }
@@ -122,18 +122,18 @@
           n = l.settings.videoDuration || 8;
         return void ("omni_flash" === a && "start_end_frame" === t
           ? Te(
-              "ðŸ”’ Start + end frames are not available for the Omni Flash model yet",
+              "🔒 Start + end frames are not available for the Omni Flash model yet",
               "warn",
             )
           : "reference" === t && "omni_flash" !== a && 8 !== n
             ? Te(
-                "ðŸ”’ Reference mode is only available at 8 seconds for Veo models",
+                "🔒 Reference mode is only available at 8 seconds for Veo models",
                 "warn",
               )
             : "reference" === t &&
               "quality" === a &&
               Te(
-                "ðŸ”’ Reference mode is not available for Veo 3.1 Quality â€” switch to Fast or Lite",
+                "🔒 Reference mode is not available for Veo 3.1 Quality — switch to Fast or Lite",
                 "warn",
               ));
       }
@@ -164,7 +164,7 @@
     ((a.onload = (e) => {
       ((Tn.value = e.target.result),
         Hn(),
-        Te(`ðŸ“„ Imported ${t.name}`, "success"));
+        Te(`📄 Imported ${t.name}`, "success"));
     }),
       a.readAsText(t),
       (Bn.value = ""));
@@ -206,7 +206,7 @@
           t
             ? a || (n = "4K requires Google AI Ultra plan")
             : (n = "4K requires a supported Google account tier"),
-          void Te("ðŸ”’ " + n, "warn")
+          void Te("🔒 " + n, "warn")
         );
       }
     }
@@ -233,7 +233,7 @@
           t
             ? a || (n = "4K video requires Google AI Ultra plan")
             : (n = "4K video requires a supported Google account tier"),
-          void Te("ðŸ”’ " + n, "warn")
+          void Te("🔒 " + n, "warn")
         );
       }
     }
@@ -300,7 +300,7 @@
           );
         if (e.length > t)
           return void Gn({
-            icon: "âš ï¸",
+            icon: "⚠️",
             title: "Not Enough Prompts",
             message: `You entered <strong>${e.length}</strong> prompts but only have <strong>${t}</strong> remaining today.`,
             hint: `Remove ${e.length - t} prompt${e.length - t > 1 ? "s" : ""} to continue, or <strong>reduce this batch size</strong> before running this batch.`,
@@ -316,7 +316,7 @@
           ).length
       )
         return void Gn({
-          icon: "ðŸ–¼ï¸",
+          icon: "🖼️",
           title: "No Start Frames",
           message:
             "Single prompt mode needs at least one start frame. Open the mapper to add images.",
@@ -333,7 +333,7 @@
           )
         )
           return void Gn({
-            icon: "ðŸ–¼ï¸",
+            icon: "🖼️",
             title: "Start Frame Required",
             message:
               "<strong>Start Frame</strong> mode requires an image for each video to start from, but none are attached.",
@@ -348,7 +348,7 @@
           )
         )
           return void Gn({
-            icon: "ðŸ–¼ï¸",
+            icon: "🖼️",
             title: "End Frame Required",
             message:
               "<strong>Start + End Frame</strong> mode requires an end frame image, but none is attached.",
@@ -363,7 +363,7 @@
           )
         )
           return void Gn({
-            icon: "ðŸŽ¨",
+            icon: "🎨",
             title: "Reference Images Required",
             message:
               "<strong>Reference</strong> mode requires at least one reference image to guide the video style, but none are attached.",
@@ -409,7 +409,7 @@
           );
         if (e.length > t)
           return void Gn({
-            icon: "âš ï¸",
+            icon: "⚠️",
             title: "Not Enough Prompts",
             message: `You entered <strong>${e.length}</strong> prompts but only have <strong>${t}</strong> remaining today.`,
             hint: `Remove ${e.length - t} prompt${e.length - t > 1 ? "s" : ""} to continue, or <strong>reduce this batch size</strong> before running this batch.`,
@@ -426,7 +426,7 @@
           )
         )
           return void Gn({
-            icon: "ðŸ–¼ï¸",
+            icon: "🖼️",
             title: "Start Frame Required",
             message:
               "<strong>Start Frame</strong> mode requires an image for each video to start from, but none are attached.",
@@ -441,7 +441,7 @@
           )
         )
           return void Gn({
-            icon: "ðŸ–¼ï¸",
+            icon: "🖼️",
             title: "End Frame Required",
             message:
               "<strong>Start + End Frame</strong> mode requires an end frame image, but none is attached.",
@@ -456,7 +456,7 @@
           )
         )
           return void Gn({
-            icon: "ðŸŽ¨",
+            icon: "🎨",
             title: "Reference Images Required",
             message:
               "<strong>Reference</strong> mode requires at least one reference image to guide the video style, but none are attached.",
@@ -484,9 +484,9 @@
     } else Te("No prompts to queue", "warn");
   }),
   Fn.addEventListener("click", async () => {
-    if ((Te("ðŸ” Checking connection...", "info"), !(await Oe())))
+    if ((Te("🔍 Checking connection...", "info"), !(await Oe())))
       return void Te("Not connected to Flow page!", "error");
-    Te("âœ… Connected", "info");
+    Te("✅ Connected", "info");
     let e = Tn.value
       .split("\n")
       .map((e) => e.trim())
@@ -501,7 +501,7 @@
         );
       if (e.length > t)
         return void Gn({
-          icon: "âš ï¸",
+          icon: "⚠️",
           title: "Not Enough Prompts",
           message: `You entered <strong>${e.length}</strong> prompts but only have <strong>${t}</strong> remaining today.`,
           hint: `Remove ${e.length - t} prompt${e.length - t > 1 ? "s" : ""} to continue, or <strong>reduce this batch size</strong> before running this batch.`,
@@ -517,7 +517,7 @@
         ).length
     )
       return void Gn({
-        icon: "ðŸ–¼ï¸",
+        icon: "🖼️",
         title: "No Start Frames",
         message:
           "Single prompt mode needs at least one start frame. Open the mapper to add images.",
@@ -539,13 +539,13 @@
       )
         return (
           Gn({
-            icon: "ðŸ–¼ï¸",
+            icon: "🖼️",
             title: "Start Frame Required",
             message:
               "<strong>Start Frame</strong> mode requires an image for each video to start from, but none are attached.",
             hint: '<strong>Option 1:</strong> Click "Choose Start Frame" to pick one image for all prompts.<br><br><strong>Option 2:</strong> Click "Different for Each" to assign a unique start frame to each prompt.',
           }),
-          void Te("âŒ No start frame attached â€” generation blocked", "error")
+          void Te("❌ No start frame attached — generation blocked", "error")
         );
       if (
         ("start_frame" === t || "start_end_frame" === t) &&
@@ -556,13 +556,13 @@
         if (e < s)
           return (
             Gn({
-              icon: "âš ï¸",
+              icon: "⚠️",
               title: "Some Prompts Missing Start Frames",
               message: `Only <strong>${e}</strong> of <strong>${s}</strong> prompts have a start frame assigned. The unmapped prompts will fail.`,
               hint: 'Open "Different for Each" to assign the missing frames, or switch to a shared start frame for all prompts.',
             }),
             void Te(
-              `âš ï¸ ${s - e} prompts have no start frame â€” generation blocked`,
+              `⚠️ ${s - e} prompts have no start frame — generation blocked`,
               "error",
             )
           );
@@ -572,25 +572,25 @@
           if (!r)
             return (
               Gn({
-                icon: "ðŸ–¼ï¸",
+                icon: "🖼️",
                 title: "End Frames Required",
                 message:
                   "<strong>Start + End Frame</strong> mode requires an end frame for each prompt, but none are assigned.",
                 hint: 'Open "Different for Each" and set end frames, or attach a shared end frame.',
               }),
-              void Te("âŒ No end frames attached â€” generation blocked", "error")
+              void Te("❌ No end frames attached — generation blocked", "error")
             );
           const e = Object.keys(l.promptEndFrameMap).length;
           if (e < s)
             return (
               Gn({
-                icon: "âš ï¸",
+                icon: "⚠️",
                 title: "Some Prompts Missing End Frames",
                 message: `Only <strong>${e}</strong> of <strong>${s}</strong> prompts have an end frame assigned. The unmapped prompts will fail.`,
                 hint: 'Open "Different for Each" to assign the missing end frames, or switch to a shared end frame for all prompts.',
               }),
               void Te(
-                `âš ï¸ ${s - e} prompts have no end frame â€” generation blocked`,
+                `⚠️ ${s - e} prompts have no end frame — generation blocked`,
                 "error",
               )
             );
@@ -598,13 +598,13 @@
         if (!a && !l.endFrameMediaId)
           return (
             Gn({
-              icon: "ðŸ–¼ï¸",
+              icon: "🖼️",
               title: "End Frame Required",
               message:
                 "<strong>Start + End Frame</strong> mode requires an end frame image, but none is attached.",
               hint: 'Click "Choose End Frame" to select an image from your library, or use "Different for Each" to assign per-prompt end frames.',
             }),
-            void Te("âŒ No end frame attached â€” generation blocked", "error")
+            void Te("❌ No end frame attached — generation blocked", "error")
           );
       }
       if (
@@ -616,14 +616,14 @@
       )
         return (
           Gn({
-            icon: "ðŸŽ¨",
+            icon: "🎨",
             title: "Reference Images Required",
             message:
               "<strong>Reference</strong> mode requires at least one reference image to guide the video style, but none are attached.",
             hint: '<strong>Option 1:</strong> Click "Add Shared Refs" to pick images for all prompts.<br><br><strong>Option 2:</strong> Click "Different for Each" to assign unique references per prompt.',
           }),
           void Te(
-            "âŒ No reference images attached â€” generation blocked",
+            "❌ No reference images attached — generation blocked",
             "error",
           )
         );
@@ -638,13 +638,13 @@
         if (e < s)
           return (
             Gn({
-              icon: "âš ï¸",
+              icon: "⚠️",
               title: "Some Prompts Missing References",
               message: `Only <strong>${e}</strong> of <strong>${s}</strong> prompts have reference images assigned. The unmapped prompts will fail.`,
               hint: 'Open "Different for Each" to assign the missing references.',
             }),
             void Te(
-              `âš ï¸ ${s - e} prompts have no references â€” generation blocked`,
+              `⚠️ ${s - e} prompts have no references — generation blocked`,
               "error",
             )
           );
@@ -655,7 +655,7 @@
     else {
       if (((t = un()), !t))
         return void Te(
-          "No prompts to run â€” type prompts or queue batches first",
+          "No prompts to run — type prompts or queue batches first",
           "warn",
         );
       gn(t.id, "running");
@@ -683,13 +683,13 @@
       )
         return (
           Gn({
-            icon: "ðŸ–¼ï¸",
+            icon: "🖼️",
             title: "Start Frame Required",
             message:
               "<strong>Start Frame</strong> mode requires an image for each video to start from, but none are attached.",
             hint: '<strong>Option 1:</strong> Click "Choose Start Frame" to pick one image for all prompts.<br><br><strong>Option 2:</strong> Click "Different for Each" to assign a unique start frame to each prompt.',
           }),
-          Te("âŒ No start frame attached â€” generation blocked", "error"),
+          Te("❌ No start frame attached — generation blocked", "error"),
           void gn(t.id, "pending")
         );
       if (
@@ -702,13 +702,13 @@
         if (e < n)
           return (
             Gn({
-              icon: "âš ï¸",
+              icon: "⚠️",
               title: "Some Prompts Missing Start Frames",
               message: `Only <strong>${e}</strong> of <strong>${n}</strong> prompts have a start frame assigned. The unmapped prompts will fail.`,
               hint: 'Open "Different for Each" to assign the missing frames, or switch to a shared start frame for all prompts.',
             }),
             Te(
-              `âš ï¸ ${n - e} prompts have no start frame â€” generation blocked`,
+              `⚠️ ${n - e} prompts have no start frame — generation blocked`,
               "error",
             ),
             void gn(t.id, "pending")
@@ -726,26 +726,26 @@
         if (!e)
           return (
             Gn({
-              icon: "ðŸ–¼ï¸",
+              icon: "🖼️",
               title: "End Frames Required",
               message:
                 "<strong>Start + End Frame</strong> mode requires an end frame for each prompt, but none are assigned.",
               hint: 'Open "Different for Each" and set end frames, or attach a shared end frame.',
             }),
-            Te("âŒ No end frames attached â€” generation blocked", "error"),
+            Te("❌ No end frames attached — generation blocked", "error"),
             void gn(t.id, "pending")
           );
         const r = Object.keys(a.perPromptEndFrames).length;
         if (r < n)
           return (
             Gn({
-              icon: "âš ï¸",
+              icon: "⚠️",
               title: "Some Prompts Missing End Frames",
               message: `Only <strong>${r}</strong> of <strong>${n}</strong> prompts have an end frame assigned. The unmapped prompts will fail.`,
               hint: 'Open "Different for Each" to assign the missing end frames, or switch to a shared end frame for all prompts.',
             }),
             Te(
-              `âš ï¸ ${n - r} prompts have no end frame â€” generation blocked`,
+              `⚠️ ${n - r} prompts have no end frame — generation blocked`,
               "error",
             ),
             void gn(t.id, "pending")
@@ -758,13 +758,13 @@
       )
         return (
           Gn({
-            icon: "ðŸ–¼ï¸",
+            icon: "🖼️",
             title: "End Frame Required",
             message:
               "<strong>Start + End Frame</strong> mode requires an end frame image, but none is attached.",
             hint: 'Click "Choose End Frame" to select an image from your library, or use "Different for Each" to assign per-prompt end frames.',
           }),
-          Te("âŒ No end frame attached â€” generation blocked", "error"),
+          Te("❌ No end frame attached — generation blocked", "error"),
           void gn(t.id, "pending")
         );
       if (
@@ -776,13 +776,13 @@
       )
         return (
           Gn({
-            icon: "ðŸŽ¨",
+            icon: "🎨",
             title: "Reference Images Required",
             message:
               "<strong>Reference</strong> mode requires at least one reference image to guide the video style, but none are attached.",
             hint: '<strong>Option 1:</strong> Click "Add Shared Refs" to pick images for all prompts.<br><br><strong>Option 2:</strong> Click "Different for Each" to assign unique references per prompt.',
           }),
-          Te("âŒ No reference images attached â€” generation blocked", "error"),
+          Te("❌ No reference images attached — generation blocked", "error"),
           void gn(t.id, "pending")
         );
       if (
@@ -797,13 +797,13 @@
         if (e < n)
           return (
             Gn({
-              icon: "âš ï¸",
+              icon: "⚠️",
               title: "Some Prompts Missing References",
               message: `Only <strong>${e}</strong> of <strong>${n}</strong> prompts have reference images assigned. The unmapped prompts will fail.`,
               hint: 'Open "Different for Each" to assign the missing references.',
             }),
             Te(
-              `âš ï¸ ${n - e} prompts have no references â€” generation blocked`,
+              `⚠️ ${n - e} prompts have no references — generation blocked`,
               "error",
             ),
             void gn(t.id, "pending")
@@ -840,7 +840,7 @@
             s = u.has(n);
           r || o || s || (delete a.perPromptEndFrames[t], e++);
         }
-      e > 0 && Te(`âš ï¸ Removed ${e} reference(s) that no longer exist`, "warn");
+      e > 0 && Te(`⚠️ Removed ${e} reference(s) that no longer exist`, "warn");
     }
     ((l.activeBatchId = t.id), (l.batchStartTime = Date.now()), zn(!0));
     const n = t.prompts
@@ -896,7 +896,7 @@
         uploadsThisSession: q,
       };
     (Te(
-      `ðŸ“¨ Starting batch "${t.name}": mode=${a.mode}, prompts=${o.length}`,
+      `📨 Starting batch "${t.name}": mode=${a.mode}, prompts=${o.length}`,
       "info",
     ),
       qa(
@@ -922,13 +922,13 @@
       Te(`Background responded: ${JSON.stringify(e)}`, "info", "debug");
     } catch (e) {
       return (
-        Te(`âŒ Failed to send to background: ${e.message}`, "error"),
+        Te(`❌ Failed to send to background: ${e.message}`, "error"),
         gn(t.id, "failed"),
         zn(!1),
         void (l.activeBatchId = null)
       );
     }
-    (Te(`ðŸš€ Batch "${t.name}" started!`, "success"),
+    (Te(`🚀 Batch "${t.name}" started!`, "success"),
       "mapped" === l.referenceMode &&
         ((l.referenceMode = "shared"),
         (l.promptReferenceMap = {}),
@@ -973,5 +973,5 @@
       zn(!1),
       Oa(),
       De("Stopped", "badge badge-disconnected", 5e3),
-      Te("â¹ Stopped", "warn"));
+      Te("⏹ Stopped", "warn"));
   }));

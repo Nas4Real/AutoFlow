@@ -84,7 +84,7 @@ async function et(e, t, a, o = "IMAGE_GENERATION", n = 0) {
       const a = await Qe(!0);
       if (a) return et(e, t, a, o, 0);
     }
-    throw new Error("reCAPTCHA recovery failed â€” cannot make API call");
+    throw new Error("reCAPTCHA recovery failed — cannot make API call");
   }
   const i = await chrome.scripting.executeScript({
       target: { tabId: c },
@@ -96,7 +96,7 @@ async function et(e, t, a, o = "IMAGE_GENERATION", n = 0) {
       args: [r, o],
     }),
     s = i?.[0]?.result;
-  if (!s) throw new Error("No reCAPTCHA token â€” try refreshing the Flow page");
+  if (!s) throw new Error("No reCAPTCHA token — try refreshing the Flow page");
   if (
     (t.clientContext?.recaptchaContext &&
       (t.clientContext.recaptchaContext.token = s),
@@ -168,7 +168,7 @@ async function et(e, t, a, o = "IMAGE_GENERATION", n = 0) {
         if (a) return et(e, t, a, o, 1);
       }
       throw new Error(
-        "Session expired (401) â€” refresh the Flow page and try again",
+        "Session expired (401) — refresh the Flow page and try again",
       );
     }
     if (429 === p.status) {
@@ -202,14 +202,14 @@ async function et(e, t, a, o = "IMAGE_GENERATION", n = 0) {
       }
       if (i)
         throw new Error(
-          "reCAPTCHA blocked â€” close the Flow tab, reopen it, and try again",
+          "reCAPTCHA blocked — close the Flow tab, reopen it, and try again",
         );
       if (s)
         throw new Error(
-          "Access denied (403) â€” your Flow session may have expired. Refresh the Flow page and try again",
+          "Access denied (403) — your Flow session may have expired. Refresh the Flow page and try again",
         );
       throw new Error(
-        "Blocked by Google (403) â€” refresh the Flow page, disable VPN if active, and try again",
+        "Blocked by Google (403) — refresh the Flow page, disable VPN if active, and try again",
       );
     }
     throw new Error(p.error);
@@ -297,7 +297,7 @@ async function tt(e, t, a, r = 0) {
   if (!l) throw new Error("No mediaId in upload response");
   return (
     zt("LOG", {
-      message: `ðŸ“¤ Uploaded "${t}" â†’ mediaId: ${l.substring(0, 8)}...`,
+      message: `📤 Uploaded "${t}" → mediaId: ${l.substring(0, 8)}...`,
       type: "success",
     }),
     l
@@ -488,7 +488,7 @@ async function nt(e, t, a, r) {
       )
         return (
           zt("LOG", {
-            message: `âœ… Video #${r + 1} upscaled to 1080p!`,
+            message: `✅ Video #${r + 1} upscaled to 1080p!`,
             type: "success",
           }),
           `https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=${e}`
@@ -496,21 +496,21 @@ async function nt(e, t, a, r) {
       if ("MEDIA_GENERATION_STATUS_FAILED" === l)
         return (
           zt("LOG", {
-            message: `âŒ Video #${r + 1} upscale failed`,
+            message: `❌ Video #${r + 1} upscale failed`,
             type: "error",
           }),
           null
         );
       a % 6 == 0 &&
         Kt(
-          `â³ Video #${String(r + 1).padStart(3, "0")} upscaling... (${Math.round((5e3 * a) / 1e3)}s)`,
+          `⏳ Video #${String(r + 1).padStart(3, "0")} upscaling... (${Math.round((5e3 * a) / 1e3)}s)`,
           "info",
         );
     } catch (e) {}
   }
   return (
     zt("LOG", {
-      message: `â° Video #${r + 1} upscale timed out`,
+      message: `⏰ Video #${r + 1} upscale timed out`,
       type: "error",
     }),
     null

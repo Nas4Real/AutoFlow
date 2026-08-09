@@ -80,7 +80,7 @@ function cn(e, t = {}) {
     X(),
     Sn(),
     Te(
-      `ðŸ“¦ Batch "${o.name}" created â€” ${e.length} prompts [${a ? "running" : "queued"}]`,
+      `📦 Batch "${o.name}" created — ${e.length} prompts [${a ? "running" : "queued"}]`,
       a ? "success" : "info",
     ),
     o
@@ -132,8 +132,8 @@ function bn(e) {
       ? ((l.batches = l.batches.filter((t) => t.id !== e)),
         X(),
         Sn(),
-        Te(`ðŸ—‘ï¸ Batch "${t.name}" deleted`, "info"))
-      : Te("âš ï¸ Can't delete a running batch â€” stop it first", "warn"));
+        Te(`🗑️ Batch "${t.name}" deleted`, "info"))
+      : Te("⚠️ Can't delete a running batch — stop it first", "warn"));
 }
 function vn(e) {
   const t = pn(e);
@@ -152,7 +152,7 @@ function vn(e) {
     l.batches.push(a),
     X(),
     Sn(),
-    Te(`ðŸ“‹ Batch duplicated â†’ "${a.name}"`, "success"));
+    Te(`📋 Batch duplicated → "${a.name}"`, "success"));
 }
 function yn(e, t) {
   const a = pn(e);
@@ -184,14 +184,14 @@ function wn(e) {
     }),
     0 === a)
   )
-    return void Te(`âœ… No failed prompts in "${t.name}"`, "info");
+    return void Te(`✅ No failed prompts in "${t.name}"`, "info");
   t.status = "pending";
   const n = (t.stats?.downloaded || 0) + (t.stats?.previousSucceeded || 0);
   ((t.stats = { total: 0, downloaded: 0, failed: 0, previousSucceeded: n }),
     (t.completedAt = null),
     X(),
     Sn(),
-    Te(`ðŸ”„ Reset ${a} failed prompts in "${t.name}"`, "success"));
+    Te(`🔄 Reset ${a} failed prompts in "${t.name}"`, "success"));
 }
 function In(e) {
   if (!l.avgTimePerImage || l.avgTimePerImage <= 0) return null;
@@ -203,13 +203,13 @@ function In(e) {
 }
 function En() {
   if (l.batches.find((e) => "running" === e.status))
-    return void Te("âš ï¸ Stop the running batch first", "warn");
+    return void Te("⚠️ Stop the running batch first", "warn");
   const e = l.batches.length;
-  ((l.batches = []), X(), Sn(), Te(`ðŸ—‘ï¸ Deleted all ${e} batches`, "info"));
+  ((l.batches = []), X(), Sn(), Te(`🗑️ Deleted all ${e} batches`, "info"));
 }
 function kn() {
   l.batches.find((e) => "running" === e.status)
-    ? Te("âš ï¸ Stop the running batch first", "warn")
+    ? Te("⚠️ Stop the running batch first", "warn")
     : (l.batches.forEach((e) => {
         ((e.status = "pending"),
           (e.stats = { total: 0, downloaded: 0, failed: 0 }),
@@ -219,7 +219,7 @@ function kn() {
       }),
       X(),
       Sn(),
-      Te("ðŸ”„ All batches reset to pending", "success"));
+      Te("🔄 All batches reset to pending", "success"));
 }
 function Mn() {
   const e = JSON.stringify(l.batches, null, 2),
@@ -230,7 +230,7 @@ function Mn() {
     (n.download = `turboflow-batches-${Date.now()}.json`),
     n.click(),
     URL.revokeObjectURL(a),
-    Te(`ðŸ“¤ Exported ${l.batches.length} batches`, "success"));
+    Te(`📤 Exported ${l.batches.length} batches`, "success"));
 }
 function $n(e) {
   try {
@@ -248,8 +248,8 @@ function $n(e) {
         e.prompts.forEach((e) => (e.status = "pending")),
         l.batches.push(e),
         a++);
-    (X(), Sn(), Te(`ðŸ“¥ Imported ${a} batches`, "success"));
+    (X(), Sn(), Te(`📥 Imported ${a} batches`, "success"));
   } catch (e) {
-    Te(`âŒ Import failed: ${e.message}`, "error");
+    Te(`❌ Import failed: ${e.message}`, "error");
   }
 }

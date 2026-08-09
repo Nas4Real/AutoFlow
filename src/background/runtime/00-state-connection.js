@@ -60,6 +60,10 @@ const V = new Map(),
   K = new Set(),
   Y = new Map(),
   W = [];
+const TF_MAX_INTERCEPT_WORKFLOWS = 64,
+  TF_MAX_INTERCEPT_ID_LENGTH = 256,
+  TF_MAX_CAPTURED_MEDIA = 512,
+  TF_MAX_DOWNLOAD_QUEUE = 256;
 let q = 0,
   Q = 3,
   J = 3;
@@ -460,7 +464,7 @@ async function Fe() {
     _vD._recovering = !0;
     const e = (await chrome.tabs.get(c)).url;
     return e && Ie(e)
-      ? (Kt("ðŸ”„ reCAPTCHA expired â€” reloading Flow page...", "warn"),
+      ? (Kt("🔄 reCAPTCHA expired — reloading Flow page...", "warn"),
         (d = null),
         (u = null),
         await chrome.scripting.executeScript({
@@ -483,7 +487,7 @@ async function Fe() {
               level: "url_reload",
               succeededBefore: E.total,
             }),
-            Kt("âœ… reCAPTCHA recovered via page reload", "success"),
+            Kt("✅ reCAPTCHA recovered via page reload", "success"),
             (_vD._recovering = !1),
             await we(3e3),
             !0)
@@ -497,7 +501,7 @@ async function je() {
   if (!c) return !1;
   try {
     ((_vD._recovering = !0),
-      Kt("ðŸ”„ Creating new project to reset reCAPTCHA session...", "warn"),
+      Kt("🔄 Creating new project to reset reCAPTCHA session...", "warn"),
       (d = null),
       (u = null));
     const e = await chrome.scripting.executeScript({
@@ -540,7 +544,7 @@ async function je() {
     if (!t?.success)
       return (
         Kt(
-          "âŒ Failed to create new project: " + (t?.error || "unknown"),
+          "❌ Failed to create new project: " + (t?.error || "unknown"),
           "error",
         ),
         (_vD._recovering = !1),
@@ -568,12 +572,12 @@ async function je() {
             level: "new_project",
             succeededBefore: E.total,
           }),
-          Kt("âœ… reCAPTCHA recovered via new project", "success"),
+          Kt("✅ reCAPTCHA recovered via new project", "success"),
           (_vD._recovering = !1),
           await we(5e3),
           !0)
         : (Kt(
-            "âš ï¸ New project created but reCAPTCHA still failing â€” try disabling VPN",
+            "⚠️ New project created but reCAPTCHA still failing — try disabling VPN",
             "warn",
           ),
           (_vD._recovering = !1),
@@ -582,7 +586,7 @@ async function je() {
   } catch (e) {
     return (
       (_vD._recovering = !1),
-      Kt("âŒ New project recovery failed: " + e.message, "error"),
+      Kt("❌ New project recovery failed: " + e.message, "error"),
       !1
     );
   }
@@ -606,7 +610,7 @@ async function Be() {
   if (ue >= 3)
     return (
       Kt(
-        "âš ï¸ Max recovery attempts reached â€” close Flow tab and reopen manually",
+        "⚠️ Max recovery attempts reached — close Flow tab and reopen manually",
         "error",
       ),
       zt("SHOW_FIX_UNUSUAL", {}),
@@ -622,18 +626,18 @@ async function Be() {
     if (fe < 2) {
       if ((fe++, await Fe())) return (e(!0), !0);
       Kt(
-        "âš ï¸ Page reload didn't fix reCAPTCHA â€” escalating to new project...",
+        "⚠️ Page reload didn't fix reCAPTCHA — escalating to new project...",
         "warn",
       );
     }
     return (await je())
       ? (e(!0), !0)
-      : (Kt("âŒ Please close the Flow tab, reopen it and try again", "error"),
+      : (Kt("❌ Please close the Flow tab, reopen it and try again", "error"),
         zt("SHOW_FIX_UNUSUAL", {}),
         e(!1),
         !1);
   } catch (t) {
-    return (Kt("âŒ Recovery crashed: " + t.message, "error"), e(!1), !1);
+    return (Kt("❌ Recovery crashed: " + t.message, "error"), e(!1), !1);
   } finally {
     ((de = !1), await we(2e3), (le = null));
   }
@@ -741,7 +745,7 @@ async function ze() {
           flowTabId: null,
           hasProject: !1,
           lastCheck: Date.now(),
-          lastError: "Flow tab navigated away â€” open Flow again",
+          lastError: "Flow tab navigated away — open Flow again",
         }),
         Ke(),
         _vD);
@@ -806,7 +810,7 @@ function We() {
             status: "disconnected",
             flowTabId: null,
             hasProject: !1,
-            lastError: "Flow tab navigated away â€” open Flow again",
+            lastError: "Flow tab navigated away — open Flow again",
             lastCheck: Date.now(),
           }),
           Ke()));

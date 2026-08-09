@@ -390,6 +390,8 @@ async function run() {
   assert.match(studioSource, /getViewFromLocationHash/);
   assert.match(studioSource, /useState\(\(\) => getViewFromLocationHash\(\)\)/);
   assert.match(studioSource, /hashchange/);
+  assert.doesNotMatch(studioSource, /<Modal\.Root\s+isOpen=/);
+  assert.match(studioSource, /<Modal\.Backdrop\s+[^>]*isOpen=/);
   assert.match(studioHtml, /generated\/studio\.bundle\.js/);
   assert.doesNotMatch(studioHtml, /01-studio-shell\.js|07-studio-boot\.js|details-inspector/);
 

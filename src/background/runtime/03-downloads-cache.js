@@ -310,14 +310,37 @@ function tfExactDownloadName(e, t, a, r, o = null) {
   return (i.push(`${u}.${r}`), i.join("/"));
 }
 function kt(e, t) {
-  if (K.has(e)) return;
-  K.add(e);
-  const a = V.get(t);
+  if (
+    typeof e !== "string" ||
+    e.length === 0 ||
+    e.length > TF_MAX_INTERCEPT_ID_LENGTH ||
+    typeof t !== "string" ||
+    t.length === 0 ||
+    t.length > TF_MAX_INTERCEPT_ID_LENGTH
+  )
+    return;
+  const a = V.get(t),
+    c = Y.get(e);
   if (void 0 === a)
     return void zt("LOG", {
-      message: `âš ï¸ Unknown batchId ${t.substring(0, 8)}... â€” skipping`,
+      message: `⚠️ Unknown batchId ${t.substring(0, 8)}... — skipping`,
       type: "error",
     });
+  if (!c || "image" !== c.type || c.batchId !== t)
+    return void zt("LOG", {
+      message: `⚠️ Uncorrelated mediaId ${e.substring(0, 8)}... — skipping`,
+      type: "error",
+    });
+  if (K.has(e)) return;
+  if (
+    K.size >= TF_MAX_CAPTURED_MEDIA ||
+    (_ && W.length >= TF_MAX_DOWNLOAD_QUEUE)
+  )
+    return void zt("LOG", {
+      message: "⚠️ Captured media queue limit reached — skipping",
+      type: "error",
+    });
+  K.add(e);
   z.has(a) || z.set(a, []);
   const r = z.get(a),
     o = r.length;
@@ -330,9 +353,8 @@ function kt(e, t) {
     return (
       E.total++,
       E.downloaded++,
-      void zt("IMAGE_READY", { message: `ðŸ–¼ #${s} generated`, stats: { ...E } })
+      void zt("IMAGE_READY", { message: `🖼 #${s} generated`, stats: { ...E } })
     );
-  const c = Y.get(e);
   (W.push({
     mediaId: e,
     promptIndex: a,
@@ -340,13 +362,13 @@ function kt(e, t) {
     fileSuffix: i,
     type: "image",
     status: "pending",
-    prompt: c?.prompt || "",
+    prompt: c.prompt || "",
     namingSettings: w,
     fileName: tfExactDownloadName(w, a, i, "png", o),
   }),
     E.total++,
     zt("IMAGE_READY", {
-      message: `ðŸ–¼ #${s} generated â€” downloading 2K`,
+      message: `🖼 #${s} generated — downloading 2K`,
       stats: { ...E },
     }),
     Z || Vt());
@@ -354,7 +376,7 @@ function kt(e, t) {
 function Lt(e, t, a) {
   if (
     (zt("LOG", {
-      message: `ðŸ“¥ Video #${String(a + 1).padStart(3, "0")} queued for download`,
+      message: `📥 Video #${String(a + 1).padStart(3, "0")} queued for download`,
       type: "info",
     }),
     W.some((e) => e.mediaId === t && "video" === e.type))
@@ -368,7 +390,7 @@ function Lt(e, t, a) {
     return (
       E.total++,
       E.downloaded++,
-      void zt("IMAGE_READY", { message: `ðŸŽ¬ #${o} generated`, stats: { ...E } })
+      void zt("IMAGE_READY", { message: `🎬 #${o} generated`, stats: { ...E } })
     );
   (W.push({
     mediaId: t,
@@ -386,11 +408,11 @@ function Lt(e, t, a) {
   }),
     E.total++,
     zt("IMAGE_READY", {
-      message: `ðŸŽ¬ #${o} generated â€” downloading`,
+      message: `🎬 #${o} generated — downloading`,
       stats: { ...E },
     }),
     zt("LOG", {
-      message: `ðŸ“¥ Queue now has ${W.length} items, worker running: ${Z}`,
+      message: `📥 Queue now has ${W.length} items, worker running: ${Z}`,
       type: "info",
     }),
     Z || Vt());
@@ -438,11 +460,11 @@ async function Dt(e, t, a) {
     e.retried
       ? ((e.status = "failed"),
         E.failed++,
-        zt("LOG", { message: `âŒ #${r} download failed`, type: "error" }),
+        zt("LOG", { message: `❌ #${r} download failed`, type: "error" }),
         zt("DOWNLOAD_FAILED", { mediaId: e.mediaId }))
       : ((e.retried = !0),
         (e.status = "pending"),
-        zt("LOG", { message: `âŸ³ #${r} retrying...`, type: "warn" }));
+        zt("LOG", { message: `⟳ #${r} retrying...`, type: "warn" }));
   }
   q--;
 }
@@ -498,7 +520,7 @@ async function $t(e, t, a, r) {
       return (
         (N = !0),
         Kt(
-          "âš ï¸ 4K upscale requires Google AI Ultra â€” downloading in 2K instead",
+          "⚠️ 4K upscale requires Google AI Ultra — downloading in 2K instead",
           "warn",
         ),
         null
@@ -507,7 +529,7 @@ async function $t(e, t, a, r) {
       return (
         (N = !0),
         Kt(
-          "âš ï¸ Your Google account's 4K upscale limit reached â€” switching to 2K",
+          "⚠️ Your Google account's 4K upscale limit reached — switching to 2K",
           "warn",
         ),
         null
@@ -518,15 +540,15 @@ async function $t(e, t, a, r) {
       ((L = Date.now()),
         k++,
         (x = Math.min(1.5 * x, 2e4)),
-        1 !== Q && ((Q = 1), Kt("â³ 4K rate limited â€” slowing down", "warn")),
+        1 !== Q && ((Q = 1), Kt("⏳ 4K rate limited — slowing down", "warn")),
         zt("LOG", {
-          message: `ðŸ›‘ 4K upscale ${t} rate limited â€” cooldown ${(x / 1e3).toFixed(1)}s (${a + 1}/3)`,
+          message: `🛑 4K upscale ${t} rate limited — cooldown ${(x / 1e3).toFixed(1)}s (${a + 1}/3)`,
           type: "warn",
         }));
     else {
       const e = 1500 * Math.pow(1.5, a) + 500 * Math.random();
       (zt("LOG", {
-        message: `â³ 4K upscale ${t} server error â€” retry in ${(e / 1e3).toFixed(1)}s (${a + 1}/3)`,
+        message: `⏳ 4K upscale ${t} server error — retry in ${(e / 1e3).toFixed(1)}s (${a + 1}/3)`,
         type: "warn",
       }),
         await we(e));
@@ -554,7 +576,7 @@ async function Gt(e, t, a, r) {
       return (
         (R = !0),
         Kt(
-          "âš ï¸ Your Google account's 2K upscale limit reached â€” switching to standard quality",
+          "⚠️ Your Google account's 2K upscale limit reached — switching to standard quality",
           "warn",
         ),
         null
@@ -564,15 +586,15 @@ async function Gt(e, t, a, r) {
       ((S = Date.now()),
         P++,
         (M = Math.min(1.5 * M, 2e4)),
-        1 !== Q && ((Q = 1), Kt("â³ Rate limited â€” slowing down", "warn")),
+        1 !== Q && ((Q = 1), Kt("⏳ Rate limited — slowing down", "warn")),
         zt("LOG", {
-          message: `ðŸ›‘ Upscale ${t} rate limited â€” global cooldown ${(M / 1e3).toFixed(1)}s (${a + 1}/3)`,
+          message: `🛑 Upscale ${t} rate limited — global cooldown ${(M / 1e3).toFixed(1)}s (${a + 1}/3)`,
           type: "warn",
         }));
     else {
       const e = 1500 * Math.pow(1.5, a) + 500 * Math.random();
       (zt("LOG", {
-        message: `â³ Upscale ${t} server error â€” retry in ${(e / 1e3).toFixed(1)}s (${a + 1}/3)`,
+        message: `⏳ Upscale ${t} server error — retry in ${(e / 1e3).toFixed(1)}s (${a + 1}/3)`,
         type: "warn",
       }),
         await we(e));
@@ -616,7 +638,7 @@ async function Ft(e, t, a, r) {
         return (
           (B = !0),
           Kt(
-            "âš ï¸ 4K video upscale requires Google AI Ultra â€” downloading in 1080p instead",
+            "⚠️ 4K video upscale requires Google AI Ultra — downloading in 1080p instead",
             "warn",
           ),
           null
@@ -625,7 +647,7 @@ async function Ft(e, t, a, r) {
         return (
           (B = !0),
           Kt(
-            "âš ï¸ Your Google account's 4K video upscale limit reached â€” switching to 1080p",
+            "⚠️ Your Google account's 4K video upscale limit reached — switching to 1080p",
             "warn",
           ),
           null
@@ -637,13 +659,13 @@ async function Ft(e, t, a, r) {
           F++,
           (H = Math.min(1.5 * H, 3e4)),
           zt("LOG", {
-            message: `ðŸ›‘ 4K video upscale ${t} rate limited â€” cooldown ${(H / 1e3).toFixed(1)}s (${a + 1}/3)`,
+            message: `🛑 4K video upscale ${t} rate limited — cooldown ${(H / 1e3).toFixed(1)}s (${a + 1}/3)`,
             type: "warn",
           }));
       else {
         const e = 5e3 * Math.pow(2, a) + 2e3 * Math.random();
         (zt("LOG", {
-          message: `â³ 4K video upscale ${t} server error â€” retry in ${(e / 1e3).toFixed(0)}s (${a + 1}/3)`,
+          message: `⏳ 4K video upscale ${t} server error — retry in ${(e / 1e3).toFixed(0)}s (${a + 1}/3)`,
           type: "warn",
         }),
           await we(e));
@@ -681,7 +703,7 @@ async function jt(e, t, a, r) {
     (e.status = "done"),
     E.downloaded++,
     zt("DOWNLOAD_COMPLETE", {
-      message: `âœ… #${t} saved (${((3 * r.length) / 4 / 1024 / 1024).toFixed(1)}MB)`,
+      message: `✅ #${t} saved (${((3 * r.length) / 4 / 1024 / 1024).toFixed(1)}MB)`,
       stats: { ...E },
       mediaId: e.mediaId,
       fileName: e.fileName || null,
@@ -689,7 +711,7 @@ async function jt(e, t, a, r) {
 }
 async function Ht(e, t, a) {
   if (!e.mediaId) throw new Error("No mediaId available for standard download");
-  Kt(`ðŸ“¥ #${t} downloading standard quality`, "info");
+  Kt(`📥 #${t} downloading standard quality`, "info");
   const r = `https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=${e.mediaId}`,
     o = await chrome.scripting.executeScript({
       target: { tabId: c },
@@ -752,7 +774,7 @@ async function Ht(e, t, a) {
     (e.status = "done"),
     E.downloaded++,
     zt("DOWNLOAD_COMPLETE", {
-      message: `âœ… #${t} saved (${(n.size / 1024 / 1024).toFixed(1)}MB)`,
+      message: `✅ #${t} saved (${(n.size / 1024 / 1024).toFixed(1)}MB)`,
       stats: { ...E },
       mediaId: e.mediaId,
       fileName: e.fileName || null,
@@ -770,7 +792,7 @@ async function Bt(e, t, a, r, o) {
       await we(e);
     }
     zt("LOG", {
-      message: `ðŸŽ¬ Upscaling #${t} to 4K (this may take several minutes)...`,
+      message: `🎬 Upscaling #${t} to 4K (this may take several minutes)...`,
       type: "info",
     });
     for (let e = 0; e < 30; e++) {
@@ -789,13 +811,13 @@ async function Bt(e, t, a, r, o) {
       a?.success && a.downloadUrl
         ? ((s = a.downloadUrl), (l = "4K"))
         : zt("LOG", {
-            message: `âš ï¸ #${t} 4K upscale failed â€” trying 1080p`,
+            message: `⚠️ #${t} 4K upscale failed — trying 1080p`,
             type: "warn",
           });
     } catch (e) {
       if ("_xY" === e.name) throw e;
       zt("LOG", {
-        message: `âš ï¸ #${t} 4K upscale error: ${e.message} â€” trying 1080p`,
+        message: `⚠️ #${t} 4K upscale error: ${e.message} — trying 1080p`,
         type: "warn",
       });
     }
@@ -808,7 +830,7 @@ async function Bt(e, t, a, r, o) {
       await we(e);
     }
     if (
-      (zt("LOG", { message: `ðŸŽ¬ Upscaling #${t} to 1080p...`, type: "info" }),
+      (zt("LOG", { message: `🎬 Upscaling #${t} to 1080p...`, type: "info" }),
       !n)
     ) {
       for (let e = 0; e < 30; e++) {
@@ -849,7 +871,7 @@ async function Bt(e, t, a, r, o) {
           if (o && c) {
             (($ = !0),
               Kt(
-                "âš ï¸ Your Google account's 1080p upscale limit reached â€” switching to 720p for remaining videos",
+                "⚠️ Your Google account's 1080p upscale limit reached — switching to 720p for remaining videos",
                 "warn",
               ),
               (a = null));
@@ -862,16 +884,16 @@ async function Bt(e, t, a, r, o) {
               (U = Math.min(1.5 * U, 3e4)),
               1 !== Q &&
                 ((Q = 1),
-                Kt("â³ Video upscale rate limited â€” slowing down", "warn")),
+                Kt("⏳ Video upscale rate limited — slowing down", "warn")),
               zt("LOG", {
-                message: `ðŸ›‘ Video upscale ${t} rate limited â€” cooldown ${(U / 1e3).toFixed(1)}s (${i + 1}/3)`,
+                message: `🛑 Video upscale ${t} rate limited — cooldown ${(U / 1e3).toFixed(1)}s (${i + 1}/3)`,
                 type: "warn",
               })),
             (o || s) && i < 3)
           ) {
             const e = 5e3 * Math.pow(2, i) + 2e3 * Math.random();
             (zt("LOG", {
-              message: `â³ Video upscale retry ${i + 1}/3 in ${(e / 1e3).toFixed(0)}s...`,
+              message: `⏳ Video upscale retry ${i + 1}/3 in ${(e / 1e3).toFixed(0)}s...`,
               type: "warn",
             }),
               await we(e),
@@ -885,14 +907,14 @@ async function Bt(e, t, a, r, o) {
         i
           ? ((s = i), (l = "1080p"))
           : zt("LOG", {
-              message: `âš ï¸ #${t} 1080p upscale polling failed â€” downloading 720p`,
+              message: `⚠️ #${t} 1080p upscale polling failed — downloading 720p`,
               type: "warn",
             });
       }
     } catch (e) {
       if ("_xY" === e.name) throw e;
       zt("LOG", {
-        message: `âš ï¸ #${t} 1080p upscale error: ${e.message} â€” downloading 720p`,
+        message: `⚠️ #${t} 1080p upscale error: ${e.message} — downloading 720p`,
         type: "warn",
       });
     }
@@ -922,7 +944,7 @@ async function Bt(e, t, a, r, o) {
             ? (ce = "1080p_with_fallback")
             : null === ce && (ce = "720p"),
     zt("DOWNLOAD_COMPLETE", {
-      message: `âœ… #${t} saved (${l})`,
+      message: `✅ #${t} saved (${l})`,
       stats: { ...E },
       mediaId: e.mediaId,
     }));
@@ -947,7 +969,7 @@ async function Vt() {
       }
       if (e > 120) {
         zt("LOG", {
-          message: `â° Downloads timed out â€” ${E.downloaded}/${E.total} saved`,
+          message: `⏰ Downloads timed out — ${E.downloaded}/${E.total} saved`,
           type: "warn",
         });
         break;
@@ -984,7 +1006,7 @@ async function Vt() {
   ((Z = !1),
     E.total > 0 &&
       Kt(
-        `ðŸ ${E.downloaded} image${1 !== E.downloaded ? "s" : ""} saved${E.failed > 0 ? ` Â· ${E.failed} failed` : ""}`,
+        `🏁 ${E.downloaded} image${1 !== E.downloaded ? "s" : ""} saved${E.failed > 0 ? ` · ${E.failed} failed` : ""}`,
         E.failed > 0 ? "warn" : "success",
       ),
     zt("STATS_UPDATE", { stats: { ...E } }));

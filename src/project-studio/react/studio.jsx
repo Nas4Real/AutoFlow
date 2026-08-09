@@ -245,22 +245,25 @@ function PageHeader({ title, description, actions }) {
 
 function StudioModal({ open, onOpenChange, title, children, footer, size = "md" }) {
   return (
-    <Modal.Root isOpen={open} onOpenChange={onOpenChange}>
-      <Modal.Backdrop className="studio-modal-backdrop" isDismissable>
-        <Modal.Container className="studio-modal-container" placement="center" size={size}>
-          <Modal.Dialog className="studio-modal-dialog">
-            <Modal.Header className="studio-modal-header">
-              <Modal.Heading>{title}</Modal.Heading>
-              <Modal.CloseTrigger className="modal-close" aria-label="Close dialog">
-                <X size={18} />
-              </Modal.CloseTrigger>
-            </Modal.Header>
-            <Modal.Body className="studio-modal-body">{children}</Modal.Body>
-            {footer ? <Modal.Footer className="studio-modal-footer">{footer}</Modal.Footer> : null}
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal.Root>
+    <Modal.Backdrop
+      className="studio-modal-backdrop"
+      isOpen={open}
+      onOpenChange={onOpenChange}
+      isDismissable
+    >
+      <Modal.Container className="studio-modal-container" placement="center" size={size}>
+        <Modal.Dialog className="studio-modal-dialog">
+          <Modal.Header className="studio-modal-header">
+            <Modal.Heading>{title}</Modal.Heading>
+            <Modal.CloseTrigger className="modal-close" aria-label="Close dialog">
+              <X size={18} />
+            </Modal.CloseTrigger>
+          </Modal.Header>
+          <Modal.Body className="studio-modal-body">{children}</Modal.Body>
+          {footer ? <Modal.Footer className="studio-modal-footer">{footer}</Modal.Footer> : null}
+        </Modal.Dialog>
+      </Modal.Container>
+    </Modal.Backdrop>
   );
 }
 

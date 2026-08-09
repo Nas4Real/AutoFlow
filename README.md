@@ -4,11 +4,18 @@ TurboFlow is a Chrome MV3 extension for batch image and video generation on Goog
 
 ## Install
 
+Use Node.js 22 or 24 LTS. From a fresh checkout, build the ignored Project Studio assets before loading the extension:
+
+```powershell
+npm ci --ignore-scripts
+npm run build:studio
+```
+
 1. Open `chrome://extensions`.
 2. Remove any old TurboFlow build.
 3. Enable Developer mode.
 4. Click "Load unpacked".
-5. Select this `TurboFlow` folder.
+5. Select the cloned repository folder.
 6. Refresh the Google Flow tab and reopen the side panel.
 
 ## File Map
@@ -29,6 +36,14 @@ src/
     sidepanel.js            Breadcrumb only; index.html loads app/*.js
     app/                    Side panel JavaScript shards
     styles/                 Side panel CSS shards
+  project-studio/
+    index.html              React Studio extension-page shell
+    app/                    Bootstrap and classic state compatibility facade
+    react/                  Maintained React Studio source and styles
+    generated/              Ignored local bundles produced before packaging
+  shared/
+    project-domain/         DOM-free project storage and JSON contracts
+    project-services/       Shared schemas, adapters, and read-model contracts
 assets/
   icons/                    Extension icons
 docs/
@@ -39,6 +54,20 @@ docs/
 ```
 
 Start future edits with [`docs/code-map.md`](docs/code-map.md), then open only the shard for the feature you are changing.
+
+## Development
+
+Install the pinned dependencies with `npm ci`, then use these repository checks:
+
+| Command | Purpose |
+| --- | --- |
+| `npm test` | Run the smoke and contract test suite. |
+| `npm run check:syntax` | Parse-check the classic `.js` source shards. |
+| `npm run test:build` | Build Studio into a temporary directory and verify its outputs. |
+| `npm run build:studio` | Generate the local React Studio JavaScript and CSS bundles. |
+| `npm run architecture:check` | Report source and generated-asset architecture budgets. |
+
+Project Studio generated assets are intentionally ignored by Git. Run `npm run build:studio` before loading the extension from a fresh checkout. On Windows, run `scripts/build-extension.ps1` to build and package the complete extension.
 
 ## Prompt Index JSON
 

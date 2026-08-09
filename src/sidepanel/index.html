@@ -10,7 +10,7 @@
     <div id="app">
       <div id="loading-screen">
         <div class="loading-container">
-          <div class="loading-logo">⚡</div>
+          <div class="loading-logo" aria-hidden="true">⚡</div>
           <div class="loading-title">TurboFlow</div>
           <div
             class="uploading-spinner"
@@ -26,7 +26,7 @@
       </div>
       <div id="auth-screen" style="display: none">
         <div class="auth-container">
-          <div class="auth-logo">âš¡</div>
+          <div class="auth-logo" aria-hidden="true">⚡</div>
           <h1 class="auth-title">TurboFlow</h1>
           <p class="auth-subtitle">
             Batch generation for Google Flow<br />using your browser session
@@ -79,7 +79,7 @@
       <div id="main-app" style="display: none">
         <div class="header">
           <div class="header-left">
-            <span class="header-icon">⚡</span>
+            <span class="header-icon" aria-hidden="true">⚡</span>
             <h1>TurboFlow</h1>
             <span
               id="version-badge"
@@ -1982,6 +1982,7 @@
     <script src="../shared/project-services/media-link-contracts.js"></script>
     <script src="../shared/project-services/migration-shims.js"></script>
     <script src="../shared/project-services/legacy-project-normalizer.js"></script>
+    <script src="app/00-html-safety.js"></script>
     <script src="app/00-state-storage.js"></script>
       <script src="app/00a-project-studio-link.js"></script>
       <script src="app/00b-project-selector.js"></script>

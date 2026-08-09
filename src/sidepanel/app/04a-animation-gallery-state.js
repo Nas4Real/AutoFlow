@@ -9,7 +9,7 @@
     e.target === r("#picker-modal") && Rt();
   }),
   r("#btn-picker-done")?.addEventListener("click", () => {
-    $t ? Te("âš ï¸ Please wait for uploads to finish", "warn") : (M && M(E), Rt());
+    $t ? Te("⚠️ Please wait for uploads to finish", "warn") : (M && M(E), Rt());
   }),
   r("#btn-picker-upload")?.addEventListener("click", () => {
     r("#picker-upload-input").click();
@@ -44,7 +44,7 @@
   r("#btn-unlock-clear")?.addEventListener("click", async () => {
     if (
       await an({
-        icon: "ðŸ”“",
+        icon: "🔓",
         title: "Unlock Prompt Box?",
         message:
           "This only clears the current prompt-box assignments. Your queue, failed jobs, and imported batches stay saved.",
@@ -157,7 +157,7 @@ async function _a(e) {
   if (!e || 0 === e.length) return;
   if ($a())
     return void Gn({
-      icon: "â³",
+      icon: "⏳",
       title: "Wait for Current Batch",
       message:
         "You can't start animating while a batch is generating or downloads are in progress.",
@@ -167,7 +167,7 @@ async function _a(e) {
   0 !== t.length
     ? await Pa(t)
     : Gn({
-        icon: "âš ï¸",
+        icon: "⚠️",
         title: "No Animatable Images",
         message:
           "Selected items are not animatable. Wait for images to finish generating.",
@@ -176,7 +176,7 @@ async function _a(e) {
 }
 async function Pa(e) {
   (Te(
-    `âœ¨ Setting up animate flow for ${e.length} image${e.length > 1 ? "s" : ""}...`,
+    `✨ Setting up animate flow for ${e.length} image${e.length > 1 ? "s" : ""}...`,
     "info",
   ),
     (l.mode = "video"),
@@ -219,7 +219,7 @@ async function Pa(e) {
       Wt();
     }, 200),
     Te(
-      `âœ… ${e.length} start frame${e.length > 1 ? "s" : ""} loaded â€” type your prompt and save.`,
+      `✅ ${e.length} start frame${e.length > 1 ? "s" : ""} loaded — type your prompt and save.`,
       "success",
     ),
     "function" == typeof le &&
@@ -232,12 +232,12 @@ function Aa(e) {
   if (0 === e.length) return void (t.style.display = "none");
   t.style.display = "block";
   const n = t.querySelector(".mapping-preview-title");
-  n && (n.textContent = "ðŸ“Ž Start Frames Ready");
+  n && (n.textContent = "📎 Start Frames Ready");
   const o = ve(e[0].mediaId),
     s = o
-      ? `<img class="mapping-preview-thumb" src="${o}" alt="frame">`
-      : '<span class="mapping-preview-icon">ðŸ–¼</span>';
-  a.innerHTML = `\n        <div class="mapping-preview-row mapping-preview-row-compact">\n            ${s}\n            <span class="mapping-preview-count">${e.length} start frame${e.length > 1 ? "s" : ""} ready â€” type your prompt above</span>\n        </div>\n    `;
+      ? `<img class="mapping-preview-thumb" src="${TFHtmlSafety.safeMediaUrl(o)}" alt="frame">`
+      : '<span class="mapping-preview-icon">🖼</span>';
+  a.innerHTML = `\n        <div class="mapping-preview-row mapping-preview-row-compact">\n            ${s}\n            <span class="mapping-preview-count">${e.length} start frame${e.length > 1 ? "s" : ""} ready — type your prompt above</span>\n        </div>\n    `;
 }
 let Ta = null;
 function Ca() {

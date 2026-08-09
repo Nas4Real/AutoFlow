@@ -394,8 +394,7 @@ async function oe() {
     (K = e.turboflowMapperImages);
 }
 function se(e) {
-  const t = document.createElement("div");
-  return ((t.textContent = e), t.innerHTML);
+  return globalThis.TFHtmlSafety.escapeHtml(e);
 }
 function tfSafeFolderName(e, t = "turboflow") {
   const a = String(e || "")
@@ -698,7 +697,7 @@ async function we(e, t = {}) {
               (u = Math.min(2 * u, 800)),
               (g = Date.now()),
               Te(
-                `âš¡ Upload concurrency reduced to ${p}x (Chrome overloaded)`,
+                `⚡ Upload concurrency reduced to ${p}x (Chrome overloaded)`,
                 "warn",
               ))
             : r
@@ -706,7 +705,7 @@ async function we(e, t = {}) {
                 (u = Math.min(2 * u, 1e3)),
                 (g = Date.now()),
                 Te(
-                  `â³ Upload concurrency reduced to ${p}x (rate limited)`,
+                  `⏳ Upload concurrency reduced to ${p}x (rate limited)`,
                   "warn",
                 ))
               : (m++,
@@ -732,7 +731,7 @@ function Ie(e) {
   const t = (e || "").toLowerCase();
   return t.includes("public_error_minor_upload") ||
     t.includes("invalid_argument")
-    ? "Rejected by Google â€” image may be corrupted, too large, or in an unsupported format. Try re-saving as JPG/PNG under 10MB."
+    ? "Rejected by Google — image may be corrupted, too large, or in an unsupported format. Try re-saving as JPG/PNG under 10MB."
     : t.includes("too large") ||
         t.includes("payload too large") ||
         t.includes("413")
@@ -744,22 +743,22 @@ function Ie(e) {
         : t.includes("permission") ||
             t.includes("forbidden") ||
             t.includes("403")
-          ? "Access denied â€” your Flow session may have expired. Refresh the Flow page."
+          ? "Access denied — your Flow session may have expired. Refresh the Flow page."
           : t.includes("401") || t.includes("unauthorized")
-            ? "Session expired â€” refresh the Flow page and try again."
+            ? "Session expired — refresh the Flow page and try again."
             : t.includes("429") || t.includes("rate") || t.includes("quota")
-              ? "Rate limited â€” too many uploads. Wait a moment and try again."
+              ? "Rate limited — too many uploads. Wait a moment and try again."
               : t.includes("500") || t.includes("502") || t.includes("503")
-                ? "Google server error â€” try again in a few seconds."
+                ? "Google server error — try again in a few seconds."
                 : t.includes("failed to fetch") ||
                     t.includes("networkerror") ||
                     t.includes("network")
-                  ? "Network error â€” check your internet connection and try again."
+                  ? "Network error — check your internet connection and try again."
                   : t.includes("timeout")
-                    ? "Upload timed out â€” check your connection and try again."
+                    ? "Upload timed out — check your connection and try again."
                     : t.includes("extension context invalidated") ||
                         t.includes("could not establish connection")
-                      ? "Extension disconnected â€” reload the extension and try again."
+                      ? "Extension disconnected — reload the extension and try again."
                       : e.substring(0, 120).replace(/\{.*$/s, "").trim() ||
-                        "Upload failed â€” unknown error.";
+                        "Upload failed — unknown error.";
 }

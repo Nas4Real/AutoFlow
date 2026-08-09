@@ -131,7 +131,7 @@ function Ft() {
             e.fileName.length > 12
               ? e.fileName.substring(0, 9) + "..."
               : e.fileName;
-        return `\n            <div class="picker-item ${t ? "selected" : ""}" data-picker-media="${e.mediaId}">\n                <div class="picker-item-check">\n                    <span class="material-symbols-outlined">check</span>\n                </div>\n                <img class="picker-item-img" src="${e.thumbnail}" alt="${se(e.fileName)}" loading="lazy">\n                <div class="picker-item-name">${se(a)}</div>\n            </div>\n        `;
+        return `\n            <div class="picker-item ${t ? "selected" : ""}" data-picker-media="${se(e.mediaId)}">\n                <div class="picker-item-check">\n                    <span class="material-symbols-outlined">check</span>\n                </div>\n                <img class="picker-item-img" src="${TFHtmlSafety.safeMediaUrl(e.thumbnail)}" alt="${se(e.fileName)}" loading="lazy">\n                <div class="picker-item-name">${se(a)}</div>\n            </div>\n        `;
       })
       .join("")),
     Dt(),
@@ -239,7 +239,7 @@ function jt() {
           .map((e, t) => {
             const a = pt(e),
               n = a?.thumbnail || "";
-            return `\n            <div class="reference-item">\n                ${n ? `<img src="${n}" alt="Reference">` : '<span style="font-size:18px">🖼</span>'}\n                <span class="ref-info">${se(a?.fileName || e.substring(0, 12) + "...")}</span>\n                <button class="btn-remove" data-remove-imgref="${t}">✕</button>\n            </div>\n        `;
+            return `\n            <div class="reference-item">\n                ${n ? `<img src="${TFHtmlSafety.safeMediaUrl(n)}" alt="Reference">` : '<span style="font-size:18px">🖼</span>'}\n                <span class="ref-info">${se(a?.fileName || e.substring(0, 12) + "...")}</span>\n                <button class="btn-remove" data-remove-imgref="${t}">✕</button>\n            </div>\n        `;
           })
           .join("")),
         e.querySelectorAll("[data-remove-imgref]").forEach((e) => {
@@ -258,7 +258,7 @@ function Gt() {
           .map((e, t) => {
             const a = pt(e),
               n = a?.thumbnail || "";
-            return `\n            <div class="reference-item">\n                ${n ? `<img src="${n}" alt="Reference">` : '<span style="font-size:18px">🖼</span>'}\n                <span class="ref-info">${se(a?.fileName || e.substring(0, 12) + "...")}</span>\n                <button class="btn-remove" data-remove-vidref="${t}">✕</button>\n            </div>\n        `;
+            return `\n            <div class="reference-item">\n                ${n ? `<img src="${TFHtmlSafety.safeMediaUrl(n)}" alt="Reference">` : '<span style="font-size:18px">🖼</span>'}\n                <span class="ref-info">${se(a?.fileName || e.substring(0, 12) + "...")}</span>\n                <button class="btn-remove" data-remove-vidref="${t}">✕</button>\n            </div>\n        `;
           })
           .join("")),
         e.querySelectorAll("[data-remove-vidref]").forEach((e) => {
@@ -283,7 +283,7 @@ function Ht() {
     a = t?.thumbnail || "",
     n = t?.fileName || "Start Frame";
   ((e.className = "upload-preview has-image"),
-    (e.innerHTML = `\n        ${a ? `<img src="${a}" alt="Start frame">` : ""}\n        <div class="upload-info">\n            <div class="filename">${se(n)}</div>\n            <div class="media-id">${l.startFrameMediaId.substring(0, 16)}...</div>\n        </div>\n        <button class="btn-remove" id="btn-change-start">Change</button>\n        <button class="btn-remove" id="btn-remove-start">✕</button>\n    `),
+    (e.innerHTML = `\n        ${a ? `<img src="${TFHtmlSafety.safeMediaUrl(a)}" alt="Start frame">` : ""}\n        <div class="upload-info">\n            <div class="filename">${se(n)}</div>\n            <div class="media-id">${se(l.startFrameMediaId.substring(0, 16))}...</div>\n        </div>\n        <button class="btn-remove" id="btn-change-start">Change</button>\n        <button class="btn-remove" id="btn-remove-start">✕</button>\n    `),
     e.querySelector("#btn-change-start")?.addEventListener("click", Ut),
     e.querySelector("#btn-remove-start")?.addEventListener("click", () => {
       ((l.startFrameMediaId = null), Ht(), J());
@@ -303,7 +303,7 @@ function Qt() {
     a = t?.thumbnail || "",
     n = t?.fileName || "End Frame";
   ((e.className = "upload-preview has-image"),
-    (e.innerHTML = `\n        ${a ? `<img src="${a}" alt="End frame">` : ""}\n        <div class="upload-info">\n            <div class="filename">${se(n)}</div>\n            <div class="media-id">${l.endFrameMediaId.substring(0, 16)}...</div>\n        </div>\n        <button class="btn-remove" id="btn-change-end">Change</button>\n        <button class="btn-remove" id="btn-remove-end">✕</button>\n    `),
+    (e.innerHTML = `\n        ${a ? `<img src="${TFHtmlSafety.safeMediaUrl(a)}" alt="End frame">` : ""}\n        <div class="upload-info">\n            <div class="filename">${se(n)}</div>\n            <div class="media-id">${se(l.endFrameMediaId.substring(0, 16))}...</div>\n        </div>\n        <button class="btn-remove" id="btn-change-end">Change</button>\n        <button class="btn-remove" id="btn-remove-end">✕</button>\n    `),
     e.querySelector("#btn-change-end")?.addEventListener("click", Bt),
     e.querySelector("#btn-remove-end")?.addEventListener("click", () => {
       ((l.endFrameMediaId = null), Qt(), J());

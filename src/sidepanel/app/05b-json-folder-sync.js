@@ -711,7 +711,7 @@ async function tfEnsureJsonAnimationFramesForBatch(e, t = {}) {
 async function tfOpenGoogleAccountChooser() {
   if (nr())
     return void Gn({
-      icon: "â³",
+      icon: "⏳",
       title: "Batch Still Active",
       message: "Stop or wait for the current batch before switching accounts.",
       hint: "The queue and failed prompts are saved locally, so switching accounts will not clear them.",

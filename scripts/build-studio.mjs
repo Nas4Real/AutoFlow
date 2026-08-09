@@ -1,14 +1,20 @@
 import { build } from "esbuild";
 import { copyFile, mkdir } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDirectory, "..");
+const require = createRequire(import.meta.url);
 const outdirArgument = process.argv.find((argument) => argument.startsWith("--outdir="));
-const outdir = outdirArgument
-  ? path.resolve(root, outdirArgument.slice("--outdir=".length))
+const outdirValue = outdirArgument?.slice("--outdir=".length).trim();
+if (outdirArgument && !outdirValue) {
+  throw new Error("--outdir requires a non-empty path.");
+}
+const outdir = outdirValue
+  ? path.resolve(root, outdirValue)
   : path.join(root, "src", "project-studio", "generated");
 
 await mkdir(path.join(outdir, "assets"), { recursive: true });
@@ -28,24 +34,31 @@ await build({
   logLevel: "info",
 });
 
-const tailwindExecutable = path.join(
-  root,
-  "node_modules",
-  ".bin",
-  process.platform === "win32" ? "tailwindcss.cmd" : "tailwindcss",
-);
+const tailwindPackagePath = require.resolve("@tailwindcss/cli/package.json");
+const tailwindPackageRoot = path.dirname(tailwindPackagePath);
+const tailwindPackage = require(tailwindPackagePath);
+const tailwindBin =
+  typeof tailwindPackage.bin === "string"
+    ? tailwindPackage.bin
+    : tailwindPackage.bin?.tailwindcss;
+if (!tailwindBin) {
+  throw new Error("@tailwindcss/cli does not declare a tailwindcss executable.");
+}
+const tailwindEntryPoint = path.resolve(tailwindPackageRoot, tailwindBin);
 const cssResult = spawnSync(
-  tailwindExecutable,
+  process.execPath,
   [
+    tailwindEntryPoint,
     "-i",
     path.join(root, "src", "project-studio", "react", "studio-tailwind.css"),
     "-o",
     path.join(outdir, "studio.bundle.css"),
     "--minify",
   ],
-  { cwd: root, encoding: "utf8", shell: process.platform === "win32" },
+  { cwd: root, encoding: "utf8", windowsHide: true },
 );
-if (cssResult.status !== 0) {
+if (cssResult.error || cssResult.status !== 0) {
+  if (cssResult.error) throw cssResult.error;
   throw new Error(cssResult.stderr || cssResult.stdout || "Studio CSS build failed.");
 }
 

@@ -37,20 +37,43 @@ function run() {
     ...sharedOrder,
     "runtime/contracts/runtime-events.js",
     "runtime/00-state-connection.js",
+    "runtime/03-downloads-cache.js",
+    "runtime/03b-intercept-security.js",
+    "runtime/04-message-router.js",
   ], "background runtime");
 
-  assertOrder(read("src/project-studio/index.html"), [
+  const studioHtml = read("src/project-studio/index.html");
+  assertOrder(studioHtml, [
     "app/studio-bootstrap.js",
     ...sharedOrder,
     "app/00-studio-state.js",
     "generated/studio.bundle.js",
   ], "Project Studio");
+  assert.match(
+    studioHtml,
+    /href="generated\/studio\.bundle\.css"/,
+    "Project Studio must load its generated stylesheet",
+  );
+  assert.doesNotMatch(
+    studioHtml,
+    /href="(?:\.\/)?studio\.css"/,
+    "Project Studio must not load the removed legacy stylesheet",
+  );
 
-  assertOrder(read("src/sidepanel/index.html"), [
+  const sidepanelHtml = read("src/sidepanel/index.html");
+  assertOrder(sidepanelHtml, [
     ...sharedOrder,
+    "app/00-html-safety.js",
     "app/00-state-storage.js",
     "app/00a-project-studio-link.js",
   ], "side panel");
+  for (const className of ["loading-logo", "auth-logo", "header-icon"]) {
+    assert.match(
+      sidepanelHtml,
+      new RegExp(`class="${className}"[^>]*aria-hidden="true"`),
+      `${className} is decorative and must be hidden from assistive technology`,
+    );
+  }
 
   console.log("loader order smoke tests passed");
 }

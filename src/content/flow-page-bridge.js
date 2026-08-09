@@ -1,6 +1,106 @@
 (() => {
   "use strict";
 
+  const TF_MAX_INTERCEPT_WORKFLOWS = 64;
+  const TF_MAX_INTERCEPT_ID_LENGTH = 256;
+
+  function isBoundedInterceptId(value) {
+    return (
+      typeof value === "string" &&
+      value.length > 0 &&
+      value.length <= TF_MAX_INTERCEPT_ID_LENGTH
+    );
+  }
+
+  function normalizeInterceptedEvent(value) {
+    if (!value || typeof value !== "object") return null;
+    const rules = {
+      BATCH_GENERATE_RESPONSE: { method: "POST" },
+      WORKFLOW_UPDATE: { method: "PATCH" },
+    };
+    const rule = rules[value.eventType];
+    if (
+      !rule ||
+      value.method !== rule.method ||
+      !Number.isInteger(value.status) ||
+      value.status < 200 ||
+      value.status >= 300 ||
+      !Number.isFinite(value.timestamp) ||
+      Math.abs(Date.now() - value.timestamp) > 5 * 60 * 1000 ||
+      typeof value.url !== "string" ||
+      value.url.length > 2048
+    )
+      return null;
+    let interceptedUrl;
+    try {
+      interceptedUrl = new URL(value.url, window.location.href);
+    } catch {
+      return null;
+    }
+    const trustedEndpoint =
+      value.eventType === "BATCH_GENERATE_RESPONSE"
+        ? interceptedUrl.origin === "https://aisandbox-pa.googleapis.com" &&
+          /^\/v1\/projects\/[^/]{1,256}\/flowMedia:batchGenerateImages$/.test(
+            interceptedUrl.pathname,
+          )
+        : interceptedUrl.origin === window.location.origin &&
+          interceptedUrl.pathname.includes("flowWorkflows");
+    if (!trustedEndpoint)
+      return null;
+
+    if (value.eventType === "WORKFLOW_UPDATE") {
+      const metadata = value.data?.metadata;
+      if (
+        !isBoundedInterceptId(metadata?.batchId) ||
+        !isBoundedInterceptId(metadata?.primaryMediaId)
+      )
+        return null;
+      return {
+        data: {
+          metadata: {
+            batchId: metadata.batchId,
+            primaryMediaId: metadata.primaryMediaId,
+          },
+        },
+        eventType: value.eventType,
+        method: value.method,
+        status: value.status,
+        timestamp: value.timestamp,
+        url: interceptedUrl.href,
+      };
+    }
+
+    const workflows = value.data?.workflows;
+    if (
+      !Array.isArray(workflows) ||
+      workflows.length === 0 ||
+      workflows.length > TF_MAX_INTERCEPT_WORKFLOWS
+    )
+      return null;
+    for (const workflow of workflows) {
+      const metadata = workflow?.metadata;
+      if (
+        !isBoundedInterceptId(metadata?.batchId) ||
+        !isBoundedInterceptId(metadata?.primaryMediaId)
+      )
+        return null;
+    }
+    const sanitizedWorkflows = workflows.map((workflow) => ({
+      metadata: {
+        batchId: workflow.metadata.batchId,
+        primaryMediaId: workflow.metadata.primaryMediaId,
+      },
+    }));
+    return {
+      data: { workflows: sanitizedWorkflows },
+      eventType: value.eventType,
+      method: value.method,
+      status: value.status,
+      timestamp: value.timestamp,
+      url: interceptedUrl.href,
+    };
+  }
+
   function projectIdFromLocation() {
     const match =
       window.location.pathname.match(/\/project\/([^/?#]+)/) ||
@@ -39,19 +139,16 @@
   installNavigationHooks();
 
   window.addEventListener("message", function (event) {
-    event.source === window &&
-      "FLOW_AUTO_INTERCEPT" === event.data?.type &&
-      chrome.runtime?.id &&
+    if (
+      event.source !== window ||
+      "FLOW_AUTO_INTERCEPT" !== event.data?.type ||
+      !chrome.runtime?.id
+    )
+      return;
+    const intercepted = normalizeInterceptedEvent(event.data);
+    intercepted &&
       chrome.runtime
-        .sendMessage({
-          type: "API_INTERCEPTED",
-          eventType: event.data.eventType,
-          url: event.data.url,
-          method: event.data.method,
-          status: event.data.status,
-          data: event.data.data,
-          timestamp: event.data.timestamp,
-        })
+        .sendMessage({ type: "API_INTERCEPTED", ...intercepted })
         .catch(() => {});
   });
 
