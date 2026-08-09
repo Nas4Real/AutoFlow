@@ -760,7 +760,13 @@ async function mr() {
           : `✅ Recovered ${o} item${o > 1 ? "s" : ""} generated while panel was closed`,
         "success",
       ));
-  } catch (e) {}
+  } catch (error) {
+    console.warn("Could not restore the previous generation state", error);
+    Te(
+      "Could not restore the previous generation state. Reopen the panel to try again.",
+      "warn",
+    );
+  }
 }
 (setTimeout(() => {
   le("session_start", { plan: i?.plan || "free" });
