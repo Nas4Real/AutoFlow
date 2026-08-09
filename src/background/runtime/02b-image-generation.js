@@ -319,6 +319,7 @@ async function St(e, t, a = null) {
         : O.plan),
     zt("BATCH_GENERATION_DONE", {
       message: "All API requests completed",
+      uiBatchId: t.uiBatchId || null,
       totalPrompts: I,
       successfulPrompts: y,
       failedPrompts: A,
@@ -357,7 +358,11 @@ async function Mt(e, t, a, r, o) {
         message: `🖊 #${r + 1} — "${o.substring(0, 50) + (o.length > 50 ? "..." : "")}"`,
         type: "info",
       }),
-      zt("PROMPT_STATUS", { promptIndex: i, status: "running" }));
+      zt("PROMPT_STATUS", {
+        promptIndex: i,
+        status: "running",
+        uiBatchId: t.uiBatchId || null,
+      }));
     for (let e = 0; e < n; e++) {
       const a = _e(),
         l = i,
@@ -480,7 +485,11 @@ async function Mt(e, t, a, r, o) {
             const e = t.promptIndex;
             (u.set(e, (u.get(e) || 0) + 1),
               u.get(e) >= n &&
-                (zt("PROMPT_STATUS", { promptIndex: e, status: "submitted" }),
+                (zt("PROMPT_STATUS", {
+                  promptIndex: e,
+                  status: "submitted",
+                  uiBatchId: t.uiBatchId || null,
+                }),
                 zt("LOG", {
                   message: `✓ Prompt #${e + 1} complete (${n}/${n})`,
                   type: "success",
@@ -528,14 +537,19 @@ async function Mt(e, t, a, r, o) {
             0 === e
               ? (zt("PROMPT_STATUS", {
                   promptIndex: o,
-                  status: "failed",
-                  error: failureReason,
-                }),
+                status: "failed",
+                error: failureReason,
+                uiBatchId: t.uiBatchId || null,
+              }),
                 zt("LOG", {
                   message: `❌ Prompt #${o + 1} failed — all ${n} request(s) errored`,
                   type: "error",
                 }))
-              : (zt("PROMPT_STATUS", { promptIndex: o, status: "submitted" }),
+              : (zt("PROMPT_STATUS", {
+                  promptIndex: o,
+                  status: "submitted",
+                  uiBatchId: t.uiBatchId || null,
+                }),
                 zt("LOG", {
                   message: `⚠️ Prompt #${o + 1} partial — ${e}/${n} succeeded`,
                   type: "warn",

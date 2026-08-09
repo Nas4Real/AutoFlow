@@ -207,6 +207,69 @@ async function run() {
   assert.equal(startImageMessage.settings.aspectRatio, "IMAGE_ASPECT_RATIO_SQUARE");
   assert.equal(startImageMessage.settings.imageCount, 3);
   assert.equal(startImageMessage.settings.speedMode, "balanced");
+
+  assert.equal(
+    await studio.handleVideoRuntimeMessage({
+      type: "FROM_BACKGROUND",
+      subType: "PREVIEW_READY",
+      uiBatchId: imageRun.run.image_run_id,
+      mediaType: "image",
+      mediaId: "flow-media-runtime-preview",
+      fifeUrl: "https://example.test/runtime-preview.png",
+      promptIndex: 0,
+      fileName: "scenes/jack_checks_his_budget__1.png",
+    }),
+    true,
+  );
+  project = studio.getState().activeProject;
+  const runtimeVariant = project.image_variants.find(
+    (variant) => variant.media_id === "flow-media-runtime-preview",
+  );
+  assert.ok(runtimeVariant);
+  assert.equal(runtimeVariant.prompt_id, firstPromptId);
+  assert.equal(runtimeVariant.image_run_id, imageRun.run.image_run_id);
+  assert.equal(runtimeVariant.thumbnail_url, "https://example.test/runtime-preview.png");
+  assert.equal(
+    project.image_generation_runs.find(
+      (run) => run.image_run_id === imageRun.run.image_run_id,
+    ).status,
+    "generating",
+  );
+  assert.equal(
+    await studio.handleVideoRuntimeMessage({
+      type: "FROM_BACKGROUND",
+      subType: "PROMPT_STATUS",
+      uiBatchId: imageRun.run.image_run_id,
+      promptIndex: 1,
+      status: "failed",
+      error: "Flow rejected this prompt.",
+    }),
+    true,
+  );
+  project = studio.getState().activeProject;
+  assert.equal(
+    project.prompt_records.find((record) => record.prompt_id === secondPromptId)
+      .image_generation_state,
+    "failed",
+  );
+  assert.equal(
+    await studio.handleVideoRuntimeMessage({
+      type: "FROM_BACKGROUND",
+      subType: "BATCH_GENERATION_DONE",
+      uiBatchId: imageRun.run.image_run_id,
+      successfulPrompts: 1,
+      failedPrompts: 1,
+      totalImages: 1,
+    }),
+    true,
+  );
+  project = studio.getState().activeProject;
+  assert.equal(
+    project.image_generation_runs.find(
+      (run) => run.image_run_id === imageRun.run.image_run_id,
+    ).status,
+    "partial",
+  );
   const firstCacheKey = `sha256:${"b".repeat(64)}`;
   const recorded = await studio.recordImageGenerationRunVariants(imageRun.run.image_run_id, [
     {

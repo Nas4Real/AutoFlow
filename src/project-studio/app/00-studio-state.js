@@ -1994,6 +1994,115 @@
     );
   }
 
+  async function recordImagePreviewFromRuntimeMessage(message) {
+    if (
+      !message ||
+      message.type !== "FROM_BACKGROUND" ||
+      message.subType !== "PREVIEW_READY" ||
+      message.mediaType === "video" ||
+      !message.uiBatchId ||
+      !message.mediaId
+    ) {
+      return false;
+    }
+
+    const domain = getDomain();
+    let domainState = studioState.domainState;
+    if (domain && typeof domain.load === "function") {
+      domainState = await domain.load();
+      studioState.domainState = domainState;
+      studioState.activeProject = resolveActiveProject(domainState);
+      studioState.flowContext = getStoredFlowContext(studioState.activeProject);
+    }
+
+    const runMatch = findProjectByImageRunId(domainState, message.uiBatchId);
+    const project = runMatch?.project;
+    const runRecord = runMatch?.run;
+    if (!project || !runRecord || String(runRecord.status || "") !== "generating") return false;
+
+    const promptIndex = Number(message.promptIndex || 0);
+    const requestItems = Array.isArray(runRecord.request_items)
+      ? runRecord.request_items.filter(isObject)
+      : [];
+    const requestItem =
+      requestItems.find((item) => Number(item.source_index || 0) === promptIndex) ||
+      requestItems[promptIndex];
+    if (!requestItem?.prompt_id) return false;
+
+    const timestamp = new Date().toISOString();
+    const variants = getProjectImageVariants(project).slice();
+    const existingVariant =
+      variants.find(
+        (variant) =>
+          variant.image_run_id === runRecord.image_run_id &&
+          getVariantMediaId(variant) === String(message.mediaId),
+      ) || null;
+    const promptVariants = variants.filter(
+      (variant) =>
+        variant.image_run_id === runRecord.image_run_id &&
+        variant.prompt_id === requestItem.prompt_id,
+    );
+    const fallbackIndex = existingVariant
+      ? Number(existingVariant.variant_index || 0)
+      : promptVariants.reduce(
+          (highest, variant) => Math.max(highest, Number(variant.variant_index || 0)),
+          -1,
+        ) + 1;
+    const variant = Object.assign(
+      buildImageVariantRecord(
+        project,
+        runRecord,
+        requestItem,
+        {
+          media_id: message.mediaId,
+          file_name: message.fileName,
+          thumbnail_url: message.fifeUrl,
+          fife_url: message.fifeUrl,
+          file_state: "remote",
+        },
+        fallbackIndex,
+        existingVariant,
+        timestamp,
+      ),
+      {
+        cache_state: existingVariant?.cache_state || "pending",
+        file_state: existingVariant?.file_state === "available" ? "available" : "remote",
+        repair_state: "",
+        status: "available",
+      },
+    );
+    upsertImageVariant(variants, variant);
+
+    const mediaLinks = getProjectMediaLinks(project).slice();
+    syncVariantMediaLink(mediaLinks, project, variant, timestamp);
+    await updateProjectById(project.project_id, {
+      image_variants: variants,
+      media_links: mediaLinks,
+      image_generation_runs: getProjectImageGenerationRuns(project).map((run) =>
+        run.image_run_id === runRecord.image_run_id
+          ? Object.assign({}, run, {
+              status: "generating",
+              variant_count: variants.filter(
+                (item) => item.image_run_id === runRecord.image_run_id,
+              ).length,
+              updated_at: timestamp,
+            })
+          : run,
+      ),
+      prompt_records: getProjectPromptRecords(project).map((record) =>
+        record.prompt_id === requestItem.prompt_id
+          ? Object.assign({}, record, {
+              active_image_run_id: runRecord.image_run_id,
+              image_generation_state: "generated",
+              image_generation_completed_at: timestamp,
+              updated_at: timestamp,
+            })
+          : record,
+      ),
+    });
+    return true;
+  }
+
   async function recordCachedPreviewFromRuntimeMessage(message) {
     if (!message || message.type !== "FROM_BACKGROUND" || message.subType !== "PREVIEW_CACHED") {
       return false;
@@ -2052,6 +2161,113 @@
     await updateProjectById(project.project_id, {
       image_variants: nextVariants,
       media_links: nextMediaLinks,
+    });
+    return true;
+  }
+
+  async function recordImageRunStatusFromRuntimeMessage(message) {
+    if (
+      !message ||
+      message.type !== "FROM_BACKGROUND" ||
+      !message.uiBatchId ||
+      (message.subType !== "PROMPT_STATUS" && message.subType !== "BATCH_GENERATION_DONE")
+    ) {
+      return false;
+    }
+
+    const domain = getDomain();
+    let domainState = studioState.domainState;
+    if (domain && typeof domain.load === "function") {
+      domainState = await domain.load();
+      studioState.domainState = domainState;
+      studioState.activeProject = resolveActiveProject(domainState);
+      studioState.flowContext = getStoredFlowContext(studioState.activeProject);
+    }
+    const runMatch = findProjectByImageRunId(domainState, message.uiBatchId);
+    const project = runMatch?.project;
+    const runRecord = runMatch?.run;
+    if (!project || !runRecord) return false;
+
+    const timestamp = new Date().toISOString();
+    const requestItems = Array.isArray(runRecord.request_items)
+      ? runRecord.request_items.filter(isObject)
+      : [];
+    const promptIds = new Set(requestItems.map((item) => item.prompt_id).filter(Boolean));
+    const promptStatuses = Object.assign({}, runRecord.prompt_statuses || {});
+    let nextRun = runRecord;
+    let nextPromptRecords = getProjectPromptRecords(project);
+
+    if (message.subType === "PROMPT_STATUS") {
+      const promptIndex = Number(message.promptIndex || 0);
+      const requestItem =
+        requestItems.find((item) => Number(item.source_index || 0) === promptIndex) ||
+        requestItems[promptIndex];
+      if (!requestItem?.prompt_id) return false;
+      const status = String(message.status || "").toLowerCase();
+      if (!["running", "submitted", "failed"].includes(status)) return false;
+      promptStatuses[requestItem.prompt_id] = {
+        status,
+        error: status === "failed" ? String(message.error || "Image generation failed.") : "",
+        updated_at: timestamp,
+      };
+      const failedCount = Object.values(promptStatuses).filter(
+        (item) => item?.status === "failed",
+      ).length;
+      nextRun = Object.assign({}, runRecord, {
+        status: "generating",
+        prompt_statuses: promptStatuses,
+        failed_prompt_count: failedCount,
+        updated_at: timestamp,
+      });
+      nextPromptRecords = nextPromptRecords.map((record) => {
+        if (record.prompt_id !== requestItem.prompt_id) return record;
+        return Object.assign({}, record, {
+          active_image_run_id: runRecord.image_run_id,
+          image_generation_state:
+            status === "failed" ? "failed" : status === "submitted" ? "generated" : "generating",
+          image_generation_error:
+            status === "failed" ? String(message.error || "Image generation failed.") : "",
+          updated_at: timestamp,
+        });
+      });
+    } else {
+      const successfulPrompts = Math.max(0, Number(message.successfulPrompts || 0));
+      const failedPrompts = Math.max(0, Number(message.failedPrompts || 0));
+      const status = failedPrompts ? (successfulPrompts ? "partial" : "failed") : "completed";
+      nextRun = Object.assign({}, runRecord, {
+        status,
+        successful_prompt_count: successfulPrompts,
+        failed_prompt_count: failedPrompts,
+        total_image_count: Math.max(0, Number(message.totalImages || 0)),
+        completed_at: timestamp,
+        updated_at: timestamp,
+      });
+      const variants = getProjectImageVariants(project);
+      nextPromptRecords = nextPromptRecords.map((record) => {
+        if (!promptIds.has(record.prompt_id)) return record;
+        const promptStatus = promptStatuses[record.prompt_id];
+        const hasVariant = variants.some(
+          (variant) =>
+            variant.image_run_id === runRecord.image_run_id &&
+            variant.prompt_id === record.prompt_id,
+        );
+        const failed = promptStatus?.status === "failed" || (status === "failed" && !hasVariant);
+        return Object.assign({}, record, {
+          image_generation_state: failed ? "failed" : "generated",
+          image_generation_error: failed
+            ? promptStatus?.error || record.image_generation_error || "Image generation failed."
+            : "",
+          image_generation_completed_at: failed ? record.image_generation_completed_at : timestamp,
+          updated_at: timestamp,
+        });
+      });
+    }
+
+    await updateProjectById(project.project_id, {
+      image_generation_runs: getProjectImageGenerationRuns(project).map((run) =>
+        run.image_run_id === runRecord.image_run_id ? nextRun : run,
+      ),
+      prompt_records: nextPromptRecords,
     });
     return true;
   }
@@ -3318,8 +3534,18 @@
   }
 
   async function handleVideoRuntimeMessage(message) {
+    const imagePreviewRecorded = await recordImagePreviewFromRuntimeMessage(message);
+    if (imagePreviewRecorded) {
+      return true;
+    }
+
     const cachedPreviewRecorded = await recordCachedPreviewFromRuntimeMessage(message);
     if (cachedPreviewRecorded) {
+      return true;
+    }
+
+    const imageStatusRecorded = await recordImageRunStatusFromRuntimeMessage(message);
+    if (imageStatusRecorded) {
       return true;
     }
 
