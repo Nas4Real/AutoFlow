@@ -12,3 +12,13 @@
 - [x] Run code-quality and security reviews
 - [x] Complete final browser and automated verification
 - [x] Push atomic commits and hand off results
+
+## Studio-First Media Workflow
+
+- [ ] Add selected-video image-generation contract tests
+- [ ] Extract shared image batch construction and orchestration
+- [ ] Add Studio image generation, stop, retry, and runtime progress state
+- [ ] Add settings, connection status, and queue controls to Image Review
+- [ ] Keep the side panel working through the shared service
+- [ ] Run full automated and browser verification
+- [ ] Run code/security review, address findings, and push atomic commits
