@@ -9,7 +9,7 @@ async function Ot(e, t = 3, a = 3e3) {
       if (!e.message || !e.message.includes("429") || r === t) throw e;
       const o = a * Math.pow(2, r) + 1e3 * Math.random();
       (zt("LOG", {
-        message: `â³ Rate limited â€” retrying in ${(o / 1e3).toFixed(1)}s (attempt ${r + 1}/${t})`,
+        message: `⏳ Rate limited — retrying in ${(o / 1e3).toFixed(1)}s (attempt ${r + 1}/${t})`,
         type: "warn",
       }),
         await we(o));
@@ -130,7 +130,7 @@ async function Pt(e, t, a) {
         } catch (e) {
           return (
             zt("LOG", {
-              message: `âš ï¸ Request ${o + 1}/${s} failed: ${e.message}`,
+              message: `⚠️ Request ${o + 1}/${s} failed: ${e.message}`,
               type: "warn",
             }),
             { success: !1, error: e.message }
@@ -144,7 +144,7 @@ async function Pt(e, t, a) {
   return (
     u > 0 &&
       zt("LOG", {
-        message: `âš ï¸ ${u}/${s} failed for prompt ${a + 1}`,
+        message: `⚠️ ${u}/${s} failed for prompt ${a + 1}`,
         type: "warn",
       }),
     { batchId: n, count: s, failed: u }
@@ -167,12 +167,12 @@ async function St(e, t, a = null) {
   };
   (ht(), (pt = t._autoChained || !1));
   const n = t.mode || "image";
-  Kt("âš™ï¸ Preparing batch...", "info");
+  Kt("⚙️ Preparing batch...", "info");
   const s = await $e(e.length, n, t);
   if (!s.authorized)
     return s.banned
       ? void zt("BANNED", { message: s.reason })
-      : (zt("LOG", { message: `ðŸš« ${s.reason}`, type: "error" }),
+      : (zt("LOG", { message: `🚫 ${s.reason}`, type: "error" }),
         void 0 !== s.remaining &&
           zt("LIMIT_REACHED", {
             message: s.reason,
@@ -181,11 +181,11 @@ async function St(e, t, a = null) {
         void (
           s.serverDown &&
           zt("LOG", {
-            message: "ðŸ’¡ Check your internet connection and try again.",
+            message: "💡 Check your internet connection and try again.",
             type: "warn",
           })
         ));
-  (Kt("âœ… Ready to go", "success"),
+  (Kt("✅ Ready to go", "success"),
     (f = !0),
     (w = {
       naming: t.naming || "numbered",
@@ -205,37 +205,37 @@ async function St(e, t, a = null) {
     g = e.length * p;
   if (
     (Kt(
-      `âš¡ Generating ${g} ${l ? "video" : "image"}${g > 1 ? "s" : ""} from ${e.length} prompt${e.length > 1 ? "s" : ""}${m}`,
+      `⚡ Generating ${g} ${l ? "video" : "image"}${g > 1 ? "s" : ""} from ${e.length} prompt${e.length > 1 ? "s" : ""}${m}`,
       "success",
     ),
-    Kt("ðŸ”„ Connecting to Flow...", "info"),
+    Kt("🔄 Connecting to Flow...", "info"),
     !c)
   )
     return (
-      Kt("âŒ No Flow tab found â€” open Google Flow and try again", "error"),
+      Kt("❌ No Flow tab found — open Google Flow and try again", "error"),
       void failStartup("No Flow tab found - open Google Flow and try again")
     );
   const h = await Qe(!0);
   if (!h)
     return (
-      Kt("âŒ Authentication failed â€” try refreshing the Flow page", "error"),
+      Kt("❌ Authentication failed — try refreshing the Flow page", "error"),
       void failStartup("Authentication failed - refresh the Flow page")
     );
   const _ = await Xe();
   if (!_)
     return (
-      Kt("âŒ No project open â€” create or open a project in Flow", "error"),
+      Kt("❌ No project open — create or open a project in Flow", "error"),
       void failStartup("No Flow project open - create or open a project in Flow")
     );
   if (!(await Ze()))
     return (
       Kt(
-        "âŒ Security check failed â€” refresh the Flow page. Disable VPN if active.",
+        "❌ Security check failed — refresh the Flow page. Disable VPN if active.",
         "error",
       ),
       void failStartup("Security check failed - refresh Flow page", "recaptcha_blocked")
     );
-  (Kt("âœ… Connected", "success"),
+  (Kt("✅ Connected", "success"),
     (lt = Date.now()),
     "image" === n
       ? await Mt(e, t, o, h, _)
@@ -264,12 +264,12 @@ async function St(e, t, a = null) {
     f &&
       (A > 0 && y > 0
         ? Kt(
-            `âš ï¸ Done â€” ${y}/${I} prompts succeeded, ${A} failed (${v})`,
+            `⚠️ Done — ${y}/${I} prompts succeeded, ${A} failed (${v})`,
             "warn",
           )
         : A > 0
-          ? Kt(`âŒ Failed â€” all ${I} prompts errored (${v})`, "error")
-          : Kt(`âœ… All ${I} prompts generated (${v})`, "success")),
+          ? Kt(`❌ Failed — all ${I} prompts errored (${v})`, "error")
+          : Kt(`✅ All ${I} prompts generated (${v})`, "success")),
     A > 0)
   ) {
     const e = new Set();
@@ -291,7 +291,7 @@ async function St(e, t, a = null) {
           ? t.slice(0, a).join(", ") + `, +${t.length - a} more`
           : t.join(", ")),
         Kt(
-          `âŒ Failed ${e.toLowerCase()}${t.length > 1 ? "s" : ""}: ${r}`,
+          `❌ Failed ${e.toLowerCase()}${t.length > 1 ? "s" : ""}: ${r}`,
           "error",
         ));
     }
@@ -312,7 +312,7 @@ async function St(e, t, a = null) {
     (O?.ok &&
       (O.deducted > 0
         ? Kt(
-            `ðŸ“Š ${O.deducted} prompts deducted Â· ${O.remaining} remaining today`,
+            `📊 ${O.deducted} prompts deducted · ${O.remaining} remaining today`,
             "info",
           )
         : O.plan),
@@ -353,7 +353,7 @@ async function Mt(e, t, a, r, o) {
       c = ";" + Date.now() + r;
     (V.set(s, i),
       zt("LOG", {
-        message: `ðŸ–Š #${r + 1} â€” "${o.substring(0, 50) + (o.length > 50 ? "..." : "")}"`,
+        message: `🖊 #${r + 1} — "${o.substring(0, 50) + (o.length > 50 ? "..." : "")}"`,
         type: "info",
       }),
       zt("PROMPT_STATUS", { promptIndex: i, status: "running" }));
@@ -480,7 +480,7 @@ async function Mt(e, t, a, r, o) {
               u.get(e) >= n &&
                 (zt("PROMPT_STATUS", { promptIndex: e, status: "submitted" }),
                 zt("LOG", {
-                  message: `âœ“ Prompt #${e + 1} complete (${n}/${n})`,
+                  message: `✓ Prompt #${e + 1} complete (${n}/${n})`,
                   type: "success",
                 })));
           }
@@ -495,26 +495,26 @@ async function Mt(e, t, a, r, o) {
           ) {
             let t = e.message || "Unknown error";
             (t.includes("PUBLIC_ERROR_UNSAFE_GENERATION")
-              ? (t = "Blocked by safety filter â€” try rewording the prompt")
+              ? (t = "Blocked by safety filter — try rewording the prompt")
               : t.includes("PUBLIC_ERROR_UNSAFE_IMAGE_UPLOAD")
                 ? (t = "Reference image blocked by safety filter")
                 : t.includes("reCAPTCHA blocked")
-                  ? (t = "reCAPTCHA blocked â€” refresh Flow page or disable VPN")
+                  ? (t = "reCAPTCHA blocked — refresh Flow page or disable VPN")
                   : t.includes("Access denied")
-                    ? (t = "Session expired â€” refresh Flow page")
+                    ? (t = "Session expired — refresh Flow page")
                     : t.includes("Blocked by Google")
-                      ? (t = "Blocked by Google â€” refresh Flow page")
+                      ? (t = "Blocked by Google — refresh Flow page")
                       : t.includes("Rejected (400)") ||
                         (t.includes("500")
                           ? (t = "Server error (500)")
                           : t.includes("429")
                             ? (t = "Rate limited (429)")
                             : t.includes("403")
-                              ? (t = "Access denied (403) â€” refresh Flow page")
+                              ? (t = "Access denied (403) — refresh Flow page")
                               : t.length > 150 &&
                                 (t = t.substring(0, 150) + "...")),
               zt("LOG", {
-                message: `âŒ Prompt #${o + 1} failed â€” ${t}`,
+                message: `❌ Prompt #${o + 1} failed — ${t}`,
                 type: "error",
               }));
           }
@@ -530,12 +530,12 @@ async function Mt(e, t, a, r, o) {
                   error: failureReason,
                 }),
                 zt("LOG", {
-                  message: `âŒ Prompt #${o + 1} failed â€” all ${n} request(s) errored`,
+                  message: `❌ Prompt #${o + 1} failed — all ${n} request(s) errored`,
                   type: "error",
                 }))
               : (zt("PROMPT_STATUS", { promptIndex: o, status: "submitted" }),
                 zt("LOG", {
-                  message: `âš ï¸ Prompt #${o + 1} partial â€” ${e}/${n} succeeded`,
+                  message: `⚠️ Prompt #${o + 1} partial — ${e}/${n} succeeded`,
                   type: "warn",
                 }));
           }

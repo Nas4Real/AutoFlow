@@ -86,7 +86,7 @@ function tr() {
     .filter((e) => e.trim());
   t.length > 1 &&
   !(await an({
-    icon: "âš ï¸",
+    icon: "⚠️",
     title: "Switch to Single Prompt Mode?",
     message: `This will keep only your first prompt and discard ${t.length - 1} other${t.length > 2 ? "s" : ""}.`,
     confirmText: "Continue",
@@ -147,18 +147,18 @@ function or() {
     (e.style.display = "inline-flex"),
     "fast" === l.speedMode
       ? (e.classList.add("speed-fast"),
-        (e.title = "Fast Mode â€” full speed, max concurrency"),
+        (e.title = "Fast Mode — full speed, max concurrency"),
         (t.textContent = "bolt"),
         (a.textContent = "Fast"))
       : "balanced" === l.speedMode
         ? (e.classList.add("speed-balanced"),
           (e.title =
-            "Balanced Mode â€” moderate concurrency for fewer rate limits"),
+            "Balanced Mode — moderate concurrency for fewer rate limits"),
           (t.textContent = "balance"),
           (a.textContent = "Balanced"))
         : "slow" === l.speedMode &&
           (e.classList.add("speed-slow"),
-          (e.title = "Slow Mode â€” running 1 generation at a time"),
+          (e.title = "Slow Mode — running 1 generation at a time"),
           (t.textContent = "hourglass_top"),
           (a.textContent = "Slow")));
 }
@@ -244,7 +244,7 @@ async function cr() {
 }),
 ar?.querySelectorAll("[data-speed]").forEach((e) => {
   e.addEventListener("click", () => {
-    if (nr()) return void Te("âš ï¸ Cannot change speed while generating", "warn");
+    if (nr()) return void Te("⚠️ Cannot change speed while generating", "warn");
     const t = e.dataset.speed;
     t !== l.speedMode &&
       ((l.speedMode = t),
@@ -254,9 +254,9 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
       lr(),
       Te(
         {
-          fast: "âš¡ Fast Mode â€” full speed",
-          balanced: "âš–ï¸ Balanced Mode â€” moderate concurrency",
-          slow: "ðŸ¢ Slow Mode â€” one at a time",
+          fast: "⚡ Fast Mode — full speed",
+          balanced: "⚖️ Balanced Mode — moderate concurrency",
+          slow: "🐢 Slow Mode — one at a time",
         }[t] || t,
         "info",
       ));
@@ -336,14 +336,14 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
         if (
           (Oa(),
           Te(
-            `ðŸ“Š Generation complete: ${a}/${t} prompts succeeded, ${r} images queued`,
+            `📊 Generation complete: ${a}/${t} prompts succeeded, ${r} images queued`,
             n > 0 ? "warn" : "success",
           ),
           tfScheduleDownloadHistorySync(2500),
           0 === r)
         ) {
           if (
-            (Te("âŒ No images generated â€” batch failed", "error"),
+            (Te("❌ No images generated — batch failed", "error"),
             l.activeBatchId)
           ) {
             const e = pn(l.activeBatchId);
@@ -353,7 +353,7 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
                   (e.status = "failed");
               }),
               gn(l.activeBatchId, "failed"),
-              Te(`â†©ï¸ Batch "${e.name}" marked as failed`, "error")),
+              Te(`↩️ Batch "${e.name}" marked as failed`, "error")),
               (l.activeBatchId = null));
           }
           (m && (clearInterval(m), (m = null)),
@@ -431,13 +431,13 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
       if ("BANNED" === e.subType) return (Xe(e.message), zn(!1), void Oa());
       if ("LIMIT_REACHED" === e.subType) {
         if (
-          (Te(`ðŸš« ${e.message || "Daily limit reached."}`, "error"),
+          (Te(`🚫 ${e.message || "Daily limit reached."}`, "error"),
           le("limit_reached", {
             remaining: e.remaining,
             plan: i?.plan || "free",
           }),
           void 0 !== e.remaining &&
-            Te(`ðŸ“Š ${e.remaining} prompts remaining today.`, "warn"),
+            Te(`📊 ${e.remaining} prompts remaining today.`, "warn"),
           (r("#limit-message").textContent =
             e.message ||
             "Daily limit reached. Reduce the batch size for unlimited."),
@@ -463,7 +463,7 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
         if (
           (zn(!1),
           De("Stale References", "badge badge-disconnected", 8e3),
-          Te(`ðŸ”„ ${e.message}`, "warn"),
+          Te(`🔄 ${e.message}`, "warn"),
           l.activeBatchId)
         ) {
           const e = pn(l.activeBatchId);
@@ -490,7 +490,7 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
         if (
           (zn(!1),
           De("Quota Reached", "badge badge-disconnected", 8e3),
-          Te(`ðŸš« ${e.message}`, "error"),
+          Te(`🚫 ${e.message}`, "error"),
           l.activeBatchId)
         ) {
           const e = pn(l.activeBatchId);
@@ -513,7 +513,7 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
             (e.status = "failed");
         }),
           Gn({
-            icon: "ðŸš«",
+            icon: "🚫",
             title:
               "video" === e.type
                 ? "Google Flow Video Limit Reached"
@@ -534,7 +534,7 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
         if (
           (zn(!1),
           De("Stale References", "badge badge-disconnected", 8e3),
-          Te(`ðŸ”„ ${e.message}`, "warn"),
+          Te(`🔄 ${e.message}`, "warn"),
           l.activeBatchId)
         ) {
           const e = pn(l.activeBatchId);
@@ -555,7 +555,7 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
         t &&
           "flex" !== t.style.display &&
           Gn({
-            icon: "ðŸ”„",
+            icon: "🔄",
             title: "Reference Frames Need Local Files",
             message:
               "TurboFlow tried to reconnect the start frames for this Google Flow project, but some local files were missing.",
@@ -564,8 +564,8 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
       }
       if ("SERVER_DOWN" === e.subType) {
         if (
-          (Te(`âš ï¸ ${e.message || "Could not reach server."}`, "error"),
-          Te("ðŸ’¡ Check your internet connection and try again.", "warn"),
+          (Te(`⚠️ ${e.message || "Could not reach server."}`, "error"),
+          Te("💡 Check your internet connection and try again.", "warn"),
           l.activeBatchId)
         ) {
           const e = pn(l.activeBatchId);
@@ -588,7 +588,7 @@ ar?.querySelectorAll("[data-speed]").forEach((e) => {
   te(),
   oe(),
   Hn(),
-  Te("TurboFlow v" + xe() + " ready ðŸš€", "info"));
+  Te("TurboFlow v" + xe() + " ready 🚀", "info"));
 try {
   const e = me();
   chrome.runtime
@@ -694,7 +694,7 @@ async function mr() {
           ((a.status = "failed"), e++);
       e > 0 &&
         Te(
-          `ðŸ§¹ Cleaned ${e} stale placeholder${e > 1 ? "s" : ""} from previous session`,
+          `🧹 Cleaned ${e} stale placeholder${e > 1 ? "s" : ""} from previous session`,
           "info",
         );
     }
@@ -724,7 +724,7 @@ async function mr() {
           zn(!0),
           Yn(),
           Te(
-            `ðŸ”„ Reconnected to running batch "${t.name}" â€” ${e.stats.downloaded}/${e.stats.total}`,
+            `🔄 Reconnected to running batch "${t.name}" — ${e.stats.downloaded}/${e.stats.total}`,
             "success",
           ));
       else if (
@@ -756,8 +756,8 @@ async function mr() {
       ee(),
       Te(
         n > 0
-          ? `âœ… Recovered ${o} item${o > 1 ? "s" : ""} (${n} matched, ${a} new)`
-          : `âœ… Recovered ${o} item${o > 1 ? "s" : ""} generated while panel was closed`,
+          ? `✅ Recovered ${o} item${o > 1 ? "s" : ""} (${n} matched, ${a} new)`
+          : `✅ Recovered ${o} item${o > 1 ? "s" : ""} generated while panel was closed`,
         "success",
       ));
   } catch (e) {}

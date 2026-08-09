@@ -13,7 +13,7 @@ function et(e) {
 const tt = [
   {
     type: "welcome",
-    icon: "âš¡",
+    icon: "⚡",
     title: "Welcome to TurboFlow!",
     desc: "Let's take a quick tour so you can start generating in under a minute.",
     btnText: "Show Me Around",
@@ -21,32 +21,32 @@ const tt = [
   {
     type: "spotlight",
     target: ".tabs",
-    icon: "ðŸ“‘",
+    icon: "📑",
     title: "Your 5 Tabs",
-    desc: "<strong>Control</strong> â€” settings & prompts<br><strong>Queue</strong> â€” batch management & auto-chaining<br><strong>Gallery</strong> â€” view, select & download results<br><strong>Library</strong> â€” save & tag reference images<br><strong>Logs</strong> â€” detailed activity log",
+    desc: "<strong>Control</strong> — settings & prompts<br><strong>Queue</strong> — batch management & auto-chaining<br><strong>Gallery</strong> — view, select & download results<br><strong>Library</strong> — save & tag reference images<br><strong>Logs</strong> — detailed activity log",
     position: "bottom",
   },
   {
     type: "spotlight",
     target: '[data-mode="image"]',
-    icon: "ðŸŽ¨",
+    icon: "🎨",
     title: "Generation Mode",
-    desc: "Switch between <strong>Image</strong> and <strong>Video</strong> generation. Each has its own settings â€” models, aspect ratios, and modes.",
+    desc: "Switch between <strong>Image</strong> and <strong>Video</strong> generation. Each has its own settings — models, aspect ratios, and modes.",
     position: "bottom",
     targetParent: ".pill-group",
   },
   {
     type: "spotlight",
     target: "#setting-image-model",
-    icon: "ðŸ¤–",
+    icon: "🤖",
     title: "AI Model",
-    desc: "<strong>Nano Banana Pro</strong> â€” newest, best quality<br><strong>Nano Banana 2</strong> â€” fast, reliable<br><br>Both are Google's latest image models.",
+    desc: "<strong>Nano Banana Pro</strong> — newest, best quality<br><strong>Nano Banana 2</strong> — fast, reliable<br><br>Both are Google's latest image models.",
     position: "bottom",
   },
   {
     type: "spotlight",
     target: '[data-img-ratio="IMAGE_ASPECT_RATIO_LANDSCAPE"]',
-    icon: "ðŸ“",
+    icon: "📐",
     title: "Aspect Ratio",
     desc: "Choose <strong>Landscape</strong> (16:9) or <strong>Portrait</strong> (9:16). This applies to every image in the batch.",
     position: "bottom",
@@ -55,7 +55,7 @@ const tt = [
   {
     type: "spotlight",
     target: '[data-img-count="1"]',
-    icon: "âœ–ï¸",
+    icon: "✖️",
     title: "Images Per Prompt",
     desc: "Generate <strong>1 to 4 variants</strong> per prompt. Great for exploring different interpretations of the same idea.",
     position: "bottom",
@@ -64,15 +64,15 @@ const tt = [
   {
     type: "spotlight",
     target: "#img-reference-section",
-    icon: "ðŸ–¼ï¸",
+    icon: "🖼️",
     title: "Reference Images",
-    desc: "<strong>Add Reference Images (Same for All)</strong> â€” pick images from your Library to guide every prompt's style.<br><br><strong>Assign Different Image for Each Prompt</strong> â€” give each prompt its own reference image. Supports auto 1:1 mapping, @tag matching, and bulk upload.",
+    desc: "<strong>Add Reference Images (Same for All)</strong> — pick images from your Library to guide every prompt's style.<br><br><strong>Assign Different Image for Each Prompt</strong> — give each prompt its own reference image. Supports auto 1:1 mapping, @tag matching, and bulk upload.",
     position: "top",
   },
   {
     type: "spotlight",
     target: ".settings-card",
-    icon: "âš™ï¸",
+    icon: "⚙️",
     title: "Download Settings",
     desc: "<strong>Auto-download</strong> - images and videos download automatically<br><strong>Quality</strong> - choose 2K or Standard for images, 720p or 1080p for videos",
     position: "top",
@@ -80,15 +80,15 @@ const tt = [
   {
     type: "spotlight",
     target: "#prompt-input",
-    icon: "âœï¸",
+    icon: "✍️",
     title: "Your Prompts",
-    desc: "Type one prompt per line. Each line = one generation.<br><br>You can <strong>import a .txt file</strong> with the upload button. Paste 10 or 500 â€” TurboFlow handles it all.<br><br>ðŸ’¡ When you assign different images per prompt, the textarea locks to keep prompts synced with their images.",
+    desc: "Type one prompt per line. Each line = one generation.<br><br>You can <strong>import a .txt file</strong> with the upload button. Paste 10 or 500 — TurboFlow handles it all.<br><br>💡 When you assign different images per prompt, the textarea locks to keep prompts synced with their images.",
     position: "top",
   },
   {
     type: "spotlight",
     target: "#btn-start",
-    icon: "ðŸš€",
+    icon: "🚀",
     title: "Generate Now",
     desc: "Click to <strong>start generating immediately</strong>. Prompts fire and the results appear live in the Gallery tab.",
     position: "top",
@@ -96,32 +96,32 @@ const tt = [
   {
     type: "spotlight",
     target: "#btn-add-queue",
-    icon: "ðŸ“‹",
+    icon: "📋",
     title: "Add to Queue",
-    desc: "Don't want to run now? Add prompts to the <strong>Queue</strong> instead.<br><br>Stack multiple batches with different settings, then hit <strong>Run All</strong> â€” they <strong>auto-run</strong> one after another. You can also duplicate, retry failed prompts, and import/export batches.",
+    desc: "Don't want to run now? Add prompts to the <strong>Queue</strong> instead.<br><br>Stack multiple batches with different settings, then hit <strong>Run All</strong> — they <strong>auto-run</strong> one after another. You can also duplicate, retry failed prompts, and import/export batches.",
     position: "top",
   },
   {
     type: "spotlight",
     target: '[data-tab="gallery"]',
-    icon: "ðŸ–¼",
+    icon: "🖼",
     title: "Gallery",
-    desc: "All generated images and videos appear here, <strong>grouped by prompt</strong>.<br><br><strong>Select</strong> items individually or all at once, then <strong>download</strong> in your preferred quality â€” 2K upscaled, standard, 720p, or 1080p.",
+    desc: "All generated images and videos appear here, <strong>grouped by prompt</strong>.<br><br><strong>Select</strong> items individually or all at once, then <strong>download</strong> in your preferred quality — 2K upscaled, standard, 720p, or 1080p.",
     position: "bottom",
   },
   {
     type: "spotlight",
     target: '[data-tab="library"]',
-    icon: "ðŸ“š",
+    icon: "📚",
     title: "Image Library",
-    desc: "Upload images to use as <strong>references, start frames, or end frames</strong> across all your batches.<br><br>ðŸ’¡ <strong>Tag images</strong> with @names (e.g. @hero, @logo) then use those @tags in your prompts â€” the <strong>Auto-Tag</strong> mapper will match them automatically.",
+    desc: "Upload images to use as <strong>references, start frames, or end frames</strong> across all your batches.<br><br>💡 <strong>Tag images</strong> with @names (e.g. @hero, @logo) then use those @tags in your prompts — the <strong>Auto-Tag</strong> mapper will match them automatically.",
     position: "bottom",
   },
   {
     type: "welcome",
-    icon: "ðŸŽ‰",
+    icon: "🎉",
     title: "You're All Set!",
-    desc: "Open Google Flow, type your prompts, and hit generate.<br>TurboFlow handles the rest.<br><br>ðŸ’¡ <strong>Tip:</strong> Check the <strong>Logs tab</strong> for detailed status on every generation.",
+    desc: "Open Google Flow, type your prompts, and hit generate.<br>TurboFlow handles the rest.<br><br>💡 <strong>Tip:</strong> Check the <strong>Logs tab</strong> for detailed status on every generation.",
     btnText: "Start Creating",
     isFinal: !0,
   },
@@ -250,7 +250,7 @@ function mt(e, t) {
   const a = y.find((a) => a.tag === t && a.id !== e);
   if (a)
     return (
-      Te(`âš ï¸ Tag "@${t}" is already used by "${a.fileName}"`, "warn"),
+      Te(`⚠️ Tag "@${t}" is already used by "${a.fileName}"`, "warn"),
       !1
     );
   const n = y.find((t) => t.id === e);
@@ -259,7 +259,7 @@ function mt(e, t) {
     ((n.tag = t),
     ae(),
     kt(),
-    Te(`ðŸ·ï¸ Tagged "${n.fileName}" as @${t}`, "info"),
+    Te(`🏷️ Tagged "${n.fileName}" as @${t}`, "info"),
     !0)
   );
 }
@@ -270,7 +270,7 @@ function ut(e) {
   ((t.tag = null),
     ae(),
     kt(),
-    Te(`ðŸ·ï¸ Removed @${a} tag from "${t.fileName}"`, "info"));
+    Te(`🏷️ Removed @${a} tag from "${t.fileName}"`, "info"));
 }
 function gt() {
   return y.filter((e) => e.tag && e.mediaId && !e.uploading && !e.hiddenInLibrary);
@@ -358,7 +358,7 @@ function vt() {
   const e = y.filter(
     (e) => e.mediaId && !e.uploading && !e.tag && !e.hiddenInLibrary,
   );
-  if (0 === e.length) return void Te("âœ“ All images are already tagged", "info");
+  if (0 === e.length) return void Te("✓ All images are already tagged", "info");
   let t = 0,
     a = 0;
   for (const n of e) {
@@ -367,9 +367,9 @@ function vt() {
   }
   t > 0 && (ae(), kt());
   const n = y.filter((e) => e.tag && e.id).length - t;
-  let r = `ðŸ·ï¸ Auto-tagged ${t} image${1 !== t ? "s" : ""}`;
+  let r = `🏷️ Auto-tagged ${t} image${1 !== t ? "s" : ""}`;
   (n > 0 && (r += ` (${n} already had tags)`),
-    a > 0 && (r += ` â€” ${a} skipped`),
+    a > 0 && (r += ` — ${a} skipped`),
     Te(r, t > 0 ? "success" : "info"),
     "function" == typeof le &&
       le("library_auto_tag", { tagged: t, skipped: a }));
@@ -377,13 +377,13 @@ function vt() {
 async function yt(e) {
   if (y.filter((e) => !e.uploading).length >= 500)
     return (
-      Te("âš ï¸ Library full â€” max 500 images. Remove some first.", "warn"),
+      Te("⚠️ Library full — max 500 images. Remove some first.", "warn"),
       null
     );
   const t = await Vn(e),
     a = await ce(t, e.type);
   if (!a)
-    return (Te(`âŒ Failed to create thumbnail for "${e.name}"`, "error"), null);
+    return (Te(`❌ Failed to create thumbnail for "${e.name}"`, "error"), null);
   const n = dt(),
     r = {
       id: n,
@@ -418,7 +418,7 @@ async function yt(e) {
           return (
             (y = y.filter((e) => e.id !== n)),
             kt(),
-            Te(`âŒ "${e.name}" â€” ${Ie(t)}`, "error"),
+            Te(`❌ "${e.name}" — ${Ie(t)}`, "error"),
             null
           );
         if (
@@ -436,7 +436,7 @@ async function yt(e) {
           o = t;
           const n = 1500 * Math.pow(1.5, a) + 500 * Math.random();
           (Te(
-            `âŸ³ "${e.name}" upload retry ${a + 1}/3 in ${(n / 1e3).toFixed(1)}s`,
+            `⟳ "${e.name}" upload retry ${a + 1}/3 in ${(n / 1e3).toFixed(1)}s`,
             "warn",
           ),
             await ie(n));
@@ -449,7 +449,7 @@ async function yt(e) {
         s && ((s.mediaId = r.mediaId), (s.uploading = !1)),
         ae(),
         kt(),
-        Te(`ðŸ“¸ "${e.name}" added to library`, "success"),
+        Te(`📸 "${e.name}" added to library`, "success"),
         q++,
         (j = !0),
         s
@@ -471,12 +471,12 @@ async function yt(e) {
         return (
           (y = y.filter((e) => e.id !== n)),
           kt(),
-          Te(`âŒ "${e.name}" â€” ${Ie(o)}`, "error"),
+          Te(`❌ "${e.name}" — ${Ie(o)}`, "error"),
           null
         );
       const i = 1500 * Math.pow(1.5, a) + 500 * Math.random();
       (Te(
-        `âŸ³ "${e.name}" upload error â€” retry ${a + 1}/3 in ${(i / 1e3).toFixed(1)}s`,
+        `⟳ "${e.name}" upload error — retry ${a + 1}/3 in ${(i / 1e3).toFixed(1)}s`,
         "warn",
       ),
         await ie(i));
@@ -484,7 +484,7 @@ async function yt(e) {
   return (
     (y = y.filter((e) => e.id !== n)),
     kt(),
-    Te(`âŒ "${e.name}" â€” ${Ie(o)}`, "error"),
+    Te(`❌ "${e.name}" — ${Ie(o)}`, "error"),
     null
   );
 }
@@ -527,7 +527,7 @@ function It(e) {
       l.endFrameMediaId === t.mediaId && (l.endFrameMediaId = null)),
     ae(),
     kt(),
-    Te(`ðŸ—‘ "${a}" removed from library`, "info"));
+    Te(`🗑 "${a}" removed from library`, "info"));
 }
 function Et() {
   if (0 === y.length) return;
@@ -539,7 +539,7 @@ function Et() {
     (l.endFrameMediaId = null),
     ae(),
     kt(),
-    Te(`ðŸ—‘ Library cleared â€” ${e} images removed`, "info"));
+    Te(`🗑 Library cleared — ${e} images removed`, "info"));
 }
 function kt() {
   const e = r("#library-grid"),
@@ -557,7 +557,7 @@ function kt() {
     );
   ((t.textContent = `${o.length} image${1 !== o.length ? "s" : ""}`),
     (a.style.display = "flex"),
-    (n.textContent = `${o.length} images Â· ${ct()}`),
+    (n.textContent = `${o.length} images · ${ct()}`),
     (e.innerHTML =
       o
         .map((e) => {
@@ -572,7 +572,7 @@ function kt() {
             (r = t
               ? ""
               : e.tag
-                ? `\n                <div class="library-item-tag">\n                    <span class="tag-pill" data-lib-tag-id="${e.id}">\n                        @${se(e.tag)}\n                        <button class="tag-remove" data-tag-remove="${e.id}" title="Remove tag">âœ•</button>\n                    </span>\n                </div>\n            `
+                ? `\n                <div class="library-item-tag">\n                    <span class="tag-pill" data-lib-tag-id="${e.id}">\n                        @${se(e.tag)}\n                        <button class="tag-remove" data-tag-remove="${e.id}" title="Remove tag">✕</button>\n                    </span>\n                </div>\n            `
                 : `\n                <div class="library-item-tag">\n                    <button class="tag-add-btn" data-tag-add="${e.id}" title="Add tag for auto-mapping">+ Tag</button>\n                    <div class="tag-input-wrapper" data-tag-input-wrapper="${e.id}" style="display:none">\n                        <input type="text" class="tag-input-field" data-tag-input="${e.id}"\n                            placeholder="tag name" maxlength="20" spellcheck="false">\n                    </div>\n                </div>\n            `),
             `\n            <div class="library-item ${t ? "uploading" : ""}" data-lib-id="${e.id}">\n                <div class="library-item-overlay">\n                    <div class="uploading-spinner"></div>\n                </div>\n                <img class="library-item-img" src="${e.thumbnail}" alt="${se(e.fileName)}" loading="lazy">\n                <div class="library-item-info">\n                    <span class="library-item-name" title="${se(e.fileName)}">${se(a)}</span>\n                    ${t ? "" : `\n                        <button class="library-item-delete" data-lib-delete="${e.id}" title="Remove">\n                            <span class="material-symbols-outlined">close</span>\n                        </button>\n                    `}\n                </div>\n                ${r}\n                <div class="library-item-mediaid">${n}</div>\n            </div>\n        `
           );
@@ -637,22 +637,22 @@ function kt() {
       if (await St("upload images")) {
         if (1 === a.length) await yt(a[0]);
         else {
-          Te(`ðŸ“¤ Uploading ${a.length} images (10x parallel)...`, "info");
+          Te(`📤 Uploading ${a.length} images (10x parallel)...`, "info");
           const e = (await wt(a, (e, t, a, n) => {})).filter(
               (e) => null !== e,
             ).length,
             t = a.length - e;
           t > 0
-            ? Te(`ðŸ“¤ Upload complete: ${e} succeeded, ${t} failed`, "warn")
-            : Te(`ðŸ“¤ All ${e} images uploaded successfully`, "success");
+            ? Te(`📤 Upload complete: ${e} succeeded, ${t} failed`, "warn")
+            : Te(`📤 All ${e} images uploaded successfully`, "success");
         }
         e.target.value = "";
       } else e.target.value = "";
-    else Te("âš ï¸ No image files selected", "warn");
+    else Te("⚠️ No image files selected", "warn");
   }),
   r("#btn-library-clear")?.addEventListener("click", () => {
     0 !== y.length && Et();
   }),
   r("#btn-library-autotag")?.addEventListener("click", () => {
-    0 !== y.length ? vt() : Te("âš ï¸ Library is empty", "warn");
+    0 !== y.length ? vt() : Te("⚠️ Library is empty", "warn");
   }));

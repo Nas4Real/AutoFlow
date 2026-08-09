@@ -124,7 +124,7 @@
                 m = String(s).padStart(3, "0") + l;
               if (
                 (zt("LOG", {
-                  message: `ðŸ“¥ Manual download: #${m}.${d}`,
+                  message: `📥 Manual download: #${m}.${d}`,
                   type: "info",
                 }),
                 "video" === a)
@@ -133,11 +133,11 @@
                   a = await xt(e, p);
                 (await Nt(a),
                   zt("LOG", {
-                    message: `âœ… #${m}.${d} saved`,
+                    message: `✅ #${m}.${d} saved`,
                     type: "success",
                   }),
                   zt("DOWNLOAD_COMPLETE", {
-                    message: `âœ“ ${m}.${d} saved manually`,
+                    message: `✓ ${m}.${d} saved manually`,
                     stats: { ...E },
                     mediaId: t,
                   }));
@@ -174,11 +174,11 @@
                     1,
                   );
                   (zt("LOG", {
-                    message: `âœ… #${m}.${d} (${n}MB 2K) saved`,
+                    message: `✅ #${m}.${d} (${n}MB 2K) saved`,
                     type: "success",
                   }),
                     zt("DOWNLOAD_COMPLETE", {
-                      message: `âœ“ ${m}.${d} (${n}MB) saved manually`,
+                      message: `✓ ${m}.${d} (${n}MB) saved manually`,
                       stats: { ...E },
                       mediaId: t,
                     }));
@@ -233,11 +233,11 @@
                       })
                       .catch(() => {}),
                     zt("LOG", {
-                      message: `âœ… #${m}.${d} (standard) saved`,
+                      message: `✅ #${m}.${d} (standard) saved`,
                       type: "success",
                     }),
                     zt("DOWNLOAD_COMPLETE", {
-                      message: `âœ“ ${m}.${d} saved manually (standard)`,
+                      message: `✓ ${m}.${d} saved manually (standard)`,
                       stats: { ...E },
                       mediaId: t,
                     }));
@@ -246,7 +246,7 @@
               r({ ok: !0 });
             } catch (e) {
               (zt("LOG", {
-                message: `âŒ Manual download failed: ${e.message}`,
+                message: `❌ Manual download failed: ${e.message}`,
                 type: "error",
               }),
                 r({ ok: !1, error: e.message }));
@@ -264,17 +264,17 @@
       const l = i ? "standard" : "2K upscaled";
       return (
         zt("LOG", {
-          message: `ðŸ“¥ Downloading ${t.length} items (${l}) â†’ ${n}/ (${J}x parallel)`,
+          message: `📥 Downloading ${t.length} items (${l}) → ${n}/ (${J}x parallel)`,
           type: "info",
         }),
         (async () => {
           if (!c)
-            return void zt("LOG", { message: "âŒ No Flow tab", type: "error" });
+            return void zt("LOG", { message: "❌ No Flow tab", type: "error" });
           const a = await Qe(),
             r = await Xe();
           if (!a || !r)
             return void zt("LOG", {
-              message: "âŒ Missing auth/project",
+              message: "❌ Missing auth/project",
               type: "error",
             });
           const d = t.map((e) => {
@@ -323,7 +323,7 @@
                   if (n) {
                     try {
                       zt("LOG", {
-                        message: `ðŸŽ¬ Upscaling #${w} to 4K (this may take several minutes)...`,
+                        message: `🎬 Upscaling #${w} to 4K (this may take several minutes)...`,
                         type: "info",
                       });
                       const o = await ot(
@@ -345,7 +345,7 @@
                         i && (s = "4K"));
                     } catch (e) {
                       zt("LOG", {
-                        message: `âš ï¸ 4K upscale failed: ${e.message} â€” trying 1080p`,
+                        message: `⚠️ 4K upscale failed: ${e.message} — trying 1080p`,
                         type: "warn",
                       });
                     }
@@ -371,7 +371,7 @@
                       } catch (e) {}
                   } else
                     zt("LOG", {
-                      message: `âš ï¸ #${w} cannot upscale to 4K â€” workflow ID missing (likely from older session). Downloading 720p.`,
+                      message: `⚠️ #${w} cannot upscale to 4K — workflow ID missing (likely from older session). Downloading 720p.`,
                       type: "warn",
                     });
                 } else if ("1080p" === n) {
@@ -380,7 +380,7 @@
                   if (n)
                     try {
                       zt("LOG", {
-                        message: `ðŸŽ¬ Upscaling #${w} to 1080p...`,
+                        message: `🎬 Upscaling #${w} to 1080p...`,
                         type: "info",
                       });
                       const o = await rt(
@@ -402,7 +402,7 @@
                         i && (s = "1080p"));
                     } catch (e) {
                       zt("LOG", {
-                        message: `âš ï¸ Upscale failed: ${e.message} â€” using 720p`,
+                        message: `⚠️ Upscale failed: ${e.message} — using 720p`,
                         type: "warn",
                       });
                     }
@@ -414,7 +414,7 @@
                 (await Nt(c),
                   u++,
                   zt("DOWNLOAD_COMPLETE", {
-                    message: `âœ“ ${w}.${l} saved (${s})`,
+                    message: `✓ ${w}.${l} saved (${s})`,
                     stats: { ...E },
                     mediaId: t.mediaId,
                   }));
@@ -476,7 +476,7 @@
                 const n = (r.size / 1024 / 1024).toFixed(1);
                 (u++,
                   zt("DOWNLOAD_COMPLETE", {
-                    message: `âœ… #${w}.${l} saved (${n}MB standard)`,
+                    message: `✅ #${w}.${l} saved (${n}MB standard)`,
                     stats: { ...E },
                     mediaId: t.mediaId,
                   }));
@@ -504,13 +504,13 @@
                         ? ((N = !0),
                           zt("LOG", {
                             message:
-                              "ðŸš« 4K upscale quota reached â€” falling back to 2K",
+                              "🚫 4K upscale quota reached — falling back to 2K",
                             type: "warn",
                           }))
                         : ((R = !0),
                           zt("LOG", {
                             message:
-                              "ðŸš« Upscale quota reached â€” remaining items will use standard quality",
+                              "🚫 Upscale quota reached — remaining items will use standard quality",
                             type: "warn",
                           })),
                         (p = !0),
@@ -524,7 +524,7 @@
                     if ("4k" === e && c && l) {
                       ((N = !0),
                         zt("LOG", {
-                          message: "âš ï¸ 4K requires Google AI Ultra â€” using 2K",
+                          message: "⚠️ 4K requires Google AI Ultra — using 2K",
                           type: "warn",
                         }),
                         (p = !0),
@@ -571,7 +571,7 @@
                   );
                   (u++,
                     zt("DOWNLOAD_COMPLETE", {
-                      message: `âœ“ ${w}.${l} (${n}MB ${"4k" === e ? "4K" : "2K"})`,
+                      message: `✓ ${w}.${l} (${n}MB ${"4k" === e ? "4K" : "2K"})`,
                       stats: { ...E },
                       mediaId: t.mediaId,
                     }));
@@ -627,7 +627,7 @@
                       .catch(() => {}),
                     u++,
                     zt("DOWNLOAD_COMPLETE", {
-                      message: `âœ“ ${w}.${l} (standard)`,
+                      message: `✓ ${w}.${l} (standard)`,
                       stats: { ...E },
                       mediaId: t.mediaId,
                     }));
@@ -636,7 +636,7 @@
             } catch (e) {
               (p++,
                 zt("LOG", {
-                  message: `âŒ #${String(t.fileNum).padStart(3, "0")}${t.fileSuffix || ""} failed: ${e.message}`,
+                  message: `❌ #${String(t.fileNum).padStart(3, "0")}${t.fileSuffix || ""} failed: ${e.message}`,
                   type: "error",
                 }),
                 zt("DOWNLOAD_FAILED", { mediaId: t.mediaId }));
@@ -654,7 +654,7 @@
               (f(d[h++]).then(() => {
                 u + p >= d.length
                   ? (zt("LOG", {
-                      message: `âœ… Download complete: ${u} saved${p > 0 ? `, ${p} failed` : ""} (${l})`,
+                      message: `✅ Download complete: ${u} saved${p > 0 ? `, ${p} failed` : ""} (${l})`,
                       type: u > 0 ? "success" : "error",
                     }),
                     w())
@@ -752,7 +752,7 @@
             r({ ok: !0, mediaId: t });
           } catch (e) {
             (zt("LOG", {
-              message: `âŒ Upload failed: ${e.message}`,
+              message: `❌ Upload failed: ${e.message}`,
               type: "error",
             }),
               r({ ok: !1, error: e.message }));
@@ -784,7 +784,7 @@
       return (
         (g = t.length * n),
         zt("LOG", {
-          message: `ðŸ“¨ START_BATCH received: ${t.length} prompts, mode=${a.mode}, expecting ${g} total images`,
+          message: `📨 START_BATCH received: ${t.length} prompts, mode=${a.mode}, expecting ${g} total images`,
           type: "info",
         }),
         (E = { total: 0, downloaded: 0, failed: 0 }),
@@ -828,7 +828,7 @@
         (ce = null),
         St(t, a, o).catch((e) => {
           (zt("LOG", {
-            message: `ðŸ’€ FATAL: _dG crashed: ${e.message}`,
+            message: `💀 FATAL: _dG crashed: ${e.message}`,
             type: "error",
           }),
             zt("LOG", {
@@ -849,7 +849,7 @@
         (C = !0),
         (ut = !0),
         _t("user_stopped"),
-        zt("LOG", { message: "â¹ Stopped by user", type: "warn" }),
+        zt("LOG", { message: "⏹ Stopped by user", type: "warn" }),
         r({ ok: !0 }),
         !0
       );

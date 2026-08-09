@@ -300,14 +300,14 @@ async function bt(e, t, a = 200, q = {}) {
             ((f = !1),
             zt("LOG", {
               message:
-                "ðŸ›‘ Too many consecutive failures â€” stopping batch. Check your Flow page and try again.",
+                "🛑 Too many consecutive failures — stopping batch. Check your Flow page and try again.",
               type: "error",
             })));
         for (let t = 0; t < e.length; t++)
           void 0 === r[t] &&
             (r[t] = {
               status: "rejected",
-              reason: new Error("Stopped â€” too many consecutive failures"),
+              reason: new Error("Stopped — too many consecutive failures"),
             });
         return void g();
       }
@@ -354,7 +354,7 @@ async function bt(e, t, a = 200, q = {}) {
             (f = !1),
             zt("LOG", {
               message:
-                "ðŸš« Your Google account's daily generation limit reached. Try again in a few hours.",
+                "🚫 Your Google account's daily generation limit reached. Try again in a few hours.",
               type: "error",
             }),
             zt("QUOTA_EXHAUSTED", {
@@ -366,7 +366,7 @@ async function bt(e, t, a = 200, q = {}) {
           void 0 === r[t] &&
             (r[t] = {
               status: "rejected",
-              reason: new Error("Skipped â€” daily quota reached"),
+              reason: new Error("Skipped — daily quota reached"),
             });
         return void g();
       }
@@ -428,7 +428,7 @@ async function bt(e, t, a = 200, q = {}) {
           c > 1 &&
             ((c = 1),
             Kt(
-              "â³ Google is throttling â€” slowing down to 1 at a time...",
+              "⏳ Google is throttling — slowing down to 1 at a time...",
               "warn",
             ))),
         _ && i < y)
@@ -459,7 +459,7 @@ async function bt(e, t, a = 200, q = {}) {
         ((c = Math.min(c + 1, t)),
         (b = Math.max(b / 1.3, 5e3)),
         (v = Date.now()),
-        c === t && Kt("âœ“ Pacing recovered â€” running at full speed", "success"));
+        c === t && Kt("✓ Pacing recovered — running at full speed", "success"));
     }
     g();
   }
@@ -478,7 +478,7 @@ async function bt(e, t, a = 200, q = {}) {
           void 0 === r[t] &&
             (r[t] = {
               status: "rejected",
-              reason: new Error("Skipped â€” generation stopped"),
+              reason: new Error("Skipped — generation stopped"),
             });
         return (g(), void clearInterval(_));
       }

@@ -13,17 +13,17 @@ function Jt() {
             e.classList.remove("mapper-shared-prompt-error");
           }, 2e3)),
         void Gn({
-          icon: "âœï¸",
+          icon: "✍️",
           title: "Prompt Required",
           message:
             "You must write a prompt before saving. The prompt describes what motion or action you want for all your start frames.",
-          hint: "Type a single prompt at the top of the mapper â€” it will apply to all your start frames.",
+          hint: "Type a single prompt at the top of the mapper — it will apply to all your start frames.",
         })
       );
     }
   } else if (!z.some((e) => (e || "").trim().length > 0))
     return void Gn({
-      icon: "âœï¸",
+      icon: "✍️",
       title: "Prompts Required",
       message: "You must write at least one prompt before saving.",
       hint: "Click the edit icon next to each row to add prompts.",
@@ -81,7 +81,7 @@ function Jt() {
               ...Object.keys(l.promptEndFrameMap),
             ]).size
           : Object.keys(l.promptReferenceMap).length),
-    Te(`ðŸ“Ž Saved â€” ${n}/${z.length} prompts have images assigned`, "success"));
+    Te(`📎 Saved — ${n}/${z.length} prompts have images assigned`, "success"));
 }
 function Xt() {
   const e = !0 === l.singlePromptMode,
@@ -99,7 +99,7 @@ function Xt() {
           (o.title = "Upload images as start frames"))
         : ((o.innerHTML =
             '<span class="material-symbols-outlined">link</span> Auto 1:1'),
-          (o.title = "Select images from PC â†’ map 1:1 by order"))));
+          (o.title = "Select images from PC → map 1:1 by order"))));
   const s = r("#btn-mapper-add-prompt");
   s && (s.style.display = e ? "none" : "");
   const i = document.querySelector(".mapper-add-prompt-row");
@@ -136,8 +136,8 @@ function ea() {
   const d = i.length,
     c = d > 0 && s > 0;
   t.innerHTML = c
-    ? `${z.length} prompts â€¢ ${s} mapped â€¢ <span class="mapper-unmapped-count">${d} unmapped</span>`
-    : `${z.length} prompts â€¢ ${s} mapped`;
+    ? `${z.length} prompts • ${s} mapped • <span class="mapper-unmapped-count">${d} unmapped</span>`
+    : `${z.length} prompts • ${s} mapped`;
   const p = r("#mapper-jump-unmapped");
   if ((p && p.remove(), c)) {
     const e = r(".mapper-count-row");
@@ -152,7 +152,7 @@ function ea() {
   }
   let m = "";
   l.singlePromptMode &&
-    (m = `\n            <div class="mapper-shared-prompt-row">\n                <span class="mapper-shared-prompt-label">ðŸ“ Prompt:</span>\n                <span class="mapper-shared-prompt-text" id="mapper-shared-prompt-text"\n                      contenteditable="true" spellcheck="false"\n                      placeholder="Type a prompt that applies to all frames...">${se(z[0] || "")}</span>\n            </div>\n        `);
+    (m = `\n            <div class="mapper-shared-prompt-row">\n                <span class="mapper-shared-prompt-label">📝 Prompt:</span>\n                <span class="mapper-shared-prompt-text" id="mapper-shared-prompt-text"\n                      contenteditable="true" spellcheck="false"\n                      placeholder="Type a prompt that applies to all frames...">${se(z[0] || "")}</span>\n            </div>\n        `);
   const u = z
     .map((e, t) => {
       const a = String(t + 1).padStart(3, "0"),
@@ -166,7 +166,7 @@ function ea() {
         if (e) {
           const a = ve(e),
             n = ta(e);
-          c = `\n                    <div class="mapper-prompt-refs" data-drop-start="${t}">\n                        <span class="mapper-ref-drag-handle" data-drag-start="${t}" title="Drag to swap with another prompt">\n                            <span class="material-symbols-outlined">drag_indicator</span>\n                        </span>\n                        <div class="mapper-ref-item">\n                            ${a ? `<img class="mapper-ref-thumb" src="${a}" alt="frame">` : '<div class="mapper-ref-thumb" style="display:flex;align-items:center;justify-content:center;font-size:14px">ðŸ–¼</div>'}\n                            <span class="mapper-ref-label">${se(n)}</span>\n                        </div>\n                        <div class="mapper-frame-actions">\n                            <button class="mapper-frame-btn" data-mapper-change="${t}">Change</button>\n                            <button class="mapper-frame-btn remove" data-mapper-remove-frame="${t}">âœ•</button>\n                        </div>\n                    </div>\n                `;
+          c = `\n                    <div class="mapper-prompt-refs" data-drop-start="${t}">\n                        <span class="mapper-ref-drag-handle" data-drag-start="${t}" title="Drag to swap with another prompt">\n                            <span class="material-symbols-outlined">drag_indicator</span>\n                        </span>\n                        <div class="mapper-ref-item">\n                            ${a ? `<img class="mapper-ref-thumb" src="${a}" alt="frame">` : '<div class="mapper-ref-thumb" style="display:flex;align-items:center;justify-content:center;font-size:14px">🖼</div>'}\n                            <span class="mapper-ref-label">${se(n)}</span>\n                        </div>\n                        <div class="mapper-frame-actions">\n                            <button class="mapper-frame-btn" data-mapper-change="${t}">Change</button>\n                            <button class="mapper-frame-btn remove" data-mapper-remove-frame="${t}">✕</button>\n                        </div>\n                    </div>\n                `;
         } else
           c = `\n                    <div class="mapper-prompt-refs mapper-refs-empty" data-drop-start="${t}">\n                        <span class="mapper-no-refs">\n                            ${s > 0 ? '<span class="material-symbols-outlined mapper-warning-icon">warning</span>' : ""}\n                            no start frame\n                        </span>\n                        <button class="mapper-add-btn" data-mapper-add="${t}">\n                            <span class="material-symbols-outlined">add</span>\n                            Set Frame\n                        </button>\n                    </div>\n                `;
       } else if (o) {
@@ -176,14 +176,14 @@ function ea() {
         if (e) {
           const a = ve(e),
             r = ta(e);
-          n = `\n                    <div class="mapper-frame-row" data-drop-start="${t}">\n                        <span class="mapper-frame-label">Start:</span>\n                        <span class="mapper-ref-drag-handle" data-drag-start="${t}" title="Drag to swap with another prompt's start frame">\n                            <span class="material-symbols-outlined">drag_indicator</span>\n                        </span>\n                        <div class="mapper-ref-item">\n                            ${a ? `<img class="mapper-ref-thumb" src="${a}" alt="start">` : '<div class="mapper-ref-thumb" style="display:flex;align-items:center;justify-content:center;font-size:14px">ðŸ–¼</div>'}\n                            <span class="mapper-ref-label">${se(r)}</span>\n                        </div>\n                        <div class="mapper-frame-actions">\n                            <button class="mapper-frame-btn" data-mapper-change-start="${t}">Change</button>\n                            <button class="mapper-frame-btn remove" data-mapper-remove-start="${t}">âœ•</button>\n                        </div>\n                    </div>\n                `;
+          n = `\n                    <div class="mapper-frame-row" data-drop-start="${t}">\n                        <span class="mapper-frame-label">Start:</span>\n                        <span class="mapper-ref-drag-handle" data-drag-start="${t}" title="Drag to swap with another prompt's start frame">\n                            <span class="material-symbols-outlined">drag_indicator</span>\n                        </span>\n                        <div class="mapper-ref-item">\n                            ${a ? `<img class="mapper-ref-thumb" src="${a}" alt="start">` : '<div class="mapper-ref-thumb" style="display:flex;align-items:center;justify-content:center;font-size:14px">🖼</div>'}\n                            <span class="mapper-ref-label">${se(r)}</span>\n                        </div>\n                        <div class="mapper-frame-actions">\n                            <button class="mapper-frame-btn" data-mapper-change-start="${t}">Change</button>\n                            <button class="mapper-frame-btn remove" data-mapper-remove-start="${t}">✕</button>\n                        </div>\n                    </div>\n                `;
         } else
           n = `\n                    <div class="mapper-frame-row mapper-frame-row-empty" data-drop-start="${t}">\n                        <span class="mapper-frame-label">Start:</span>\n                        <button class="mapper-add-btn" data-mapper-add-start="${t}">\n                            <span class="material-symbols-outlined">add</span>\n                            Set Start Frame\n                        </button>\n                    </div>\n                `;
         let r = "";
         if (a) {
           const e = ve(a),
             n = ta(a);
-          r = `\n                    <div class="mapper-frame-row" data-drop-end="${t}">\n                        <span class="mapper-frame-label">End:</span>\n                        <span class="mapper-ref-drag-handle" data-drag-end="${t}" title="Drag to swap with another prompt's end frame">\n                            <span class="material-symbols-outlined">drag_indicator</span>\n                        </span>\n                        <div class="mapper-ref-item">\n                            ${e ? `<img class="mapper-ref-thumb" src="${e}" alt="end">` : '<div class="mapper-ref-thumb" style="display:flex;align-items:center;justify-content:center;font-size:14px">ðŸ–¼</div>'}\n                            <span class="mapper-ref-label">${se(n)}</span>\n                        </div>\n                        <div class="mapper-frame-actions">\n                            <button class="mapper-frame-btn" data-mapper-change-end="${t}">Change</button>\n                            <button class="mapper-frame-btn remove" data-mapper-remove-end="${t}">âœ•</button>\n                        </div>\n                    </div>\n                `;
+          r = `\n                    <div class="mapper-frame-row" data-drop-end="${t}">\n                        <span class="mapper-frame-label">End:</span>\n                        <span class="mapper-ref-drag-handle" data-drag-end="${t}" title="Drag to swap with another prompt's end frame">\n                            <span class="material-symbols-outlined">drag_indicator</span>\n                        </span>\n                        <div class="mapper-ref-item">\n                            ${e ? `<img class="mapper-ref-thumb" src="${e}" alt="end">` : '<div class="mapper-ref-thumb" style="display:flex;align-items:center;justify-content:center;font-size:14px">🖼</div>'}\n                            <span class="mapper-ref-label">${se(n)}</span>\n                        </div>\n                        <div class="mapper-frame-actions">\n                            <button class="mapper-frame-btn" data-mapper-change-end="${t}">Change</button>\n                            <button class="mapper-frame-btn remove" data-mapper-remove-end="${t}">✕</button>\n                        </div>\n                    </div>\n                `;
         } else
           r = `\n                    <div class="mapper-frame-row mapper-frame-row-empty" data-drop-end="${t}">\n                        <span class="mapper-frame-label">End:</span>\n                        <button class="mapper-add-btn" data-mapper-add-end="${t}">\n                            <span class="material-symbols-outlined">add</span>\n                            Set End Frame\n                        </button>\n                    </div>\n                `;
         c = `<div class="mapper-frames-stack">${n}${r}</div>`;
@@ -192,7 +192,7 @@ function ea() {
           a = e
             .map((e, a) => {
               const n = ve(e);
-              return `\n                    <div class="mapper-ref-item">\n                        ${n ? `<img class="mapper-ref-thumb" src="${n}" alt="ref">` : '<div class="mapper-ref-thumb" style="display:flex;align-items:center;justify-content:center;font-size:14px">ðŸ–¼</div>'}\n                        <span class="mapper-ref-label">${se(ta(e))}</span>\n                        <button class="mapper-ref-remove" data-mapper-remove-ref="${t}-${a}" title="Remove">âœ•</button>\n                    </div>\n                `;
+              return `\n                    <div class="mapper-ref-item">\n                        ${n ? `<img class="mapper-ref-thumb" src="${n}" alt="ref">` : '<div class="mapper-ref-thumb" style="display:flex;align-items:center;justify-content:center;font-size:14px">🖼</div>'}\n                        <span class="mapper-ref-label">${se(ta(e))}</span>\n                        <button class="mapper-ref-remove" data-mapper-remove-ref="${t}-${a}" title="Remove">✕</button>\n                    </div>\n                `;
             })
             .join(""),
           n =
@@ -213,7 +213,7 @@ function ea() {
   let g = "";
   (l.singlePromptMode &&
     (g =
-      '\n            <div class="mapper-single-banner">\n                <span class="material-symbols-outlined">link</span>\n                Single prompt mode â€” all start frames share the same prompt.\n            </div>\n        '),
+      '\n            <div class="mapper-single-banner">\n                <span class="material-symbols-outlined">link</span>\n                Single prompt mode — all start frames share the same prompt.\n            </div>\n        '),
     (e.innerHTML = g + m + u),
     aa(),
     Xt(),
@@ -223,14 +223,14 @@ function ta(e) {
   const t = K.find((t) => t.mediaId === e);
   if (t)
     return t.fileName.length > 6
-      ? t.fileName.substring(0, 5) + "â€¦"
+      ? t.fileName.substring(0, 5) + "…"
       : t.fileName;
   const a = y.find((t) => t.mediaId === e);
   if (a) {
     const e = a.tag ? "@" + a.tag : a.fileName;
-    return e.length > 6 ? e.substring(0, 5) + "â€¦" : e;
+    return e.length > 6 ? e.substring(0, 5) + "…" : e;
   }
-  return e.substring(0, 5) + "â€¦";
+  return e.substring(0, 5) + "…";
 }
 function aa() {
   (document.querySelectorAll("[data-mapper-add]").forEach((e) => {
@@ -479,7 +479,7 @@ function na(e) {
     }));
 }
 function ra(e) {
-  if (z.length <= 1) return void Te("âš ï¸ Can't delete the last prompt", "warn");
+  if (z.length <= 1) return void Te("⚠️ Can't delete the last prompt", "warn");
   z.splice(e, 1);
   const t = ue();
   ("start_frame" === t
@@ -559,13 +559,13 @@ function da(e, t = null) {
             const a = await _e(o);
             (pa(e, a.mediaId, t),
               ea(),
-              Te(`ðŸ“¤ Uploaded "${o.name}" â†’ prompt #${e + 1}`, "success"));
+              Te(`📤 Uploaded "${o.name}" → prompt #${e + 1}`, "success"));
           } catch (e) {
-            Te(`âŒ Upload failed: ${e.message}`, "error");
+            Te(`❌ Upload failed: ${e.message}`, "error");
           }
           ya();
         }
-      } else Te("âš ï¸ Not an image file", "warn");
+      } else Te("⚠️ Not an image file", "warn");
   };
   (a.addEventListener("change", n), a.click());
 }
@@ -598,6 +598,6 @@ function pa(e, t, a = null) {
         : (W[e] = t)
       : (Q[e] || (Q[e] = []),
         Q[e].includes(t)
-          ? Te("âš ï¸ Image already assigned to this prompt", "warn")
+          ? Te("⚠️ Image already assigned to this prompt", "warn")
           : Q[e].push(t));
 }

@@ -29,7 +29,7 @@ function jn(e) {
         l.promptStartFrameMap[t] = e;
       }),
       J(),
-      Te(`ðŸ“ Single prompt expanded to ${t.length} videos`, "info"),
+      Te(`📝 Single prompt expanded to ${t.length} videos`, "info"),
       Array(t.length).fill(e[0]));
 }
 function Gn({ icon: e, title: t, message: a, hint: n }) {
@@ -97,7 +97,7 @@ function Qn() {
         Wn(),
         J(),
         Te(
-          "âš ï¸ Omni Flash does not support start + end frames â€” switched to Text mode",
+          "⚠️ Omni Flash does not support start + end frames — switched to Text mode",
           "warn",
         )))
     : (u?.classList.remove("locked"),
@@ -112,7 +112,7 @@ function Qn() {
             Wn(),
             J(),
             Te(
-              "âš ï¸ Reference mode is only available at 8 seconds for Veo models â€” switched to Text",
+              "⚠️ Reference mode is only available at 8 seconds for Veo models — switched to Text",
               "warn",
             )))
         : "quality" === e
@@ -165,7 +165,7 @@ function Yn() {
         if (e?.stats) {
           l.stats = e.stats;
           const t = e.stats;
-          Un.textContent = `Downloaded: ${t.downloaded} / ${t.total}${t.failed > 0 ? ` Â· Failed: ${t.failed}` : ""}`;
+          Un.textContent = `Downloaded: ${t.downloaded} / ${t.total}${t.failed > 0 ? ` · Failed: ${t.failed}` : ""}`;
           const a =
             t.total > 0 ? Math.round((t.downloaded / t.total) * 100) : 0;
           if (
@@ -215,7 +215,7 @@ function Yn() {
           if (!e.isRunning && n > 0)
             return (
               Te(
-                `ðŸ§¹ Cleaning ${n} stuck placeholder${n > 1 ? "s" : ""}...`,
+                `🧹 Cleaning ${n} stuck placeholder${n > 1 ? "s" : ""}...`,
                 "warn",
               ),
               void Oa()
@@ -242,7 +242,7 @@ function Yn() {
               }),
                 a > 0 &&
                   Te(
-                    `âš ï¸ ${a} prompt${a > 1 ? "s" : ""} stuck without status â€” marked as failed. Click "Retry Failed" to redo them.`,
+                    `⚠️ ${a} prompt${a > 1 ? "s" : ""} stuck without status — marked as failed. Click "Retry Failed" to redo them.`,
                     "warn",
                   ));
               const n = e.prompts.filter((e) => "failed" === e.status).length;
@@ -272,7 +272,7 @@ function Yn() {
               return void ((p = !1), (U = !1));
             if (!(await tfEnsureJackReferenceForBatch(s)))
               return void ((p = !1), (U = !1));
-            (Te(`â›“ï¸ Auto-chaining â†’ "${s.name}"`, "success"),
+            (Te(`⛓️ Auto-chaining → "${s.name}"`, "success"),
               (U = !0),
               await ie(2e3),
               gn(s.id, "running"),
@@ -359,7 +359,7 @@ function Yn() {
               }),
                 Yn());
             } catch (e) {
-              (Te(`âŒ Auto-chain failed: ${e.message}`, "error"),
+              (Te(`❌ Auto-chain failed: ${e.message}`, "error"),
                 gn(s.id, "failed"),
                 (l.activeBatchId = null),
                 zn(!1),

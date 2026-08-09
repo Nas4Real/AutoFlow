@@ -20,7 +20,7 @@ async function Ct(e, t, a, r, o) {
       s = ";" + Date.now() + r;
     (V.set(i, n),
       zt("LOG", {
-        message: `ðŸŽ¬ #${r + 1} â€” "${o.substring(0, 50) + (o.length > 50 ? "..." : "")}"`,
+        message: `🎬 #${r + 1} — "${o.substring(0, 50) + (o.length > 50 ? "..." : "")}"`,
         type: "info",
       }),
       zt("PROMPT_STATUS", {
@@ -141,7 +141,7 @@ async function Ct(e, t, a, r, o) {
             if (!a) {
               if ((O++, O >= 5))
                 throw new Error(
-                  "Polling failed â€” lost auth token after 5 consecutive failures",
+                  "Polling failed — lost auth token after 5 consecutive failures",
                 );
               continue;
             }
@@ -217,7 +217,7 @@ async function Ct(e, t, a, r, o) {
             }
             t % 6 == 0 &&
               Kt(
-                `â³ Video #${String(n + 1).padStart(3, "0")}${d > 1 ? String.fromCharCode(97 + e) : ""} still generating... (${Math.round((5e3 * t) / 1e3)}s)`,
+                `⏳ Video #${String(n + 1).padStart(3, "0")}${d > 1 ? String.fromCharCode(97 + e) : ""} still generating... (${Math.round((5e3 * t) / 1e3)}s)`,
                 "info",
               );
           } catch (e) {
@@ -272,7 +272,7 @@ async function Ct(e, t, a, r, o) {
                     status: "submitted",
                     uiBatchId: t.uiBatchId || null,
                   }),
-                  Kt(`âš ï¸ Prompt #${n + 1} partial â€” ${e}/${d} videos`, "warn"))
+                  Kt(`⚠️ Prompt #${n + 1} partial — ${e}/${d} videos`, "warn"))
                 : zt("PROMPT_STATUS", {
                     promptIndex: n,
                     status: "failed",
@@ -291,7 +291,7 @@ async function Ct(e, t, a, r, o) {
                   uiBatchId: t.uiBatchId || null,
                 }),
                 Kt(
-                  `âœ… Prompt #${e + 1} complete (${d}/${d} videos)`,
+                  `✅ Prompt #${e + 1} complete (${d}/${d} videos)`,
                   "success",
                 )));
           }
@@ -316,7 +316,7 @@ async function Ct(e, t, a, r, o) {
                 e
               );
             (t.includes("PUBLIC_ERROR_UNSAFE_GENERATION")
-              ? (t = "Blocked by safety filter â€” try rewording the prompt")
+              ? (t = "Blocked by safety filter — try rewording the prompt")
               : t.includes("PUBLIC_ERROR_UNSAFE_IMAGE_UPLOAD")
                 ? (t = "Reference image blocked by safety filter")
                 : t.includes("Google rejected")
@@ -326,18 +326,18 @@ async function Ct(e, t, a, r, o) {
                     : t.includes("Polling failed")
                       ? (t = "Lost connection during generation")
                       : t.includes("reCAPTCHA blocked")
-                        ? (t = "reCAPTCHA blocked â€” refresh Flow page")
+                        ? (t = "reCAPTCHA blocked — refresh Flow page")
                         : t.includes("Rejected (400)") ||
                           (t.includes("429")
                             ? (t = "Rate limited (429)")
                             : t.includes("403")
-                              ? (t = "Access denied â€” refresh Flow page")
+                              ? (t = "Access denied — refresh Flow page")
                               : t.includes("500")
                                 ? (t = "Server error (500)")
                                 : t.length > 150 &&
                                   (t = t.substring(0, 150) + "...")),
               Kt(
-                `âŒ Video #${String(n + 1).padStart(3, "0")} failed â€” ${t}`,
+                `❌ Video #${String(n + 1).padStart(3, "0")} failed — ${t}`,
                 "error",
               ));
           }
@@ -358,7 +358,7 @@ async function Ct(e, t, a, r, o) {
                   status: "submitted",
                   uiBatchId: t.uiBatchId || null,
                 }),
-                Kt(`âš ï¸ Prompt #${n + 1} partial â€” ${e}/${d} videos`, "warn"));
+                Kt(`⚠️ Prompt #${n + 1} partial — ${e}/${d} videos`, "warn"));
           }
           throw e;
         }

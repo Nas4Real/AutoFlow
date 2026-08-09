@@ -9,7 +9,7 @@
     const e = u.size;
     0 !== e &&
       (await an({
-        icon: "ðŸ—‘",
+        icon: "🗑",
         title: "Clear Gallery?",
         message: `This will remove all ${e} items from the gallery. This cannot be undone.`,
         confirmText: "Clear All",
@@ -21,7 +21,7 @@
       v.clear(),
       Ba(),
       ee(),
-      Te("ðŸ—‘ Gallery cleared", "info"));
+      Te("🗑 Gallery cleared", "info"));
   }),
   r("#btn-download-selected").addEventListener("click", (e) => {
     e.stopPropagation();
@@ -50,7 +50,7 @@
   }),
   r("#btn-animate-selected")?.addEventListener("click", () => {
     const e = [...g].filter((e) => xa(u.get(e)));
-    0 !== e.length ? _a(e) : Te("âš ï¸ No animatable images in selection", "warn");
+    0 !== e.length ? _a(e) : Te("⚠️ No animatable images in selection", "warn");
   }),
   r("#btn-close-preview").addEventListener("click", rn),
   r("#preview-modal").addEventListener("click", (e) => {
@@ -197,19 +197,19 @@
       ? (l.batches.splice(e.index, 0, e.batch),
         X(),
         Sn(),
-        Te(`â†©ï¸ Batch "${e.batch.name}" restored`, "success"))
+        Te(`↩️ Batch "${e.batch.name}" restored`, "success"))
       : "delete-all" === e.type &&
         ((l.batches = e.batches),
         X(),
         Sn(),
-        Te(`â†©ï¸ All ${e.batches.length} batches restored`, "success")),
+        Te(`↩️ All ${e.batches.length} batches restored`, "success")),
       (r("#undo-toast").style.display = "none"),
       c && clearTimeout(c));
   }),
   r("#btn-reset-all")?.addEventListener("click", kn),
   r("#btn-delete-all")?.addEventListener("click", () => {
     if (l.batches.find((e) => "running" === e.status))
-      return void Te("âš ï¸ Stop the running batch first", "warn");
+      return void Te("⚠️ Stop the running batch first", "warn");
     if (0 === l.batches.length) return;
     d.push({ type: "delete-all", batches: [...l.batches] });
     const e = l.batches.length;
@@ -217,7 +217,7 @@
       An(`${e} batches deleted`),
       X(),
       Sn(),
-      Te(`ðŸ—‘ï¸ Deleted all ${e} batches`, "info"));
+      Te(`🗑️ Deleted all ${e} batches`, "info"));
   }),
   r("#btn-export-batches")?.addEventListener("click", Mn),
   r("#btn-import-batches")?.addEventListener("click", () =>
@@ -282,21 +282,21 @@
         );
       if (t <= 0)
         return void Gn({
-          icon: "â³",
+          icon: "⏳",
           title: "Google Limit Reached",
           message: `You've used all <strong>${i.promptsPerDay || 0}</strong> available prompts for today.`,
           hint: "Come back tomorrow for more available prompts, or <strong>reduce this batch size</strong> before running this batch.",
         });
       if (a > t)
         return void Gn({
-          icon: "âš ï¸",
+          icon: "⚠️",
           title: "Not Enough Prompts",
           message: `Your queued batches have <strong>${a}</strong> total prompts but you only have <strong>${t}</strong> remaining today.`,
           hint: "Remove some prompts or batches to fit within your limit, or <strong>reduce this batch size</strong> before running this batch.",
         });
     }
     const t = e[0];
-    (Te(`â–¶ï¸ Starting ${e.length} batches (auto-chain)...`, "success"),
+    (Te(`▶️ Starting ${e.length} batches (auto-chain)...`, "success"),
       (p = !0),
       Pn("run-batch", t.id, null, { keepChain: !0 }));
   }));

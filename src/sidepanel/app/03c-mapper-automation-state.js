@@ -51,7 +51,7 @@ function ma() {
               e &&
                 (m.push(e.fileName),
                 u.push(n),
-                Te(`âŒ "${e.fileName}" â€” ${e.error}`, "error")));
+                Te(`❌ "${e.fileName}" — ${e.error}`, "error")));
         }),
         l.singlePromptMode)
       ) {
@@ -68,19 +68,19 @@ function ma() {
       const g =
         r.length > z.length ? ` (${r.length - z.length} extras ignored)` : "";
       if (0 === p)
-        Te(`ðŸ”— Auto 1:1 â€” ${c} images mapped successfully${g}`, "success");
+        Te(`🔗 Auto 1:1 — ${c} images mapped successfully${g}`, "success");
       else {
-        Te(`ðŸ”— Auto 1:1 â€” ${c} images mapped${g}`, c > 0 ? "success" : "warn");
+        Te(`🔗 Auto 1:1 — ${c} images mapped${g}`, c > 0 ? "success" : "warn");
         const e = u.map((e) => `#${e + 1}`).join(", ");
         (Te(
-          `âš ï¸ ${p} image${p > 1 ? "s" : ""} rejected â€” prompt${p > 1 ? "s" : ""} ${e} ${p > 1 ? "have" : "has"} no reference. Fix below â†“`,
+          `⚠️ ${p} image${p > 1 ? "s" : ""} rejected — prompt${p > 1 ? "s" : ""} ${e} ${p > 1 ? "have" : "has"} no reference. Fix below ↓`,
           "warn",
         ),
           ha());
       }
       r.length < z.length &&
         Te(
-          `â„¹ï¸ Prompts #${r.length + 1}â€“#${z.length} have no image â€” only ${r.length} files for ${z.length} prompts`,
+          `ℹ️ Prompts #${r.length + 1}–#${z.length} have no image — only ${r.length} files for ${z.length} prompts`,
           "info",
         );
     };
@@ -89,7 +89,7 @@ function ma() {
 function ua() {
   if (l.singlePromptMode)
     return void Te(
-      'âš ï¸ "Same for All" doesn\'t apply in single-prompt mode. Use Auto 1:1 to add multiple start frames.',
+      '⚠️ "Same for All" doesn\'t apply in single-prompt mode. Use Auto 1:1 to add multiple start frames.',
       "warn",
     );
   const e = ue(),
@@ -105,7 +105,7 @@ function ua() {
     t &&
       r.length > 1 &&
       Te(
-        "â„¹ï¸ One start frame per prompt â€” using first image (end frames must be set manually)",
+        "ℹ️ One start frame per prompt — using first image (end frames must be set manually)",
         "info",
       );
     const o = t ? [r[0]] : r,
@@ -130,7 +130,7 @@ function ua() {
           : (d++,
             e &&
               (c.push(e.fileName),
-              Te(`âŒ "${e.fileName}" â€” ${e.error}`, "error")));
+              Te(`❌ "${e.fileName}" — ${e.error}`, "error")));
       }),
       0 !== l.length)
     ) {
@@ -148,18 +148,18 @@ function ua() {
         }),
         0 === d
           ? Te(
-              `ðŸ“‹ Same for All â€” applied ${l.length} image${l.length > 1 ? "s" : ""} to all ${z.length} prompts`,
+              `📋 Same for All — applied ${l.length} image${l.length > 1 ? "s" : ""} to all ${z.length} prompts`,
               "success",
             )
           : (Te(
-              `ðŸ“‹ Same for All â€” applied ${l.length} image${l.length > 1 ? "s" : ""} to all ${z.length} prompts`,
+              `📋 Same for All — applied ${l.length} image${l.length > 1 ? "s" : ""} to all ${z.length} prompts`,
               "success",
             ),
             Te(
-              `âš ï¸ ${d} image${d > 1 ? "s" : ""} rejected: ${c.map((e) => `"${e}"`).join(", ")}. Try re-saving as JPG/PNG.`,
+              `⚠️ ${d} image${d > 1 ? "s" : ""} rejected: ${c.map((e) => `"${e}"`).join(", ")}. Try re-saving as JPG/PNG.`,
               "warn",
             )));
-    } else Te("âŒ All uploads failed â€” no references applied", "error");
+    } else Te("❌ All uploads failed — no references applied", "error");
   };
   (a.addEventListener("change", n), a.click());
 }
@@ -168,7 +168,7 @@ function ga() {
     t = "start_frame" === e || "start_end_frame" === e;
   if (0 === gt().length)
     return void Te(
-      "âš ï¸ No tagged images in library â€” tag images in the Library tab first",
+      "⚠️ No tagged images in library — tag images in the Library tab first",
       "warn",
     );
   let a = 0,
@@ -194,14 +194,14 @@ function ga() {
     0 === a && 0 === n.size)
   )
     Te(
-      "âš ï¸ No @tags found in prompts â€” use @tagname in your prompt text",
+      "⚠️ No @tags found in prompts — use @tagname in your prompt text",
       "warn",
     );
   else if (0 === a && n.size > 0)
-    Te(`âš ï¸ No library images tagged with @${[...n].join(", @")}`, "warn");
+    Te(`⚠️ No library images tagged with @${[...n].join(", @")}`, "warn");
   else {
     a > 0 && (B = !0);
-    let e = `ðŸ· Auto-Tag â€” ${a} match${1 !== a ? "es" : ""} mapped`;
+    let e = `🏷 Auto-Tag — ${a} match${1 !== a ? "es" : ""} mapped`;
     (n.size > 0 && (e += ` (no match for @${[...n].join(", @")})`),
       Te(e, "success"));
   }
@@ -209,7 +209,7 @@ function ga() {
 function fa() {
   ("start_frame" === ue() ? (W = z.map(() => null)) : (Q = z.map(() => [])),
     ea(),
-    Te("ðŸ—‘ All mappings cleared", "info"),
+    Te("🗑 All mappings cleared", "info"),
     le("mapper_action", { action: "clear", prompts: z.length }));
 }
 function ha() {
@@ -357,32 +357,32 @@ function ka() {
     e.style.display = "block";
     const n = e.querySelector(".mapping-preview-title");
     return (
-      n && (n.textContent = "ðŸ“Ž Start Frames"),
-      void (t.innerHTML = `\n        <div class="mapping-preview-row mapping-preview-row-compact">\n            <span class="mapping-preview-icon">ðŸ–¼ï¸</span>\n            <span class="mapping-preview-count">${a.length} start frame${a.length > 1 ? "s" : ""} assigned</span>\n        </div>\n    `)
+      n && (n.textContent = "📎 Start Frames"),
+      void (t.innerHTML = `\n        <div class="mapping-preview-row mapping-preview-row-compact">\n            <span class="mapping-preview-icon">🖼️</span>\n            <span class="mapping-preview-count">${a.length} start frame${a.length > 1 ? "s" : ""} assigned</span>\n        </div>\n    `)
     );
   }
   e.style.display = "block";
   const i = e.querySelector(".mapping-preview-title");
   (i &&
     (i.textContent = o
-      ? "ðŸ“Ž Start Frame Mapping"
+      ? "📎 Start Frame Mapping"
       : s
-        ? "ðŸ“Ž Start + End Frame Mapping"
-        : "ðŸ“Ž Reference Mapping"),
+        ? "📎 Start + End Frame Mapping"
+        : "📎 Reference Mapping"),
     (t.innerHTML = a
       .map((e, t) => {
         const a = e.length > 40 ? e.substring(0, 37) + "..." : e;
         if (o) {
           const e = l.promptStartFrameMap[t],
             n = e ? ve(e) : null;
-          return `\n                <div class="mapping-preview-row">\n                    <span class="mapping-preview-num">${t + 1}.</span>\n                    ${n ? `<img class="mapping-preview-thumb" src="${n}" alt="frame">` : e ? '<span class="mapping-preview-icon">ðŸ–¼</span>' : '<span class="mapping-preview-shared">(no frame)</span>'}\n                    <span class="mapping-preview-prompt">${se(a)}</span>\n                </div>\n            `;
+          return `\n                <div class="mapping-preview-row">\n                    <span class="mapping-preview-num">${t + 1}.</span>\n                    ${n ? `<img class="mapping-preview-thumb" src="${n}" alt="frame">` : e ? '<span class="mapping-preview-icon">🖼</span>' : '<span class="mapping-preview-shared">(no frame)</span>'}\n                    <span class="mapping-preview-prompt">${se(a)}</span>\n                </div>\n            `;
         }
         if (s) {
           const e = l.promptStartFrameMap[t],
             n = l.promptEndFrameMap[t],
             r = e ? ve(e) : null,
             o = n ? ve(n) : null;
-          return `\n                <div class="mapping-preview-row">\n                    <span class="mapping-preview-num">${t + 1}.</span>\n                    ${r ? `<img class="mapping-preview-thumb" src="${r}" alt="start">` : e ? '<span class="mapping-preview-icon">ðŸ–¼</span>' : '<span class="mapping-preview-shared">(no start)</span>'}\n                    <span class="mapping-preview-arrow">â†’</span>\n                    ${o ? `<img class="mapping-preview-thumb" src="${o}" alt="end">` : n ? '<span class="mapping-preview-icon">ðŸ–¼</span>' : '<span class="mapping-preview-shared">(no end)</span>'}\n                    <span class="mapping-preview-prompt">${se(a)}</span>\n                </div>\n            `;
+          return `\n                <div class="mapping-preview-row">\n                    <span class="mapping-preview-num">${t + 1}.</span>\n                    ${r ? `<img class="mapping-preview-thumb" src="${r}" alt="start">` : e ? '<span class="mapping-preview-icon">🖼</span>' : '<span class="mapping-preview-shared">(no start)</span>'}\n                    <span class="mapping-preview-arrow">→</span>\n                    ${o ? `<img class="mapping-preview-thumb" src="${o}" alt="end">` : n ? '<span class="mapping-preview-icon">🖼</span>' : '<span class="mapping-preview-shared">(no end)</span>'}\n                    <span class="mapping-preview-prompt">${se(a)}</span>\n                </div>\n            `;
         }
         {
           const e = l.promptReferenceMap[t] || [];
@@ -391,7 +391,7 @@ function ka() {
               const t = ve(e);
               return t
                 ? `<img class="mapping-preview-thumb" src="${t}" alt="ref">`
-                : '<span class="mapping-preview-icon">ðŸ–¼</span>';
+                : '<span class="mapping-preview-icon">🖼</span>';
             })
             .join(
               "",

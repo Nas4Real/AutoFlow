@@ -170,15 +170,15 @@ function Ba() {
                     const t =
                         e.ratioClass ||
                         (e.isPortrait ? "ratio-9-16" : "ratio-16-9"),
-                      a = "video" === e.type ? "ðŸŽ¬" : "ðŸ–¼";
+                      a = "video" === e.type ? "🎬" : "🖼";
                     d = `\n                        <div class="shimmer-placeholder ${t} ${"failed" === e.status ? "shimmer-stopped" : ""}">\n                            <span class="placeholder-icon">${a}</span>\n                            <span class="placeholder-text">${i}</span>\n                        </div>\n                    `;
                   } else
                     d =
                       "video" === e.type && e.videoUrl
-                        ? `\n<video src="${e.videoUrl}" autoplay loop muted playsinline></video>\n                        <div class="shimmer-placeholder" style="display:none">\n                            <span class="placeholder-icon">ðŸŽ¬</span>\n                            <span class="placeholder-text">${i}</span>\n                        </div>\n                    `
+                        ? `\n<video src="${e.videoUrl}" autoplay loop muted playsinline></video>\n                        <div class="shimmer-placeholder" style="display:none">\n                            <span class="placeholder-icon">🎬</span>\n                            <span class="placeholder-text">${i}</span>\n                        </div>\n                    `
                         : "video" === e.type
-                          ? `\n                        <div class="shimmer-placeholder ${e.ratioClass || (e.isPortrait ? "ratio-9-16" : "ratio-16-9")} ${"failed" === e.status ? "shimmer-stopped" : ""}">\n                            <span class="placeholder-icon">ðŸŽ¬</span>\n                            <span class="placeholder-text">${i}</span>\n                        </div>\n                    `
-                          : `\n<img src="${e.fifeUrl}" alt="#${r}" loading="lazy" crossorigin="anonymous">\n                        <div class="shimmer-placeholder" style="display:none">\n                            <span class="placeholder-icon">ðŸ–¼</span>\n                            <span class="placeholder-text">Error</span>\n                        </div>\n                    `;
+                          ? `\n                        <div class="shimmer-placeholder ${e.ratioClass || (e.isPortrait ? "ratio-9-16" : "ratio-16-9")} ${"failed" === e.status ? "shimmer-stopped" : ""}">\n                            <span class="placeholder-icon">🎬</span>\n                            <span class="placeholder-text">${i}</span>\n                        </div>\n                    `
+                          : `\n<img src="${e.fifeUrl}" alt="#${r}" loading="lazy" crossorigin="anonymous">\n                        <div class="shimmer-placeholder" style="display:none">\n                            <span class="placeholder-icon">🖼</span>\n                            <span class="placeholder-text">Error</span>\n                        </div>\n                    `;
                   return `\n                    <div class="gallery-item-v2 ${o ? "selected" : ""}"\n                         data-media-id="${e.mediaId}" data-prompt-index="${e.promptIndex}">\n${s ? `\n    <div class="gallery-item-check" data-check-id="${e.mediaId}">\n        <span class="material-symbols-outlined">check</span>\n    </div>\n    <button class="gallery-item-delete" data-delete-id="${e.mediaId}" title="Remove">\n        <span class="material-symbols-outlined">close</span>\n    </button>\n` : ""}\n${d}\n<div class="gallery-item-info-v2">\n    ${t.items.length > 1 ? `<span class="gallery-item-number">v${t.items.indexOf(e) + 1}</span>` : ""}\n    <span class="gallery-item-status ${l}">${i}</span>\n    ${s && xa(e) ? `\n        <button class="gallery-item-animate ${$a() ? "disabled" : ""}"\n                data-animate-id="${e.mediaId}"\n                title="${$a() ? "Wait for current batch to finish" : "Animate this image"}"\n                ${$a() ? "disabled" : ""}>\n            <span class="material-symbols-outlined">play_circle</span>\n        </button>\n    ` : ""}\n</div>\n                    </div>\n                `;
                 })
                 .join(""),
@@ -186,7 +186,7 @@ function Ba() {
             return `\n    <div class="prompt-group ${v.has(d) ? "collapsed" : ""}" data-group-index="${t.promptIndex}" data-group-key="${d}">\n        <div class="prompt-group-header" data-group-toggle="${t.promptIndex}">\n                        <span class="material-symbols-outlined prompt-group-chevron">chevron_right</span>\n                        <div class="prompt-group-info">\n                            <span class="prompt-group-number">#${a}</span>\n${o ? `<span class="gallery-group-refs">${o}</span>` : ""}\n<span class="prompt-group-text" title="${se(t.prompt)}">${se(n)}</span>\n                        </div>\n<span class="prompt-group-count">${s} ${1 === s ? "image" : "images"}</span>\n                        <button class="prompt-group-delete" data-delete-group="${t.promptIndex}" data-delete-batch="${e.batchId}" title="Remove group">\n                            <span class="material-symbols-outlined">close</span>\n                        </button>\n                    </div>\n                    <div class="prompt-group-body ${i ? "single-image" : ""}">\n                        ${l}\n                    </div>\n                </div>\n            `;
           })
           .join("");
-      return `${projectHeader}\n    <div class="batch-gallery-group ${b.has(e.batchId) ? "collapsed" : ""}" data-batch-id="${e.batchId}">\n        <div class="batch-gallery-header" data-batch-toggle="${e.batchId}">\n                    <span class="material-symbols-outlined batch-gallery-chevron">chevron_right</span>\n                    <div class="batch-gallery-info">\n                        <span class="batch-gallery-name">${i ? "ðŸ“" : "ðŸ“¦"} ${se(l)}</span>\n                        <span class="batch-gallery-meta">${a} prompt${1 !== a ? "s" : ""} Â· ${t} item${1 !== t ? "s" : ""}</span>\n                    </div>\n                    <span class="batch-gallery-status ${s}">${o}</span>\n                    <button class="batch-gallery-select ${c ? "all-selected" : ""}" data-batch-select="${e.batchId}" title="Select all in batch">\n                        <span class="material-symbols-outlined">${c ? "check_box" : "check_box_outline_blank"}</span>\n                    </button>\n                    <button class="batch-gallery-delete" data-delete-batch-group="${e.batchId}" title="Remove batch from gallery">\n                        <span class="material-symbols-outlined">close</span>\n                    </button>\n                </div>\n                <div class="batch-gallery-body">\n                    ${p}\n                </div>\n            </div>\n        `;
+      return `${projectHeader}\n    <div class="batch-gallery-group ${b.has(e.batchId) ? "collapsed" : ""}" data-batch-id="${e.batchId}">\n        <div class="batch-gallery-header" data-batch-toggle="${e.batchId}">\n                    <span class="material-symbols-outlined batch-gallery-chevron">chevron_right</span>\n                    <div class="batch-gallery-info">\n                        <span class="batch-gallery-name">${i ? "📁" : "📦"} ${se(l)}</span>\n                        <span class="batch-gallery-meta">${a} prompt${1 !== a ? "s" : ""} · ${t} item${1 !== t ? "s" : ""}</span>\n                    </div>\n                    <span class="batch-gallery-status ${s}">${o}</span>\n                    <button class="batch-gallery-select ${c ? "all-selected" : ""}" data-batch-select="${e.batchId}" title="Select all in batch">\n                        <span class="material-symbols-outlined">${c ? "check_box" : "check_box_outline_blank"}</span>\n                    </button>\n                    <button class="batch-gallery-delete" data-delete-batch-group="${e.batchId}" title="Remove batch from gallery">\n                        <span class="material-symbols-outlined">close</span>\n                    </button>\n                </div>\n                <div class="batch-gallery-body">\n                    ${p}\n                </div>\n            </div>\n        `;
     })
     .join("")),
     ja(),
@@ -315,7 +315,7 @@ async function Ha(e) {
   if (
     0 !== t &&
     (await an({
-      icon: "ðŸ—‘",
+      icon: "🗑",
       title: "Delete Batch from Gallery?",
       message: `This will remove all ${t} item${1 !== t ? "s" : ""} from this batch. This cannot be undone.`,
       confirmText: "Delete Batch",
@@ -326,7 +326,7 @@ async function Ha(e) {
       (a.batchId || "__ungrouped__") === e && (u.delete(t), g.delete(t));
     b.delete(e);
     for (const t of [...v]) t.startsWith(e + "::") && v.delete(t);
-    (Ba(), ee(), Te(`ðŸ—‘ Removed batch from gallery (${t} items)`, "info"));
+    (Ba(), ee(), Te(`🗑 Removed batch from gallery (${t} items)`, "info"));
   }
 }
 function Qa(e) {
@@ -407,7 +407,7 @@ function Ka(e) {
     g.delete(e),
     Ba(),
     ee(),
-    Te("ðŸ—‘ Removed image from gallery", "info"));
+    Te("🗑 Removed image from gallery", "info"));
 }
 async function Ja(e, t) {
   let a = 0;
@@ -418,7 +418,7 @@ async function Ja(e, t) {
   if (
     0 !== a &&
     (await an({
-      icon: "ðŸ—‘",
+      icon: "🗑",
       title: "Delete Group?",
       message: `This will remove all ${a} item${1 !== a ? "s" : ""} from prompt #${e + 1}. This cannot be undone.`,
       confirmText: "Delete Group",
@@ -432,6 +432,6 @@ async function Ja(e, t) {
     (v.delete(`${t}::${e}`),
       Ba(),
       ee(),
-      Te(`ðŸ—‘ Removed group #${e + 1} (${a} items)`, "info"));
+      Te(`🗑 Removed group #${e + 1} (${a} items)`, "info"));
   }
 }

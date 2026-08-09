@@ -92,7 +92,7 @@ async function _e(e) {
           n = t;
           const a = 1500 * Math.pow(1.5, r) + 500 * Math.random();
           (Te(
-            `âŸ³ Upload "${e.name}" failed â€” retry ${r + 1}/3 in ${(a / 1e3).toFixed(1)}s`,
+            `⟳ Upload "${e.name}" failed — retry ${r + 1}/3 in ${(a / 1e3).toFixed(1)}s`,
             "warn",
           ),
             await ie(a));
@@ -129,7 +129,7 @@ async function _e(e) {
       if (r < 3) {
         const t = 1500 * Math.pow(1.5, r) + 500 * Math.random();
         (Te(
-          `âŸ³ Upload "${e.name}" error â€” retry ${r + 1}/3 in ${(t / 1e3).toFixed(1)}s`,
+          `⟳ Upload "${e.name}" error — retry ${r + 1}/3 in ${(t / 1e3).toFixed(1)}s`,
           "warn",
         ),
           await ie(t));
@@ -302,7 +302,7 @@ function Re(e) {
         setTimeout(() => {
           ((n.textContent = "content_copy"), e.classList.remove("active"));
         }, 2e3),
-        Te(`ðŸ“‹ ${t.length} log entries copied to clipboard`, "success"));
+        Te(`📋 ${t.length} log entries copied to clipboard`, "success"));
     } catch (e) {
       const t = new Blob([a], { type: "text/plain" }),
         n = URL.createObjectURL(t),
@@ -311,7 +311,7 @@ function Re(e) {
         (r.download = `turboflow-logs-${Date.now()}.txt`),
         r.click(),
         URL.revokeObjectURL(n),
-        Te("ðŸ“„ Logs exported as file", "success"));
+        Te("📄 Logs exported as file", "success"));
     }
   }),
   Pe.addEventListener("scroll", () => {
@@ -376,7 +376,7 @@ function Ne(t) {
   (l(n, !!t.flowTabId),
     l(o, t.hasProject, d && !!t.flowTabId),
     t.lastError && "connected" !== t.status
-      ? ((s.textContent = "ðŸ’¡ " + t.lastError), (s.style.display = "block"))
+      ? ((s.textContent = "💡 " + t.lastError), (s.style.display = "block"))
       : (s.style.display = "none"));
 }
 function qe() {
@@ -409,14 +409,14 @@ async function Oe() {
         t
           ? a ||
             Gn({
-              icon: "ðŸ“‚",
+              icon: "📂",
               title: "No Flow Project Open",
               message:
                 "Flow is open, but you need to <strong>create or open a Flow project</strong> first.",
               hint: 'Go to your Flow tab and create a new Flow project or open an existing one. The status badge will update to "Connected" automatically.',
             })
           : Gn({
-              icon: "ðŸ”Œ",
+              icon: "🔌",
               title: "Not Connected to Flow",
               message:
                 "You need an open <strong>Google Flow</strong> tab to generate images.",
@@ -444,7 +444,7 @@ function Ue() {
           ? a || (n = "Enable auto-download")
           : (n = "Google AI Ultra required")
         : (n = "Google account tier required"),
-        (s.textContent = "4K Upscale ðŸ”’ " + n));
+        (s.textContent = "4K Upscale 🔒 " + n));
     }
     n ||
       "4k" !== l.settings.imageDownloadQuality ||
@@ -486,7 +486,7 @@ function Ue() {
           ? p || (a = "Enable auto-download")
           : (a = "Google AI Ultra required")
         : (a = "Google account tier required"),
-        (g.textContent = "4K Upscale âš ï¸ Very slow ðŸ”’ " + a));
+        (g.textContent = "4K Upscale ⚠️ Very slow 🔒 " + a));
     }
     m ||
       "4k" !== l.settings.videoDownloadQuality ||
@@ -534,13 +534,13 @@ function Ue() {
     w = y?.querySelector('option[value="relaxed"]');
   if (w) {
     if (((w.disabled = !v), v))
-      w.textContent = "â³ Veo 3.1 â€” Fast (Lower Priority)";
+      w.textContent = "⏳ Veo 3.1 — Fast (Lower Priority)";
     else {
       let a = "";
       (e
         ? t || (a = "Google AI Ultra required")
         : (a = "Google account tier required"),
-        (w.textContent = "â³ Veo 3.1 â€” Fast (Lower Priority) ðŸ”’ " + a));
+        (w.textContent = "⏳ Veo 3.1 — Fast (Lower Priority) 🔒 " + a));
     }
     v ||
       "relaxed" !== l.settings.videoQuality ||
@@ -549,13 +549,13 @@ function Ue() {
   const I = y?.querySelector('option[value="lite_lp"]');
   if (I) {
     if (((I.disabled = !v), v))
-      I.textContent = "ðŸŽ¬ Veo 3.1 â€” Lite (Lower Priority)";
+      I.textContent = "🎬 Veo 3.1 — Lite (Lower Priority)";
     else {
       let a = "";
       (e
         ? t || (a = "Google AI Ultra required")
         : (a = "Google account tier required"),
-        (I.textContent = "ðŸŽ¬ Veo 3.1 â€” Lite (Lower Priority) ðŸ”’ " + a));
+        (I.textContent = "🎬 Veo 3.1 — Lite (Lower Priority) 🔒 " + a));
     }
     v ||
       "lite_lp" !== l.settings.videoQuality ||

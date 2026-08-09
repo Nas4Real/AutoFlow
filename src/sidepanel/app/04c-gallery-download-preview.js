@@ -43,7 +43,7 @@ async function tn(e) {
               ((o = "2k"), (s = "standard"), (i = "videos: 720p"));
   const d = [...t, ...a];
   if (0 === d.length) return;
-  Te(`ðŸ“¥ Downloading ${d.length} items (${i}) â†’ ${n}/`, "info");
+  Te(`📥 Downloading ${d.length} items (${i}) → ${n}/`, "info");
   let c = "landscape";
   for (const e of g) {
     const t = u.get(e);
@@ -95,7 +95,7 @@ function an({
     function h(e) {
       e.target === i && u(!1);
     }
-    ((l.textContent = e || "âš ï¸"),
+    ((l.textContent = e || "⚠️"),
       (d.textContent = t || "Are you sure?"),
       (c.textContent = a || ""),
       (p.textContent = n || "Delete"),
