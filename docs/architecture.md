@@ -15,7 +15,14 @@ Google Flow page
   -> src/shared/project-domain/01-project-json-contract.js
   -> src/background/runtime/*.js
   -> src/sidepanel/app/*.js
-  -> src/project-studio/app/*.js
+
+Project Studio extension page
+  -> src/project-studio/app/studio-bootstrap.js
+  -> src/shared/project-domain/*.js
+  -> src/shared/project-services/*.js
+  -> src/project-studio/app/00-studio-state.js
+  -> src/project-studio/generated/studio.bundle.js
+     (built from src/project-studio/react/studio.jsx)
 ```
 
 ## Files By Responsibility
@@ -33,9 +40,12 @@ Google Flow page
 - `src/sidepanel/styles/*.css`: side panel visual styling split by source order.
 - `src/sidepanel/sidepanel.js`: breadcrumb only. The side panel now loads `app/*.js` directly.
 - `src/sidepanel/app/*.js`: side panel state, active Project selection, queue UI, gallery UI, settings, prompt mapping, calls to the background runtime, and `prompt-index.json` import. The JSON importer creates paired image/video batches, attaches bundled `assets/reference/Jack.jpg` to the image batch, maps JSON filenames to per-prompt downloads, resolves generated image media IDs into video start frames, and can relink cached or downloaded stills after switching Google accounts.
-- `src/project-studio/index.html`: standalone extension page for larger Project workflows. It loads the shared project-domain module and ordered Project Studio app shards.
-- `src/project-studio/studio.css`: Project Studio layout and visual styling.
-- `src/project-studio/app/*.js`: Project Studio shell, active Project selector, Project Settings metadata edit form, typed Asset Manager, manual Asset File attachment/primary selection, inline Asset edit/disable controls, project-aware prompt JSON import into Prompt Records, reference resolution/blocking, manual blocked-reference mapping, ready-only image generation run planning, Image Variant filename mapping, Image Review board, selected variant metadata controls, workspace navigation, and details inspector.
+- `src/project-studio/index.html`: standalone extension page for larger Project workflows. It loads the bootstrap guard, shared domain/service scripts, the classic state compatibility facade, and the generated React bundle.
+- `src/project-studio/app/studio-bootstrap.js`: reports a clear local error when generated Studio assets fail to load.
+- `src/project-studio/app/00-studio-state.js`: compatibility facade between the React surface, shared project domain, Chrome storage, and side-panel/background runtime contracts.
+- `src/project-studio/react/studio.jsx`: maintained React/HeroUI Studio shell and workspace views.
+- `src/project-studio/react/studio-app.css` and `src/project-studio/react/studio-tailwind.css`: maintained Studio styling inputs.
+- `src/project-studio/generated/`: ignored JavaScript, CSS, and font build outputs produced by `npm run build:studio`; these files must exist in the packaged extension.
 - `assets/icons/`: browser extension icons referenced by `manifest.json`.
 - `docs/code-map.md`: primary low-token edit map.
 - `docs/research-notes.md`: source notes behind the split-file architecture.
@@ -50,10 +60,12 @@ Google Flow page
 - Side panel controls, queue rendering, gallery rendering, settings, or user-facing UI behavior: start in `docs/code-map.md`, then edit the matching `src/sidepanel/app/*.js` shard.
 - Project-domain storage, stable Project identity, or active Project state: edit `src/shared/project-domain/00-project-domain.js`.
 - Project-aware JSON reference fields, alias-scope contract, or prompt JSON normalization: edit `src/shared/project-domain/01-project-json-contract.js` and `docs/project-json-contract.md`.
-- Project Studio shell, Project Settings metadata, typed Asset Manager, manual Asset File attachment/primary selection, Asset edit/disable behavior, project-aware prompt JSON import, reference resolution/blocking, manual blocked-reference mapping, ready-only image generation run planning, Image Variant filename mapping, Image Review board, selected variant metadata controls, larger workspace navigation, or details inspector: edit `src/project-studio/app/*.js` and `src/project-studio/studio.css`.
+- Project Studio UI, navigation, workspaces, or visual styling: edit `src/project-studio/react/studio.jsx` and `src/project-studio/react/studio-app.css`.
+- Project Studio state commands, Chrome/runtime bridges, or compatibility contracts: edit `src/project-studio/app/00-studio-state.js` and the relevant shared project service.
+- Project Studio bundling or generated assets: edit `scripts/build-studio.mjs` or `src/project-studio/react/studio-tailwind.css`; never hand-edit `src/project-studio/generated/`.
 - Prompt-index JSON import, bundled Jack reference upload, account-switch relinking, JSON filename mapping, or image-to-video chaining: edit `src/sidepanel/app/05b-json-folder-sync.js`, plus `src/background/runtime/02b-image-generation.js`, `src/background/runtime/02c-video-generation.js`, or `src/background/runtime/03-downloads-cache.js` when needed.
 - Side panel layout or colors: edit `src/sidepanel/styles/*.css` and `src/sidepanel/index.html`.
 
 ## Naming Rule
 
-Use descriptive role-based names for future files, such as `batch-runner.js`, `download-manager.js`, or `prompt-mapper.js`. Avoid hashed bundle names in this repo unless a build tool generates them and the manifest is updated automatically.
+Use descriptive role-based names for future files, such as `batch-runner.js`, `download-manager.js`, or `prompt-mapper.js`. Hashed or generated names belong only under ignored build-output directories and must be produced by the repository build.

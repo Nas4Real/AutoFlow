@@ -4,15 +4,15 @@ Use this file before editing. It points to the smallest responsible shard so the
 
 ## Loading Model
 
-TurboFlow uses ordered classic scripts, not a bundler.
+TurboFlow uses two deliberate loading models: ordered classic scripts for the background and side panel, and a local React/esbuild bundle for Project Studio.
 
 - `src/background/service-worker.js` imports `src/background/runtime.js`.
 - `src/background/runtime.js` imports `src/shared/project-domain/00-project-domain.js`, `src/shared/project-domain/01-project-json-contract.js`, then `src/background/runtime/*.js` with `importScripts()` in numeric order.
 - `src/sidepanel/index.html` loads `src/shared/project-domain/00-project-domain.js`, `src/shared/project-domain/01-project-json-contract.js`, then `src/sidepanel/app/*.js` in listed order.
-- `src/project-studio/index.html` loads `src/shared/project-domain/00-project-domain.js`, `src/shared/project-domain/01-project-json-contract.js`, then `src/project-studio/app/*.js` in listed order.
+- `src/project-studio/index.html` loads `app/studio-bootstrap.js`, shared project-domain/service scripts, `app/00-studio-state.js`, then `generated/studio.bundle.js`. The bundle is built from `src/project-studio/react/studio.jsx` by `npm run build:studio`.
 - `src/sidepanel/sidepanel.css` imports `src/sidepanel/styles/*.css` in numeric order.
 
-Numeric prefixes are part of the architecture. Preserve global execution order while keeping loader files tiny.
+Numeric prefixes are part of the classic-script architecture. Preserve global execution order while keeping loader files tiny; do not hand-edit generated Studio assets.
 
 ## Shared Project Domain
 
@@ -25,11 +25,13 @@ Numeric prefixes are part of the architecture. Preserve global execution order w
 
 | File | Purpose |
 | --- | --- |
-| `src/project-studio/index.html` | Standalone extension page shell for the project workspace. Loads shared project domain, Studio CSS, and ordered Studio app shards. |
-| `src/project-studio/studio.css` | Project Studio layout, top bar, navigation, workspace, metrics, Asset/File/edit panels, Import / Resolve prompt/resolution tables, Image Generation gate tables, Image Review board, empty/error states, and details inspector. |
+| `src/project-studio/index.html` | Standalone extension page shell. Loads the bootstrap guard, shared domain/services, state facade, and generated React JS/CSS bundles. |
+| `src/project-studio/app/studio-bootstrap.js` | Shows a local diagnostic if the generated React Studio fails to mount. |
 | `src/project-studio/app/00-studio-state.js` | Studio state helpers. Reads, switches, and updates active project through `TFProjectDomain`; owns typed Asset creation/filter/edit/disable helpers, manual Asset File attachment/primary helpers, project-aware prompt JSON import helpers, reference resolution/blocking, manual reference-to-Asset mapping, ready-only image generation run planning, Project Image Variant filename mapping, selected variant metadata/finalization, Flow context media-cache checks, Project media Sync Folder repair, stale start-frame repair, Video Draft / Ready Video Job state, Project Gallery derivation, run/stop/retry bridge, and manual queue controls; no direct storage duplication. |
-| `src/project-studio/app/01-studio-shell.js` | Renders active project selector, navigation, Project Settings metadata form, Asset Manager, manual Asset File controls, inline Asset edit/disable controls, Import / Resolve prompt import/resolution/mapping UI, Image Generation gate UI, Image Review board and selection controls, Video Queue Builder with run/stop/retry and manual queue controls, Gallery / Downloads inspection, selected-image finalization, Project media Sync Folder repair, stale start-frame repair actions, Flow context readouts, workspace metrics/facts, and details inspector. |
-| `src/project-studio/app/07-studio-boot.js` | Tiny Studio boot loader. |
+| `src/project-studio/react/studio.jsx` | Maintained React/HeroUI Studio shell, navigation, workspace views, dialogs, and state-facade integration. |
+| `src/project-studio/react/studio-app.css` | Maintained Studio layout and component styling. |
+| `src/project-studio/react/studio-tailwind.css` | Tailwind entrypoint used to generate the packaged Studio stylesheet. |
+| `src/project-studio/generated/` | Ignored build outputs produced by `npm run build:studio`; package them, but never edit them directly. |
 
 ## Side Panel JS
 
@@ -83,7 +85,9 @@ CSS is split by source order to preserve cascade. Names describe the dominant zo
 
 - Project-domain storage, stable project IDs, active project state: `src/shared/project-domain/00-project-domain.js`.
 - Project-aware JSON reference contract and parser: `src/shared/project-domain/01-project-json-contract.js` and `docs/project-json-contract.md`.
-- Project Studio shell, project selector, Project Settings metadata edit form, typed Asset Manager, manual Asset File attachment/primary selection, Asset edit/disable controls, project-aware prompt JSON import into Prompt Records, reference resolution/blocking, manual blocked-reference mapping, ready-only image generation run planning, Project Image Variant filename mapping, selected variant metadata, Video Draft / Ready Video Job foundation, workspace navigation: `src/project-studio/app/00-studio-state.js` and `src/project-studio/app/01-studio-shell.js`.
+- Project Studio UI, navigation, dialogs, workspaces, and styling: `src/project-studio/react/studio.jsx` and `src/project-studio/react/studio-app.css`.
+- Project Studio state/domain commands and runtime bridges: `src/project-studio/app/00-studio-state.js` and the relevant `src/shared/project-services/*.js` contract.
+- Project Studio build output: `scripts/build-studio.mjs` and `src/project-studio/react/studio-tailwind.css`; never edit `src/project-studio/generated/` directly.
 - Side-panel Project Studio opener and Video Queue deep link: `src/sidepanel/app/00a-project-studio-link.js` and the header/Project strip buttons in `src/sidepanel/index.html`.
 - Side-panel active Project selector/create/switch and compact Project queue summary: `src/sidepanel/app/00b-project-selector.js` and the Project strip in `src/sidepanel/index.html`.
 - JSON import, exact filenames, `__1`/`__2` variants: `src/sidepanel/app/05b-json-folder-sync.js` and `src/background/runtime/03-downloads-cache.js`.
@@ -109,6 +113,6 @@ rtk rg -n "PROMPT_STATUS|PREVIEW_READY|BATCH_GENERATION_DONE" src/background/run
 - Prefer adding a focused shard only when the file grows past roughly 1,500 lines or the feature boundary is clean.
 - Keep numeric order stable. Add new files in the loader explicitly, then update this map.
 - Shared project-domain scripts must stay DOM-free and attach APIs under `globalThis.TFProjectDomain`.
-- Project Studio scripts must stay classic scripts and attach APIs under `globalThis.TFProjectStudio*`.
+- Project Studio's compatibility facade remains a classic script under `globalThis.TFProjectStudio*`; maintained Studio UI is React source bundled locally for MV3.
 - Do not move top-level event listener blocks above functions they reference.
-- Keep loader files tiny: `src/background/runtime.js`, `src/sidepanel/sidepanel.js`, `src/sidepanel/sidepanel.css`, and `src/project-studio/app/07-studio-boot.js` should stay maps/loaders only.
+- Keep loader/bootstrap files tiny: `src/background/runtime.js`, `src/sidepanel/sidepanel.js`, `src/sidepanel/sidepanel.css`, and `src/project-studio/app/studio-bootstrap.js` should stay maps/guards only.
