@@ -4,6 +4,13 @@ TurboFlow is a Chrome MV3 extension for batch image and video generation on Goog
 
 ## Install
 
+Use Node.js 22 or 24 LTS. From a fresh checkout, build the ignored Project Studio assets before loading the extension:
+
+```powershell
+npm ci --ignore-scripts
+npm run build:studio
+```
+
 1. Open `chrome://extensions`.
 2. Remove any old TurboFlow build.
 3. Enable Developer mode.
@@ -55,12 +62,12 @@ Install the pinned dependencies with `npm ci`, then use these repository checks:
 | Command | Purpose |
 | --- | --- |
 | `npm test` | Run the smoke and contract test suite. |
-| `npm run check:syntax` | Parse-check every maintained source JavaScript file. |
+| `npm run check:syntax` | Parse-check the classic `.js` source shards. |
 | `npm run test:build` | Build Studio into a temporary directory and verify its outputs. |
 | `npm run build:studio` | Generate the local React Studio JavaScript and CSS bundles. |
 | `npm run architecture:check` | Report source and generated-asset architecture budgets. |
 
-Project Studio generated assets are intentionally ignored by Git. Run `npm run build:studio` before loading the extension from a fresh checkout, or run `scripts/build-extension.ps1` to build and package the complete extension.
+Project Studio generated assets are intentionally ignored by Git. Run `npm run build:studio` before loading the extension from a fresh checkout. On Windows, run `scripts/build-extension.ps1` to build and package the complete extension.
 
 ## Prompt Index JSON
 

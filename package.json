@@ -2,6 +2,9 @@
   "name": "autoflow-extension",
   "version": "2.2.21",
   "private": true,
+  "engines": {
+    "node": "^22.0.0 || ^24.0.0"
+  },
   "scripts": {
     "build:studio": "node scripts/build-studio.mjs",
     "check:syntax": "node scripts/check-source-syntax.mjs",
@@ -20,6 +23,7 @@
   },
   "devDependencies": {
     "@tailwindcss/cli": "4.3.2",
-    "esbuild": "0.28.1"
+    "esbuild": "0.28.1",
+    "yaml": "2.9.0"
   }
 }
