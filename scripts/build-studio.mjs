@@ -9,8 +9,12 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDirectory, "..");
 const require = createRequire(import.meta.url);
 const outdirArgument = process.argv.find((argument) => argument.startsWith("--outdir="));
-const outdir = outdirArgument
-  ? path.resolve(root, outdirArgument.slice("--outdir=".length))
+const outdirValue = outdirArgument?.slice("--outdir=".length).trim();
+if (outdirArgument && !outdirValue) {
+  throw new Error("--outdir requires a non-empty path.");
+}
+const outdir = outdirValue
+  ? path.resolve(root, outdirValue)
   : path.join(root, "src", "project-studio", "generated");
 
 await mkdir(path.join(outdir, "assets"), { recursive: true });
@@ -30,8 +34,17 @@ await build({
   logLevel: "info",
 });
 
-const tailwindPackageRoot = path.dirname(require.resolve("@tailwindcss/cli/package.json"));
-const tailwindEntryPoint = path.join(tailwindPackageRoot, "dist", "index.mjs");
+const tailwindPackagePath = require.resolve("@tailwindcss/cli/package.json");
+const tailwindPackageRoot = path.dirname(tailwindPackagePath);
+const tailwindPackage = require(tailwindPackagePath);
+const tailwindBin =
+  typeof tailwindPackage.bin === "string"
+    ? tailwindPackage.bin
+    : tailwindPackage.bin?.tailwindcss;
+if (!tailwindBin) {
+  throw new Error("@tailwindcss/cli does not declare a tailwindcss executable.");
+}
+const tailwindEntryPoint = path.resolve(tailwindPackageRoot, tailwindBin);
 const cssResult = spawnSync(
   process.execPath,
   [

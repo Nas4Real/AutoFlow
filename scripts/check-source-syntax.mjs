@@ -34,8 +34,14 @@ for (const file of files.sort()) {
     encoding: "utf8",
   });
 
-  if (result.status !== 0) {
-    failures.push(`${path.relative(root, file)}\n${result.stderr.trim()}`);
+  if (result.error) {
+    failures.push(`${path.relative(root, file)}\n${result.error.message}`);
+  } else if (result.status !== 0) {
+    const detail =
+      result.stderr?.trim() ||
+      result.stdout?.trim() ||
+      `Node syntax check exited with status ${result.status ?? "unknown"}`;
+    failures.push(`${path.relative(root, file)}\n${detail}`);
   }
 }
 
