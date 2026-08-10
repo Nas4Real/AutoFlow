@@ -33905,7 +33905,7 @@
     } catch (error) {
       hash = rawHash;
     }
-    return NAV_ITEMS.some((item) => item.id === hash) ? hash : "channels";
+    return NAV_ITEMS.some((item) => item.id === hash) || hash === "overview" ? hash : "channels";
   }
   var StudioErrorBoundary = class extends import_react73.default.Component {
     state = { error: null };
@@ -34305,6 +34305,53 @@
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Upload, { size: 17 }),
         "Import video JSON"
       ] }) })
+    ] });
+  }
+  function ProjectOverviewView({ project, video, onBack, onNavigate }) {
+    if (!video) return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { title: "Choose a video project", description: "Open a project from the Dashboard to review its production progress.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "primary", onPress: onBack, children: "All video projects" }) });
+    const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+    const phases = [["imported", "Imported"], ["image_generation", "Images"], ["image_selection", "Selection"], ["video_generation", "Videos"], ["complete", "Complete"]];
+    const activeIndex = phases.findIndex(([id]) => id === progress.phase);
+    const cards = [["Image generation", `${progress.generated_count}/${progress.prompt_count}`, "images"], ["Variant selection", `${progress.selected_count}/${progress.prompt_count}`, "images"], ["Video generation", `${progress.video_complete_count}/${progress.prompt_count}`, "video"]];
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack project-overview", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("header", { className: "project-header", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "ghost", onPress: onBack, children: "All video projects" }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: video.display_name }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
+            video.prompt_count,
+            " scenes \xB7 ",
+            phases[activeIndex]?.[1] || "Imported"
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "project-tabs", role: "tablist", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", "aria-selected": true, children: "Overview" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "ghost", onPress: () => onNavigate("images"), children: "Image Review" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "ghost", onPress: () => onNavigate("video"), children: "Video Queue" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "ghost", onPress: () => onNavigate("media"), children: "Media" })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("section", { className: "overview-milestones", "aria-label": "Video project production phases", children: phases.map(([id, label], index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: index < activeIndex ? "complete" : index === activeIndex ? "current" : "pending", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: index < activeIndex ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Check, { size: 15 }) : index + 1 }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: label })
+      ] }, id)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "overview-status-grid", children: cards.map(([label, value, target]) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { className: "overview-metric", children: value }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: label === "Variant selection" ? "Choose one image for each scene before video generation." : "Project-scoped production progress." }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { size: "sm", variant: "secondary", onPress: () => onNavigate(target), children: [
+          "Open ",
+          label
+        ] })
+      ] }) }, label)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "overview-activity", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Production activity", description: progress.video_failed_count ? `${progress.video_failed_count} video jobs need attention.` : "No active generation is running.", actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "ghost", onPress: () => onNavigate("logs"), children: "View logs" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2, { "aria-label": "Overall video project completion", value: progress.percentage, color: "accent", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Track, { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Fill, {}) }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
+          progress.percentage,
+          "% complete \xB7 Generation starts only after you explicitly confirm in Image Review or Video Queue."
+        ] })
+      ] })
     ] });
   }
   function AssetsView({ project, onAdd, onEdit, onDelete }) {
@@ -34793,7 +34840,7 @@
       const content2 = await studioApi.readTextFile(file);
       const result = await action("video-import", () => studioApi.importProjectPromptJson(content2, file.name, name), "Video imported");
       setActiveVideoId(result.import_record.import_id);
-      setView("images");
+      setView("overview");
       setDialog(null);
       return result;
     }
@@ -34804,8 +34851,10 @@
     if (view === "channels") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ChannelsView, { project, videos, busy: !!busy, onAddChannel: () => setDialog({ type: "channel-add" }), onRenameChannel: (name) => action("channel-rename", () => studioApi.updateActiveProject({ display_name: name }), "Channel renamed"), onAddVideo: () => setDialog({ type: "video-add" }), onOpenVideo: (videoId) => {
         setActiveVideoId(videoId);
-        setView("images");
+        setView("overview");
       }, onRenameVideo: (video) => setDialog({ type: "video-rename", video }), onDeleteVideo: (video) => setDialog({ type: "video-delete", video }) });
+    } else if (view === "overview") {
+      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProjectOverviewView, { project, video: activeVideo, onBack: () => setView("channels"), onNavigate: setView });
     } else if (view === "assets") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(AssetsView, { project, onAdd: () => setDialog({ type: "asset-add" }), onEdit: (asset) => setDialog({ type: "asset-edit", asset }), onDelete: (asset) => setDialog({ type: "asset-delete", asset }) });
     } else if (view === "import") {

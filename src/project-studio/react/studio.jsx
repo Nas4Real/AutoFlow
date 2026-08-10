@@ -52,7 +52,7 @@ function getViewFromLocationHash() {
   } catch (error) {
     hash = rawHash;
   }
-  return NAV_ITEMS.some((item) => item.id === hash) ? hash : "channels";
+  return NAV_ITEMS.some((item) => item.id === hash) || hash === "overview" ? hash : "channels";
 }
 
 class StudioErrorBoundary extends React.Component {
@@ -514,6 +514,20 @@ function ChannelsView({ project, videos, onAddChannel, onRenameChannel, onAddVid
   );
 }
 
+function ProjectOverviewView({ project, video, onBack, onNavigate }) {
+  if (!video) return <EmptyState title="Choose a video project" description="Open a project from the Dashboard to review its production progress." action={<Button variant="primary" onPress={onBack}>All video projects</Button>} />;
+  const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+  const phases = [["imported", "Imported"], ["image_generation", "Images"], ["image_selection", "Selection"], ["video_generation", "Videos"], ["complete", "Complete"]];
+  const activeIndex = phases.findIndex(([id]) => id === progress.phase);
+  const cards = [["Image generation", `${progress.generated_count}/${progress.prompt_count}`, "images"], ["Variant selection", `${progress.selected_count}/${progress.prompt_count}`, "images"], ["Video generation", `${progress.video_complete_count}/${progress.prompt_count}`, "video"]];
+  return <div className="view-stack project-overview">
+    <header className="project-header"><Button size="sm" variant="ghost" onPress={onBack}>All video projects</Button><div><h2>{video.display_name}</h2><p>{video.prompt_count} scenes · {phases[activeIndex]?.[1] || "Imported"}</p></div><div className="project-tabs" role="tablist"><Button size="sm" variant="secondary" aria-selected>Overview</Button><Button size="sm" variant="ghost" onPress={() => onNavigate("images")}>Image Review</Button><Button size="sm" variant="ghost" onPress={() => onNavigate("video")}>Video Queue</Button><Button size="sm" variant="ghost" onPress={() => onNavigate("media")}>Media</Button></div></header>
+    <section className="overview-milestones" aria-label="Video project production phases">{phases.map(([id, label], index) => <div key={id} className={index < activeIndex ? "complete" : index === activeIndex ? "current" : "pending"}><span>{index < activeIndex ? <Check size={15} /> : index + 1}</span><strong>{label}</strong></div>)}</section>
+    <div className="overview-status-grid">{cards.map(([label, value, target]) => <Card key={label} variant="secondary"><Card.Content><span className="eyebrow">{label}</span><strong className="overview-metric">{value}</strong><p>{label === "Variant selection" ? "Choose one image for each scene before video generation." : "Project-scoped production progress."}</p><Button size="sm" variant="secondary" onPress={() => onNavigate(target)}>Open {label}</Button></Card.Content></Card>)}</div>
+    <section className="overview-activity"><PageHeader title="Production activity" description={progress.video_failed_count ? `${progress.video_failed_count} video jobs need attention.` : "No active generation is running."} actions={<Button size="sm" variant="ghost" onPress={() => onNavigate("logs")}>View logs</Button>} /><ProgressBar aria-label="Overall video project completion" value={progress.percentage} color="accent"><ProgressBar.Track><ProgressBar.Fill /></ProgressBar.Track></ProgressBar><p>{progress.percentage}% complete · Generation starts only after you explicitly confirm in Image Review or Video Queue.</p></section>
+  </div>;
+}
+
 function AssetsView({ project, onAdd, onEdit, onDelete }) {
   const assets = Array.isArray(project?.assets) ? project.assets : [];
   return (
@@ -916,7 +930,7 @@ function StudioApp() {
     const content = await studioApi.readTextFile(file);
     const result = await action("video-import", () => studioApi.importProjectPromptJson(content, file.name, name), "Video imported");
     setActiveVideoId(result.import_record.import_id);
-    setView("images");
+    setView("overview");
     setDialog(null);
     return result;
   }
@@ -927,7 +941,9 @@ function StudioApp() {
 
   let content = null;
   if (view === "channels") {
-    content = <ChannelsView project={project} videos={videos} busy={!!busy} onAddChannel={() => setDialog({ type: "channel-add" })} onRenameChannel={(name) => action("channel-rename", () => studioApi.updateActiveProject({ display_name: name }), "Channel renamed")} onAddVideo={() => setDialog({ type: "video-add" })} onOpenVideo={(videoId) => { setActiveVideoId(videoId); setView("images"); }} onRenameVideo={(video) => setDialog({ type: "video-rename", video })} onDeleteVideo={(video) => setDialog({ type: "video-delete", video })} />;
+    content = <ChannelsView project={project} videos={videos} busy={!!busy} onAddChannel={() => setDialog({ type: "channel-add" })} onRenameChannel={(name) => action("channel-rename", () => studioApi.updateActiveProject({ display_name: name }), "Channel renamed")} onAddVideo={() => setDialog({ type: "video-add" })} onOpenVideo={(videoId) => { setActiveVideoId(videoId); setView("overview"); }} onRenameVideo={(video) => setDialog({ type: "video-rename", video })} onDeleteVideo={(video) => setDialog({ type: "video-delete", video })} />;
+  } else if (view === "overview") {
+    content = <ProjectOverviewView project={project} video={activeVideo} onBack={() => setView("channels")} onNavigate={setView} />;
   } else if (view === "assets") {
     content = <AssetsView project={project} onAdd={() => setDialog({ type: "asset-add" })} onEdit={(asset) => setDialog({ type: "asset-edit", asset })} onDelete={(asset) => setDialog({ type: "asset-delete", asset })} />;
   } else if (view === "import") {
