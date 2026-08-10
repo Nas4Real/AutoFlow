@@ -34020,10 +34020,10 @@
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("img", { src: source, alt, onError: () => setFailedSource(source) });
   }
   function statusColor(status) {
-    if (status === "complete" || status === "ready") return "success";
+    if (["complete", "completed", "ready", "submitted"].includes(status)) return "success";
     if (status === "failed" || status === "needs_review") return "danger";
-    if (status === "running") return "accent";
-    if (status === "paused") return "warning";
+    if (status === "running" || status === "generating") return "accent";
+    if (["paused", "partial", "stopped"].includes(status)) return "warning";
     return "default";
   }
   function EmptyState({ icon: Icon2 = FolderOpen, title, description, action }) {
@@ -34377,16 +34377,137 @@
       ] }) : null
     ] });
   }
-  function ImageReviewView({ project, video, onSelect }) {
+  function getProjectImageSettings(project) {
+    const settings = project?.settings || {};
+    return {
+      imageModel: settings.image_model || settings.imageModel || "NARWHAL",
+      imageRatio: settings.image_ratio || settings.imageRatio || "IMAGE_ASPECT_RATIO_LANDSCAPE",
+      imageCount: Number(settings.image_count || settings.imageCount || 2),
+      speedMode: settings.image_speed_mode || settings.speedMode || "fast"
+    };
+  }
+  function ImageReviewView({ project, video, flowContext, busy, onRefreshConnection, onGenerate, onStop, onRetry, onSelect }) {
+    const [settings, setSettings] = (0, import_react73.useState)(() => getProjectImageSettings(project));
+    (0, import_react73.useEffect)(() => setSettings(getProjectImageSettings(project)), [project?.project_id]);
     if (!video) return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Images, title: "Choose a video", description: "Image Review is organized one video at a time." });
     const records = studioApi.getVideoPromptRecords(project, video.video_id);
     const variants = studioApi.getProjectImageVariants(project);
+    const gate = studioApi.getImageGenerationGate(project, video.video_id);
+    const runs = studioApi.getProjectImageGenerationRuns(project).filter((run) => run.video_id === video.video_id).sort((left, right) => String(right.created_at || "").localeCompare(String(left.created_at || "")));
+    const activeRun = runs.find((run) => run.status === "generating") || null;
+    const latestRun = activeRun || runs[0] || null;
+    const retryableRun = runs.find((run) => ["failed", "partial", "stopped"].includes(run.status)) || null;
+    const expectedVariants = latestRun ? Number(latestRun.prompt_count || 0) * Number(latestRun.image_count || 1) : 0;
+    const generatedVariants = latestRun ? variants.filter((variant) => variant.image_run_id === latestRun.image_run_id).length : 0;
+    const progress = expectedVariants ? Math.min(100, Math.round(generatedVariants / expectedVariants * 100)) : 0;
+    const flowStatus = String(flowContext?.status || "disconnected").toLowerCase();
+    const connected = flowStatus === "connected";
     const rows = records.map((record) => ({
       record,
       variants: variants.filter((variant) => variant.prompt_id === record.prompt_id).sort((left, right) => Number(left.variant_index || 0) - Number(right.variant_index || 0))
     })).filter((row) => row.variants.length);
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Image Review", description: video.display_name }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Image Review", description: video.display_name, actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "flow-connection", "aria-live": "polite", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: `connection-dot ${connected ? "connected" : "disconnected"}`, "aria-hidden": "true" }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "Flow connection" }),
+          connected ? "Connected" : "Disconnected"
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": "Refresh Flow connection", onPress: onRefreshConnection, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(RefreshCw, { size: 16 }) })
+      ] }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "generation-console", "aria-labelledby": "image-generation-heading", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "generation-console-heading", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Manual checkpoint" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { id: "image-generation-heading", children: "Generate image variants" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Review the settings, then start only this video's ready scenes." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "generation-counts", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Chip, { size: "sm", color: "success", variant: "soft", children: [
+              gate.ready_count,
+              " ready"
+            ] }),
+            gate.blocked_count ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Chip, { size: "sm", color: "warning", variant: "soft", children: [
+              gate.blocked_count,
+              " blocked"
+            ] }) : null
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("fieldset", { className: "generation-settings", disabled: !!activeRun || !!busy, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("legend", { children: "Image generation settings" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { htmlFor: "studio-image-model", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Model" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { id: "studio-image-model", value: settings.imageModel, onChange: (event) => setSettings((current) => ({ ...current, imageModel: event.target.value })), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "GEM_PIX_2", children: "Nano Banana Pro" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "NARWHAL", children: "Nano Banana 2" })
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { htmlFor: "studio-image-ratio", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Aspect ratio" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { id: "studio-image-ratio", value: settings.imageRatio, onChange: (event) => setSettings((current) => ({ ...current, imageRatio: event.target.value })), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_LANDSCAPE", children: "16:9" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_LANDSCAPE_FOUR_THREE", children: "4:3" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_SQUARE", children: "1:1" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_PORTRAIT_THREE_FOUR", children: "3:4" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_PORTRAIT", children: "9:16" })
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { htmlFor: "studio-image-count", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Images per prompt" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("select", { id: "studio-image-count", value: settings.imageCount, onChange: (event) => setSettings((current) => ({ ...current, imageCount: Number(event.target.value) })), children: [1, 2, 3, 4].map((count) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: count, children: count }, count)) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { htmlFor: "studio-image-speed", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Speed" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { id: "studio-image-speed", value: settings.speedMode, onChange: (event) => setSettings((current) => ({ ...current, speedMode: event.target.value })), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "fast", children: "Fast" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "balanced", children: "Balanced" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "slow", children: "Slow" })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "generation-actions", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: connected ? `${gate.ready_count} scenes can start` : "Open Google Flow to connect" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Generation spends Flow credits only after you press Generate images." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", isDisabled: !connected || !gate.ready_count || !!activeRun || !!busy, onPress: () => onGenerate(settings), children: [
+            busy === "generate-images" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(LoaderCircle, { className: "spin", size: 17 }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Play, { size: 17 }),
+            "Generate images"
+          ] })
+        ] }),
+        latestRun ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `image-run-summary status-${latestRun.status}`, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "image-run-title", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: activeRun ? "Generation in progress" : `Last run: ${latestRun.status}` }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
+                generatedVariants,
+                " of ",
+                expectedVariants,
+                " variants received"
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Chip, { size: "sm", color: statusColor(latestRun.status), variant: "soft", children: latestRun.status })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2, { "aria-label": "Image generation progress", value: progress, color: "accent", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Track, { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Fill, {}) }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "image-run-actions", children: [
+            activeRun ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { size: "sm", variant: "danger-soft", isDisabled: !!busy, onPress: () => onStop(activeRun.image_run_id), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Square, { size: 15 }),
+              "Stop"
+            ] }) : null,
+            !activeRun && retryableRun ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { size: "sm", variant: "outline", isDisabled: !!busy, onPress: () => onRetry(retryableRun.image_run_id), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(RefreshCw, { size: 15 }),
+              "Retry failed"
+            ] }) : null
+          ] }),
+          latestRun.request_items?.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "image-prompt-queue", "aria-label": "Image prompt queue", children: latestRun.request_items.map((item) => {
+            const promptStatus = latestRun.prompt_statuses?.[item.prompt_id]?.status || (latestRun.status === "generating" ? "queued" : latestRun.status);
+            return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: studioApi.sceneTitleFromFileName(item.file_name) }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Chip, { size: "sm", color: statusColor(promptStatus), variant: "soft", children: promptStatus })
+            ] }, item.prompt_id);
+          }) }) : null
+        ] }) : null
+      ] }),
       rows.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "review-list", children: rows.map(({ record, variants: sceneVariants }) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "scene-review", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "scene-review-heading", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { children: studioApi.sceneTitleFromFileName(record.file_name) }),
@@ -34529,6 +34650,7 @@
     const capture = (0, import_react73.useCallback)(() => setSnapshot(captureStudioState()), []);
     const refresh = (0, import_react73.useCallback)(async () => {
       await studioApi.loadProjectState();
+      await studioApi.refreshFlowContext({ persist: false });
       capture();
     }, [capture]);
     (0, import_react73.useEffect)(() => {
@@ -34658,6 +34780,7 @@
       const content2 = await studioApi.readTextFile(file);
       const result = await action("video-import", () => studioApi.importProjectPromptJson(content2, file.name, name), "Video imported");
       setActiveVideoId(result.import_record.import_id);
+      setView("images");
       setDialog(null);
       return result;
     }
@@ -34675,7 +34798,7 @@
     } else if (view === "import") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ImportView, { project, videos, busy: !!busy, onImport: importVideo, onResolve: (promptId, referenceIndex, assetId) => action("resolve", () => studioApi.mapPromptReferenceToAsset(promptId, referenceIndex, assetId), "Reference resolved") });
     } else if (view === "images") {
-      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ImageReviewView, { project, video: activeVideo, onSelect: (promptId, variantId) => action("select-image", () => studioApi.selectImageVariant(promptId, variantId), "Image selected") });
+      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ImageReviewView, { project, video: activeVideo, flowContext: snapshot.flowContext, busy, onRefreshConnection: () => action("flow-refresh", () => studioApi.refreshFlowContext(), "Flow connection refreshed"), onGenerate: (settings) => action("generate-images", () => studioApi.startImageGenerationRun(activeVideo.video_id, settings), "Image generation started"), onStop: (runId) => action("stop-images", () => studioApi.stopImageGenerationRun(runId), "Image generation stopped"), onRetry: (runId) => action("retry-images", () => studioApi.retryImageGenerationRun(runId), "Retry started"), onSelect: (promptId, variantId) => action("select-image", () => studioApi.selectImageVariant(promptId, variantId), "Image selected") });
     } else if (view === "video") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(VideoQueueView, { project, video: activeVideo, runner, onRunAll: () => {
         const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "" };

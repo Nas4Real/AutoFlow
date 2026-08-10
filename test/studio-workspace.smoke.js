@@ -512,6 +512,13 @@ async function run() {
   assert.match(studioSource, /items\.find\(\(item\) => item\.status === "ready"\)/);
   assert.doesNotMatch(studioSource, /items\.find\(\(item\) => item\.status === "failed"\)/);
   assert.match(studioSource, /appendStudioLog\(`Video queue paused:/);
+  assert.match(studioSource, /studioApi\.startImageGenerationRun\(activeVideo\.video_id/);
+  assert.match(studioSource, /studioApi\.stopImageGenerationRun/);
+  assert.match(studioSource, /studioApi\.retryImageGenerationRun/);
+  assert.match(studioSource, /Generate images<\/Button>/);
+  assert.match(studioSource, /<span>Images per prompt<\/span>/);
+  assert.match(studioSource, /Flow connection/);
+  assert.match(studioSource, /setView\("images"\)/);
   assert.match(studioSource, /getViewFromLocationHash/);
   assert.match(studioSource, /useState\(\(\) => getViewFromLocationHash\(\)\)/);
   assert.match(studioSource, /hashchange/);
