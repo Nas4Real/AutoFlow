@@ -33889,7 +33889,7 @@
   var studioApi = globalThis.TFProjectStudioState;
   var domainApi = globalThis.TFProjectDomain;
   var NAV_ITEMS = [
-    { id: "channels", label: "Channels", icon: Tv },
+    { id: "channels", label: "Dashboard", icon: Tv },
     { id: "assets", label: "Assets", icon: Image },
     { id: "import", label: "Import", icon: Upload },
     { id: "images", label: "Image Review", icon: Images },
@@ -34239,56 +34239,69 @@
   }
   function ChannelsView({ project, videos, onAddChannel, onRenameChannel, onAddVideo, onOpenVideo, onRenameVideo, onDeleteVideo, busy }) {
     const [channelName, setChannelName] = (0, import_react73.useState)(project?.display_name || "");
+    const [filter, setFilter] = (0, import_react73.useState)("all");
+    const [query, setQuery] = (0, import_react73.useState)("");
     (0, import_react73.useEffect)(() => setChannelName(project?.display_name || ""), [project?.project_id, project?.display_name]);
+    const projects = videos.map((video) => ({ video, progress: studioApi.getVideoProjectProgress(project, video.video_id) })).filter(({ video, progress }) => {
+      if (query.trim() && !video.display_name.toLowerCase().includes(query.trim().toLowerCase())) return false;
+      if (filter === "all") return true;
+      if (filter === "complete") return progress.phase === "complete";
+      if (filter === "progress") return progress.phase !== "imported" && progress.phase !== "complete";
+      if (filter === "attention") return progress.video_failed_count > 0;
+      return progress.phase === "imported" || progress.phase === "image_generation";
+    });
+    const phaseLabel = (phase) => ({ imported: "Imported", image_generation: "Image generation", image_selection: "Image selection", video_generation: "Video generation", complete: "Complete" })[phase] || "Imported";
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
         PageHeader,
         {
-          title: "Channels",
-          description: "Organize each YouTube channel into individual videos.",
-          actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddChannel, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 17 }),
-            "Add channel"
+          title: "Video Projects",
+          description: project ? `${videos.length} projects in ${project.display_name}` : "Import a prompt JSON file to begin.",
+          actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddVideo, isDisabled: !project, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Upload, { size: 17 }),
+            "Import JSON"
           ] })
         }
       ),
-      project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "channel-settings-band", children: [
+      project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "dashboard-controls", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Active channel" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Channel workspace" }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "inline-edit-field", children: [
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: channelName, onChange: (event) => setChannelName(event.target.value) }),
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "secondary", "aria-label": "Save channel name", isDisabled: !channelName.trim() || channelName.trim() === project.display_name || busy, onPress: () => onRenameChannel(channelName.trim()), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Save, { size: 16 }) })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "outline", onPress: onAddVideo, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 17 }),
-          "Add video"
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "dashboard-search", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Search, { size: 16 }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: query, onChange: (event) => setQuery(event.target.value), placeholder: "Search projects", "aria-label": "Search video projects" })
         ] })
       ] }) : null,
       !project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { title: "Add your first channel", description: "A channel keeps its videos, assets, images, and queue together.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddChannel, children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 17 }),
         "Add channel"
-      ] }) }) : videos.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "video-list", children: videos.map((video) => {
-        const progress = video.prompt_count ? Math.round(video.selected_count / video.prompt_count * 100) : 0;
-        return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { className: "video-card", variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { className: "video-card-content", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "video-icon", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Video, { size: 20 }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "video-card-main", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { children: video.display_name }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
-              video.selected_count,
-              " of ",
-              video.prompt_count,
-              " scenes selected"
+      ] }) }) : videos.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "dashboard-filters", children: [["all", "All"], ["ready", "Ready for action"], ["progress", "In progress"], ["attention", "Needs attention"], ["complete", "Complete"]].map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: filter === value ? "secondary" : "ghost", onPress: () => setFilter(value), children: label }, value)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "video-list project-list", children: projects.map(({ video, progress }) => {
+          return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { className: "video-card", variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { className: "video-card-content", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "video-icon", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Video, { size: 20 }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "video-card-main", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { children: video.display_name }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
+                video.prompt_count,
+                " scenes \xB7 ",
+                phaseLabel(progress.phase)
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "project-milestones", "aria-label": `Project phase: ${phaseLabel(progress.phase)}`, children: ["Imported", "Images", "Selection", "Videos", "Complete"].map((label, index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: index <= ["imported", "image_generation", "image_selection", "video_generation", "complete"].indexOf(progress.phase) ? "active" : "", children: label }, label)) }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2, { "aria-label": "Project completion progress", value: progress.percentage, color: "accent", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Track, { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Fill, {}) }) })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2, { "aria-label": "Image selection progress", value: progress, color: "accent", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Track, { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Fill, {}) }) })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "row-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", onPress: () => onOpenVideo(video.video_id), children: "Open" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": `Rename ${video.display_name}`, onPress: () => onRenameVideo(video), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Pencil, { size: 16 }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": `Delete ${video.display_name}`, onPress: () => onDeleteVideo(video), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Trash2, { size: 16 }) })
-          ] })
-        ] }) }, video.video_id);
-      }) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: FileBraces, title: "No videos yet", description: "Import one JSON file to create a video.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddVideo, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "row-actions", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", onPress: () => onOpenVideo(video.video_id), children: "Open project" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": `Rename ${video.display_name}`, onPress: () => onRenameVideo(video), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Pencil, { size: 16 }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": `Delete ${video.display_name}`, onPress: () => onDeleteVideo(video), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Trash2, { size: 16 }) })
+            ] })
+          ] }) }, video.video_id);
+        }) })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: FileBraces, title: "No videos yet", description: "Import one JSON file to create a video.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddVideo, children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Upload, { size: 17 }),
         "Import video JSON"
       ] }) })

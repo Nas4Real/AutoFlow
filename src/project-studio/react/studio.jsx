@@ -35,7 +35,7 @@ const studioApi = globalThis.TFProjectStudioState;
 const domainApi = globalThis.TFProjectDomain;
 
 const NAV_ITEMS = [
-  { id: "channels", label: "Channels", icon: Tv },
+  { id: "channels", label: "Dashboard", icon: Tv },
   { id: "assets", label: "Assets", icon: ImageIcon },
   { id: "import", label: "Import", icon: Upload },
   { id: "images", label: "Image Review", icon: Images },
@@ -445,18 +445,30 @@ function ConfirmDialog({ open, title, description, confirmLabel = "Delete", onOp
 
 function ChannelsView({ project, videos, onAddChannel, onRenameChannel, onAddVideo, onOpenVideo, onRenameVideo, onDeleteVideo, busy }) {
   const [channelName, setChannelName] = useState(project?.display_name || "");
+  const [filter, setFilter] = useState("all");
+  const [query, setQuery] = useState("");
   useEffect(() => setChannelName(project?.display_name || ""), [project?.project_id, project?.display_name]);
+  const projects = videos.map((video) => ({ video, progress: studioApi.getVideoProjectProgress(project, video.video_id) }))
+    .filter(({ video, progress }) => {
+      if (query.trim() && !video.display_name.toLowerCase().includes(query.trim().toLowerCase())) return false;
+      if (filter === "all") return true;
+      if (filter === "complete") return progress.phase === "complete";
+      if (filter === "progress") return progress.phase !== "imported" && progress.phase !== "complete";
+      if (filter === "attention") return progress.video_failed_count > 0;
+      return progress.phase === "imported" || progress.phase === "image_generation";
+    });
+  const phaseLabel = (phase) => ({ imported: "Imported", image_generation: "Image generation", image_selection: "Image selection", video_generation: "Video generation", complete: "Complete" }[phase] || "Imported");
   return (
     <div className="view-stack">
       <PageHeader
-        title="Channels"
-        description="Organize each YouTube channel into individual videos."
-        actions={<Button variant="primary" onPress={onAddChannel}><Plus size={17} />Add channel</Button>}
+        title="Video Projects"
+        description={project ? `${videos.length} projects in ${project.display_name}` : "Import a prompt JSON file to begin."}
+        actions={<Button variant="primary" onPress={onAddVideo} isDisabled={!project}><Upload size={17} />Import JSON</Button>}
       />
       {project ? (
-        <section className="channel-settings-band">
+        <section className="dashboard-controls">
           <div>
-            <span className="eyebrow">Active channel</span>
+            <span className="eyebrow">Channel workspace</span>
             <label className="inline-edit-field">
               <input value={channelName} onChange={(event) => setChannelName(event.target.value)} />
               <Button isIconOnly size="sm" variant="secondary" aria-label="Save channel name" isDisabled={!channelName.trim() || channelName.trim() === project.display_name || busy} onPress={() => onRenameChannel(channelName.trim())}>
@@ -464,28 +476,29 @@ function ChannelsView({ project, videos, onAddChannel, onRenameChannel, onAddVid
               </Button>
             </label>
           </div>
-          <Button variant="outline" onPress={onAddVideo}><Plus size={17} />Add video</Button>
+          <label className="dashboard-search"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects" aria-label="Search video projects" /></label>
         </section>
       ) : null}
       {!project ? (
         <EmptyState title="Add your first channel" description="A channel keeps its videos, assets, images, and queue together." action={<Button variant="primary" onPress={onAddChannel}><Plus size={17} />Add channel</Button>} />
       ) : videos.length ? (
-        <div className="video-list">
-          {videos.map((video) => {
-            const progress = video.prompt_count ? Math.round((video.selected_count / video.prompt_count) * 100) : 0;
+        <><div className="dashboard-filters">{[["all", "All"], ["ready", "Ready for action"], ["progress", "In progress"], ["attention", "Needs attention"], ["complete", "Complete"]].map(([value, label]) => <Button key={value} size="sm" variant={filter === value ? "secondary" : "ghost"} onPress={() => setFilter(value)}>{label}</Button>)}</div>
+        <div className="video-list project-list">
+          {projects.map(({ video, progress }) => {
             return (
               <Card key={video.video_id} className="video-card" variant="secondary">
                 <Card.Content className="video-card-content">
                   <div className="video-icon"><Video size={20} /></div>
                   <div className="video-card-main">
                     <h3>{video.display_name}</h3>
-                    <span>{video.selected_count} of {video.prompt_count} scenes selected</span>
-                    <ProgressBar aria-label="Image selection progress" value={progress} color="accent">
+                    <span>{video.prompt_count} scenes · {phaseLabel(progress.phase)}</span>
+                    <div className="project-milestones" aria-label={`Project phase: ${phaseLabel(progress.phase)}`}>{["Imported", "Images", "Selection", "Videos", "Complete"].map((label, index) => <span key={label} className={index <= ["imported", "image_generation", "image_selection", "video_generation", "complete"].indexOf(progress.phase) ? "active" : ""}>{label}</span>)}</div>
+                    <ProgressBar aria-label="Project completion progress" value={progress.percentage} color="accent">
                       <ProgressBar.Track><ProgressBar.Fill /></ProgressBar.Track>
                     </ProgressBar>
                   </div>
                   <div className="row-actions">
-                    <Button size="sm" variant="secondary" onPress={() => onOpenVideo(video.video_id)}>Open</Button>
+                    <Button size="sm" variant="secondary" onPress={() => onOpenVideo(video.video_id)}>Open project</Button>
                     <Button isIconOnly size="sm" variant="ghost" aria-label={`Rename ${video.display_name}`} onPress={() => onRenameVideo(video)}><Pencil size={16} /></Button>
                     <Button isIconOnly size="sm" variant="ghost" aria-label={`Delete ${video.display_name}`} onPress={() => onDeleteVideo(video)}><Trash2 size={16} /></Button>
                   </div>
@@ -493,7 +506,7 @@ function ChannelsView({ project, videos, onAddChannel, onRenameChannel, onAddVid
               </Card>
             );
           })}
-        </div>
+        </div></>
       ) : (
         <EmptyState icon={FileJson} title="No videos yet" description="Import one JSON file to create a video." action={<Button variant="primary" onPress={onAddVideo}><Upload size={17} />Import video JSON</Button>} />
       )}
