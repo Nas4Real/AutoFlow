@@ -34078,6 +34078,15 @@
     { id: "connection", label: "Flow Connection" },
     { id: "diagnostics", label: "Diagnostics" }
   ];
+  var IMAGE_REVIEW_TABS = [
+    { id: "generate", label: "Generate" },
+    { id: "select", label: "Select" }
+  ];
+  var MEDIA_TABS = [
+    { id: "all", label: "All" },
+    { id: "images", label: "Images" },
+    { id: "videos", label: "Videos" }
+  ];
   function getViewFromLocationHash() {
     const rawHash = String(globalThis.location?.hash || "").replace(/^#/, "");
     let hash = "";
@@ -34897,6 +34906,7 @@
   }
   function ImageReviewView({ project, video, flowContext, busy, onRefreshConnection, onGenerate, onStop, onRetry, onSelect }) {
     const [settings, setSettings] = (0, import_react73.useState)(() => getProjectImageSettings(project));
+    const [tab, setTab] = (0, import_react73.useState)("generate");
     (0, import_react73.useEffect)(() => setSettings(getProjectImageSettings(project)), [project?.project_id]);
     if (!video) return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Images, title: "Choose a video", description: "Image Review is organized one video at a time." });
     const records = studioApi.getVideoPromptRecords(project, video.video_id);
@@ -34924,7 +34934,8 @@
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": "Refresh Flow connection", onPress: onRefreshConnection, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(RefreshCw, { size: 16 }) })
       ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "generation-console", "aria-labelledby": "image-generation-heading", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { className: "studio-subtabs", "aria-label": "Image Review sections", children: IMAGE_REVIEW_TABS.map((item) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: tab === item.id ? "active" : "", "aria-current": tab === item.id ? "page" : void 0, onClick: () => setTab(item.id), children: item.label }, item.id)) }),
+      tab === "generate" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_jsx_runtime13.Fragment, { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "generation-console", "aria-labelledby": "image-generation-heading", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "generation-console-heading", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Manual checkpoint" }),
@@ -35016,8 +35027,8 @@
             ] }, item.prompt_id);
           }) }) : null
         ] }) : null
-      ] }),
-      rows.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "review-list", children: rows.map(({ record, variants: sceneVariants }) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "scene-review", children: [
+      ] }) }) : null,
+      tab === "select" && (rows.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "review-list", children: rows.map(({ record, variants: sceneVariants }) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "scene-review", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "scene-review-heading", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { children: studioApi.sceneTitleFromFileName(record.file_name) }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
@@ -35042,7 +35053,7 @@
             selected ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "selected-mark", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Check, { size: 16 }) }) : null
           ] }, variant.variant_id);
         }) })
-      ] }, record.prompt_id)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Images, title: "No generated images", description: "Generate images for this video, then review them here." })
+      ] }, record.prompt_id)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Images, title: "No generated images", description: "Generate images for this video, then review them here." }))
     ] });
   }
   function VideoQueueView({ project, video, runner, onRunAll, onPause, onContinue, onQueue, onRun, onStop, onHold, onMove, onRemove, onOpenImages }) {
@@ -35111,10 +35122,12 @@
     ] });
   }
   function MediaView({ project, video, onFinalize, onSync, busy }) {
+    const folderInput = (0, import_react73.useRef)(null);
+    const [tab, setTab] = (0, import_react73.useState)("all");
     if (!video) return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: LayoutGrid, title: "Choose a video", description: "Media is organized one video at a time." });
     const promptIds = new Set(video.prompt_ids || []);
     const media = studioApi.getProjectGalleryItems(project).items.filter((item) => promptIds.has(item.prompt_id));
-    const folderInput = (0, import_react73.useRef)(null);
+    const visibleMedia = media.filter((item) => tab === "all" || item.type === tab.slice(0, -1));
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Media", description: video.display_name, actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "outline", isDisabled: busy, onPress: () => folderInput.current?.click(), children: [
@@ -35124,11 +35137,15 @@
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "primary", isDisabled: busy, onPress: onFinalize, children: "Finalize selected" }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { ref: folderInput, type: "file", hidden: true, multiple: true, webkitdirectory: "", onChange: (event) => onSync(event.target.files) })
       ] }) }),
-      media.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "media-grid", children: media.map((item) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { className: "media-card", variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { className: "studio-subtabs", "aria-label": "Media sections", children: MEDIA_TABS.map((item) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: tab === item.id ? "active" : "", "aria-current": tab === item.id ? "page" : void 0, onClick: () => setTab(item.id), children: [
+        item.label,
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: item.id === "all" ? media.length : media.filter((entry) => entry.type === item.id.slice(0, -1)).length })
+      ] }, item.id)) }),
+      visibleMedia.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "media-grid", children: visibleMedia.map((item) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { className: "media-card", variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { children: [
         item.type === "video" && item.video_url ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("video", { controls: true, preload: "metadata", src: item.video_url }) : item.type === "image" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CachedPreviewImage, { value: item, alt: studioApi.sceneTitleFromFileName(item.prompt_file_name), placeholderClassName: "media-placeholder" }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "media-placeholder", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Image, { size: 24 }) }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: studioApi.sceneTitleFromFileName(item.prompt_file_name || item.output_file_name) }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Chip, { size: "sm", color: statusColor(item.is_selected ? "complete" : "draft"), variant: "soft", children: item.status_label })
-      ] }) }, `${item.type}:${item.id}`)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: LayoutGrid, title: "No media yet", description: "Selected images and completed videos appear here." })
+      ] }) }, `${item.type}:${item.id}`)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: LayoutGrid, title: `No ${tab === "all" ? "media" : tab} yet`, description: tab === "all" ? "Selected images and completed videos appear here." : `This video project has no ${tab} yet.` })
     ] });
   }
   function LogsView({ logs, onClear }) {

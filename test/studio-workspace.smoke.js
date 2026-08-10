@@ -554,6 +554,19 @@ async function run() {
     /\{ id: "channel", label: "Channel"[\s\S]*\{ id: "defaults", label: "Generation Defaults"[\s\S]*\{ id: "connection", label: "Flow Connection"[\s\S]*\{ id: "diagnostics", label: "Diagnostics"/,
   );
   assert.match(studioSource, /function SettingsView/);
+  assert.match(studioSource, /const IMAGE_REVIEW_TABS = \[/);
+  assert.match(
+    studioSource,
+    /\{ id: "generate", label: "Generate" \}[\s\S]*\{ id: "select", label: "Select" \}/,
+  );
+  assert.match(studioSource, /aria-label="Image Review sections"/);
+  assert.match(studioSource, /const MEDIA_TABS = \[/);
+  assert.match(
+    studioSource,
+    /\{ id: "all", label: "All" \}[\s\S]*\{ id: "images", label: "Images" \}[\s\S]*\{ id: "videos", label: "Videos" \}/,
+  );
+  assert.match(studioSource, /aria-label="Media sections"/);
+  assert.match(studioSource, /const visibleMedia = media\.filter/);
   assert.doesNotMatch(studioSource, /<Modal\.Root\s+isOpen=/);
   assert.match(studioSource, /<Modal\.Backdrop\s+[^>]*isOpen=/);
   assert.match(studioHtml, /generated\/studio\.bundle\.js/);

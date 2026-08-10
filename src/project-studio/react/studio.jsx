@@ -73,6 +73,17 @@ const SETTINGS_TABS = [
   { id: "diagnostics", label: "Diagnostics" },
 ];
 
+const IMAGE_REVIEW_TABS = [
+  { id: "generate", label: "Generate" },
+  { id: "select", label: "Select" },
+];
+
+const MEDIA_TABS = [
+  { id: "all", label: "All" },
+  { id: "images", label: "Images" },
+  { id: "videos", label: "Videos" },
+];
+
 function getViewFromLocationHash() {
   const rawHash = String(globalThis.location?.hash || "").replace(/^#/, "");
   let hash = "";
@@ -710,6 +721,7 @@ function SettingsView({ project, flowContext, logs, busy, onUpdateProject, onRef
 
 function ImageReviewView({ project, video, flowContext, busy, onRefreshConnection, onGenerate, onStop, onRetry, onSelect }) {
   const [settings, setSettings] = useState(() => getProjectImageSettings(project));
+  const [tab, setTab] = useState("generate");
   useEffect(() => setSettings(getProjectImageSettings(project)), [project?.project_id]);
   if (!video) return <EmptyState icon={Images} title="Choose a video" description="Image Review is organized one video at a time." />;
   const records = studioApi.getVideoPromptRecords(project, video.video_id);
@@ -741,6 +753,8 @@ function ImageReviewView({ project, video, flowContext, busy, onRefreshConnectio
           <Button isIconOnly size="sm" variant="ghost" aria-label="Refresh Flow connection" onPress={onRefreshConnection}><RefreshCw size={16} /></Button>
         </div>
       } />
+      <nav className="studio-subtabs" aria-label="Image Review sections">{IMAGE_REVIEW_TABS.map((item) => <button key={item.id} type="button" className={tab === item.id ? "active" : ""} aria-current={tab === item.id ? "page" : undefined} onClick={() => setTab(item.id)}>{item.label}</button>)}</nav>
+      {tab === "generate" ? <>
       <section className="generation-console" aria-labelledby="image-generation-heading">
         <div className="generation-console-heading">
           <div><span className="eyebrow">Manual checkpoint</span><h3 id="image-generation-heading">Generate image variants</h3><p>Review the settings, then start only this video's ready scenes.</p></div>
@@ -766,7 +780,8 @@ function ImageReviewView({ project, video, flowContext, busy, onRefreshConnectio
           </div>
         ) : null}
       </section>
-      {rows.length ? <div className="review-list">{rows.map(({ record, variants: sceneVariants }) => (
+      </> : null}
+      {tab === "select" && (rows.length ? <div className="review-list">{rows.map(({ record, variants: sceneVariants }) => (
         <section className="scene-review" key={record.prompt_id}>
           <div className="scene-review-heading"><h3>{studioApi.sceneTitleFromFileName(record.file_name)}</h3><span>{sceneVariants.length} options</span></div>
           <div className="variant-grid">{sceneVariants.map((variant) => {
@@ -785,7 +800,7 @@ function ImageReviewView({ project, video, flowContext, busy, onRefreshConnectio
             );
           })}</div>
         </section>
-      ))}</div> : <EmptyState icon={Images} title="No generated images" description="Generate images for this video, then review them here." />}
+      ))}</div> : <EmptyState icon={Images} title="No generated images" description="Generate images for this video, then review them here." />)}
     </div>
   );
 }
@@ -841,14 +856,17 @@ function VideoQueueView({ project, video, runner, onRunAll, onPause, onContinue,
 }
 
 function MediaView({ project, video, onFinalize, onSync, busy }) {
+  const folderInput = useRef(null);
+  const [tab, setTab] = useState("all");
   if (!video) return <EmptyState icon={LayoutGrid} title="Choose a video" description="Media is organized one video at a time." />;
   const promptIds = new Set(video.prompt_ids || []);
   const media = studioApi.getProjectGalleryItems(project).items.filter((item) => promptIds.has(item.prompt_id));
-  const folderInput = useRef(null);
+  const visibleMedia = media.filter((item) => tab === "all" || item.type === tab.slice(0, -1));
   return (
     <div className="view-stack">
       <PageHeader title="Media" description={video.display_name} actions={<><Button variant="outline" isDisabled={busy} onPress={() => folderInput.current?.click()}><FolderSync size={17} />Sync folder</Button><Button variant="primary" isDisabled={busy} onPress={onFinalize}>Finalize selected</Button><input ref={folderInput} type="file" hidden multiple webkitdirectory="" onChange={(event) => onSync(event.target.files)} /></>} />
-      {media.length ? <div className="media-grid">{media.map((item) => <Card key={`${item.type}:${item.id}`} className="media-card" variant="secondary"><Card.Content>{item.type === "video" && item.video_url ? <video controls preload="metadata" src={item.video_url} /> : item.type === "image" ? <CachedPreviewImage value={item} alt={studioApi.sceneTitleFromFileName(item.prompt_file_name)} placeholderClassName="media-placeholder" /> : <span className="media-placeholder"><ImageIcon size={24} /></span>}<strong>{studioApi.sceneTitleFromFileName(item.prompt_file_name || item.output_file_name)}</strong><Chip size="sm" color={statusColor(item.is_selected ? "complete" : "draft")} variant="soft">{item.status_label}</Chip></Card.Content></Card>)}</div> : <EmptyState icon={LayoutGrid} title="No media yet" description="Selected images and completed videos appear here." />}
+      <nav className="studio-subtabs" aria-label="Media sections">{MEDIA_TABS.map((item) => <button key={item.id} type="button" className={tab === item.id ? "active" : ""} aria-current={tab === item.id ? "page" : undefined} onClick={() => setTab(item.id)}>{item.label}<span>{item.id === "all" ? media.length : media.filter((entry) => entry.type === item.id.slice(0, -1)).length}</span></button>)}</nav>
+      {visibleMedia.length ? <div className="media-grid">{visibleMedia.map((item) => <Card key={`${item.type}:${item.id}`} className="media-card" variant="secondary"><Card.Content>{item.type === "video" && item.video_url ? <video controls preload="metadata" src={item.video_url} /> : item.type === "image" ? <CachedPreviewImage value={item} alt={studioApi.sceneTitleFromFileName(item.prompt_file_name)} placeholderClassName="media-placeholder" /> : <span className="media-placeholder"><ImageIcon size={24} /></span>}<strong>{studioApi.sceneTitleFromFileName(item.prompt_file_name || item.output_file_name)}</strong><Chip size="sm" color={statusColor(item.is_selected ? "complete" : "draft")} variant="soft">{item.status_label}</Chip></Card.Content></Card>)}</div> : <EmptyState icon={LayoutGrid} title={`No ${tab === "all" ? "media" : tab} yet`} description={tab === "all" ? "Selected images and completed videos appear here." : `This video project has no ${tab} yet.`} />}
     </div>
   );
 }
