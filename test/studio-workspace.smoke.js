@@ -398,6 +398,10 @@ async function run() {
   assert.equal(videos[0].video_id, firstVideoId);
   assert.equal(videos[0].display_name, "budget-basics");
   assert.equal(videos[0].prompt_count, 2);
+  const firstProgress = studio.getVideoProjectProgress(project, firstVideoId);
+  assert.equal(firstProgress.phase, "video_generation");
+  assert.equal(firstProgress.selected_count, 2);
+  assert.equal(firstProgress.prompt_count, 2);
   assert.equal(videos[1].video_id, secondVideoId);
   assert.equal(studio.getVideoPromptRecords(project, firstVideoId).length, 2);
   assert.equal(studio.getVideoPromptRecords(project, secondVideoId).length, 1);
