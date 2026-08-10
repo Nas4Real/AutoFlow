@@ -5,29 +5,42 @@ import { Button, Card, Chip, Modal, ProgressBar, Toast, toast } from "@heroui/re
 import {
   Activity,
   AlertCircle,
+  ArrowLeft,
   ArrowDown,
   ArrowUp,
   Check,
+  CheckCircle,
+  CheckSquare,
+  Clapperboard,
   CirclePause,
+  Cpu,
+  FileInput,
   FileJson,
+  FolderKanban,
   FolderOpen,
   FolderSync,
   Image as ImageIcon,
   Images,
+  Layers,
+  LayoutDashboard,
   LayoutGrid,
   ListVideo,
   LoaderCircle,
+  MousePointerClick,
   Pencil,
   Play,
+  PlayCircle,
   Plus,
   RefreshCw,
   Save,
   Search,
+  Settings,
+  Sparkles,
   Square,
   Trash2,
+  Trophy,
   Upload,
   Video,
-  Tv,
   X,
 } from "lucide-react";
 
@@ -35,10 +48,15 @@ const studioApi = globalThis.TFProjectStudioState;
 const domainApi = globalThis.TFProjectDomain;
 
 const NAV_ITEMS = [
-  { id: "channels", label: "Dashboard", icon: Tv },
-  { id: "import", label: "Imports", icon: Upload },
-  { id: "assets", label: "Assets", icon: ImageIcon },
-  { id: "logs", label: "Settings", icon: Activity },
+  { id: "channels", label: "Dashboard", icon: LayoutDashboard },
+  { id: "import", label: "Imports", icon: FileInput },
+];
+
+const PROJECT_TABS = [
+  { id: "overview", label: "Overview" },
+  { id: "images", label: "Image Review" },
+  { id: "video", label: "Video Queue" },
+  { id: "media", label: "Media" },
 ];
 
 function getViewFromLocationHash() {
@@ -49,7 +67,7 @@ function getViewFromLocationHash() {
   } catch (error) {
     hash = rawHash;
   }
-  return NAV_ITEMS.some((item) => item.id === hash) || hash === "overview" ? hash : "channels";
+  return NAV_ITEMS.some((item) => item.id === hash) || PROJECT_TABS.some((item) => item.id === hash) || hash === "assets" || hash === "logs" ? hash : "channels";
 }
 
 class StudioErrorBoundary extends React.Component {
@@ -440,89 +458,116 @@ function ConfirmDialog({ open, title, description, confirmLabel = "Delete", onOp
   );
 }
 
-function ChannelsView({ project, videos, onAddChannel, onRenameChannel, onAddVideo, onOpenVideo, onRenameVideo, onDeleteVideo, busy }) {
-  const [channelName, setChannelName] = useState(project?.display_name || "");
+function getProjectPresentation(progress) {
+  if (progress.video_failed_count > 0) return { tone: "attention", badge: "Action required", Icon: AlertCircle, detail: `${progress.video_failed_count} video jobs need attention`, action: "Open Video Queue", target: "video" };
+  if (progress.phase === "complete") return { tone: "complete", badge: "Complete", Icon: Trophy, detail: `${progress.video_complete_count} of ${progress.prompt_count} videos complete`, action: "View Media", target: "media" };
+  if (progress.phase === "video_generation") return { tone: "progress", badge: "In progress", Icon: PlayCircle, detail: `${progress.video_complete_count} of ${progress.prompt_count} videos complete`, action: "Open Video Queue", target: "video" };
+  if (progress.phase === "image_selection") return { tone: "attention", badge: "Action required", Icon: MousePointerClick, detail: `${progress.selected_count} of ${progress.prompt_count} scenes selected`, action: "Select Variants", target: "images" };
+  if (progress.phase === "image_generation") return { tone: "progress", badge: "In progress", Icon: Cpu, detail: `${progress.generated_count} of ${progress.prompt_count} scenes generated`, action: "Open Image Review", target: "images" };
+  return { tone: "ready", badge: "Ready", Icon: FileJson, detail: "Import Phase", action: "Generate Images", target: "images" };
+}
+
+function ReferenceDashboardView({ project, videos, onAddChannel, onAddVideo, onOpenVideo }) {
   const [filter, setFilter] = useState("all");
-  const [query, setQuery] = useState("");
-  useEffect(() => setChannelName(project?.display_name || ""), [project?.project_id, project?.display_name]);
-  const projects = videos.map((video) => ({ video, progress: studioApi.getVideoProjectProgress(project, video.video_id) }))
-    .filter(({ video, progress }) => {
-      if (query.trim() && !video.display_name.toLowerCase().includes(query.trim().toLowerCase())) return false;
-      if (filter === "all") return true;
-      if (filter === "complete") return progress.phase === "complete";
-      if (filter === "progress") return progress.phase !== "imported" && progress.phase !== "complete";
-      if (filter === "attention") return progress.video_failed_count > 0;
-      return progress.phase === "imported" || progress.phase === "image_generation";
-    });
-  const phaseLabel = (phase) => ({ imported: "Imported", image_generation: "Image generation", image_selection: "Image selection", video_generation: "Video generation", complete: "Complete" }[phase] || "Imported");
+  const [sort, setSort] = useState("updated");
+  const items = videos.map((video, index) => {
+    const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+    return { video, progress, presentation: getProjectPresentation(progress), index, importedAt: Date.parse(video.imported_at || "") || 0 };
+  });
+  const filtered = items.filter(({ progress, presentation }) => {
+    if (filter === "all") return true;
+    if (filter === "complete") return progress.phase === "complete";
+    if (filter === "attention") return presentation.tone === "attention";
+    if (filter === "progress") return presentation.tone === "progress";
+    return presentation.tone === "ready";
+  }).sort((left, right) => {
+    if (sort === "attention") return Number(right.presentation.tone === "attention") - Number(left.presentation.tone === "attention");
+    if (sort === "completion") return right.progress.percentage - left.progress.percentage;
+    return right.importedAt - left.importedAt || left.index - right.index;
+  });
+  const activeRuns = items.filter(({ progress }) => progress.phase !== "imported" && progress.phase !== "complete").length;
+  const completed = items.filter(({ progress }) => progress.phase === "complete").length;
+
   return (
-    <div className="view-stack">
-      <PageHeader
-        title="Video Projects"
-        description={project ? `${videos.length} projects in ${project.display_name}` : "Import a prompt JSON file to begin."}
-        actions={<Button variant="primary" onPress={onAddVideo} isDisabled={!project}><Upload size={17} />Import JSON</Button>}
-      />
+    <div className="reference-dashboard">
+      <header className="reference-dashboard-header">
+        <div><h1>Video Projects</h1><p>Track every video from imported prompts to completed media.</p></div>
+        <button type="button" className="reference-primary-action" onClick={onAddVideo} disabled={!project}><Plus size={18} />Import JSON</button>
+      </header>
       {project ? (
-        <section className="dashboard-controls">
-          <div>
-            <span className="eyebrow">Channel workspace</span>
-            <label className="inline-edit-field">
-              <input value={channelName} onChange={(event) => setChannelName(event.target.value)} />
-              <Button isIconOnly size="sm" variant="secondary" aria-label="Save channel name" isDisabled={!channelName.trim() || channelName.trim() === project.display_name || busy} onPress={() => onRenameChannel(channelName.trim())}>
-                <Save size={16} />
-              </Button>
-            </label>
-          </div>
-          <label className="dashboard-search"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects" aria-label="Search video projects" /></label>
-        </section>
-      ) : null}
-      {!project ? (
-        <EmptyState title="Add your first channel" description="A channel keeps its videos, assets, images, and queue together." action={<Button variant="primary" onPress={onAddChannel}><Plus size={17} />Add channel</Button>} />
-      ) : videos.length ? (
-        <><div className="dashboard-filters">{[["all", "All"], ["ready", "Ready for action"], ["progress", "In progress"], ["attention", "Needs attention"], ["complete", "Complete"]].map(([value, label]) => <Button key={value} size="sm" variant={filter === value ? "secondary" : "ghost"} onPress={() => setFilter(value)}>{label}</Button>)}</div>
-        <div className="video-list project-list">
-          {projects.map(({ video, progress }) => {
-            return (
-              <Card key={video.video_id} className="video-card" variant="secondary">
-                <Card.Content className="video-card-content">
-                  <div className="video-icon"><Video size={20} /></div>
-                  <div className="video-card-main">
-                    <h3>{video.display_name}</h3>
-                    <span>{video.prompt_count} scenes · {phaseLabel(progress.phase)}</span>
-                    <div className="project-milestones" aria-label={`Project phase: ${phaseLabel(progress.phase)}`}>{["Imported", "Images", "Selection", "Videos", "Complete"].map((label, index) => <span key={label} className={index <= ["imported", "image_generation", "image_selection", "video_generation", "complete"].indexOf(progress.phase) ? "active" : ""}>{label}</span>)}</div>
-                    <ProgressBar aria-label="Project completion progress" value={progress.percentage} color="accent">
-                      <ProgressBar.Track><ProgressBar.Fill /></ProgressBar.Track>
-                    </ProgressBar>
-                  </div>
-                  <div className="row-actions">
-                    <Button size="sm" variant="secondary" onPress={() => onOpenVideo(video.video_id)}>Open project</Button>
-                    <Button isIconOnly size="sm" variant="ghost" aria-label={`Rename ${video.display_name}`} onPress={() => onRenameVideo(video)}><Pencil size={16} /></Button>
-                    <Button isIconOnly size="sm" variant="ghost" aria-label={`Delete ${video.display_name}`} onPress={() => onDeleteVideo(video)}><Trash2 size={16} /></Button>
-                  </div>
-                </Card.Content>
-              </Card>
-            );
-          })}
-        </div></>
-      ) : (
-        <EmptyState icon={FileJson} title="No videos yet" description="Import one JSON file to create a video." action={<Button variant="primary" onPress={onAddVideo}><Upload size={17} />Import video JSON</Button>} />
-      )}
+        <>
+          <section className="reference-stats" aria-label="Channel project statistics">
+            {[["Total Projects", videos.length, FolderKanban], ["Active Runs", activeRuns, Activity], ["Completed Videos", completed, CheckCircle]].map(([label, value, Icon]) => (
+              <div className="reference-stat-card" key={label}><div><span>{label}</span><strong>{value}</strong></div><span className="reference-stat-icon"><Icon size={24} /></span></div>
+            ))}
+          </section>
+          <section className="reference-project-controls" aria-label="Filter and sort video projects">
+            <div className="reference-filter-pills">
+              {[["all", "All"], ["ready", "Ready"], ["progress", "In Progress"], ["attention", "Attention"], ["complete", "Complete"]].map(([value, label]) => (
+                <button type="button" key={value} className={filter === value ? "active" : ""} onClick={() => setFilter(value)}>{label}</button>
+              ))}
+            </div>
+            <label className="reference-sort"><span>Sort by</span><select value={sort} onChange={(event) => setSort(event.target.value)}><option value="updated">Recently Updated</option><option value="attention">Needs Attention</option><option value="completion">Completion %</option></select></label>
+          </section>
+          {filtered.length ? (
+            <section className="reference-project-grid" aria-label="Video projects">
+              {filtered.map(({ video, progress, presentation }) => {
+                const Icon = presentation.Icon;
+                return (
+                  <article className={`reference-project-card tone-${presentation.tone}`} key={video.video_id} role="button" tabIndex={0} aria-label={`Open ${video.display_name}`} onClick={() => onOpenVideo(video.video_id, "overview")} onKeyDown={(event) => { if (event.target !== event.currentTarget) return; if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onOpenVideo(video.video_id, "overview"); } }}>
+                    <div className="reference-project-card-heading">
+                      <div className="reference-project-title-group"><span className="reference-project-icon"><Icon size={25} /></span><div><h2>{video.display_name}</h2><span><Clapperboard size={13} />{video.prompt_count} scenes</span></div></div>
+                      <span className="reference-status-badge">{presentation.badge}</span>
+                    </div>
+                    <div className="reference-card-progress"><div><strong>{presentation.detail}</strong><span>{progress.percentage}%</span></div><span className="reference-progress-track"><span style={{ width: `${progress.percentage}%` }} /></span></div>
+                    <div className="reference-project-card-footer"><span>{progress.phase === "complete" ? "Production complete" : progress.phase === "imported" ? "Imported and ready" : "Updated recently"}</span><button type="button" onClick={(event) => { event.stopPropagation(); onOpenVideo(video.video_id, presentation.target); }}>{presentation.action}</button></div>
+                  </article>
+                );
+              })}
+            </section>
+          ) : <EmptyState title="No matching projects" description="Choose another production status filter." />}
+        </>
+      ) : <EmptyState title="Add your first channel" description="A channel keeps its videos, assets, images, and queue together." action={<Button variant="primary" onPress={onAddChannel}><Plus size={17} />Add channel</Button>} />}
     </div>
   );
 }
 
-function ProjectOverviewView({ project, video, onBack, onNavigate }) {
-  if (!video) return <EmptyState title="Choose a video project" description="Open a project from the Dashboard to review its production progress." action={<Button variant="primary" onPress={onBack}>All video projects</Button>} />;
+function ReferenceProjectOverviewView({ project, video, onNavigate }) {
+  if (!video) return <EmptyState title="Choose a video project" description="Open a project from the Dashboard to review its production progress." />;
   const progress = studioApi.getVideoProjectProgress(project, video.video_id);
   const phases = [["imported", "Imported"], ["image_generation", "Images"], ["image_selection", "Selection"], ["video_generation", "Videos"], ["complete", "Complete"]];
-  const activeIndex = phases.findIndex(([id]) => id === progress.phase);
-  const cards = [["Image generation", `${progress.generated_count}/${progress.prompt_count}`, "images"], ["Variant selection", `${progress.selected_count}/${progress.prompt_count}`, "images"], ["Video generation", `${progress.video_complete_count}/${progress.prompt_count}`, "video"]];
-  return <div className="view-stack project-overview">
-    <header className="project-header"><Button size="sm" variant="ghost" onPress={onBack}>All video projects</Button><div><h2>{video.display_name}</h2><p>{video.prompt_count} scenes · {phases[activeIndex]?.[1] || "Imported"}</p></div><div className="project-tabs" role="tablist"><Button size="sm" variant="secondary" aria-selected>Overview</Button><Button size="sm" variant="ghost" onPress={() => onNavigate("images")}>Image Review</Button><Button size="sm" variant="ghost" onPress={() => onNavigate("video")}>Video Queue</Button><Button size="sm" variant="ghost" onPress={() => onNavigate("media")}>Media</Button></div></header>
-    <section className="overview-milestones" aria-label="Video project production phases">{phases.map(([id, label], index) => <div key={id} className={index < activeIndex ? "complete" : index === activeIndex ? "current" : "pending"}><span>{index < activeIndex ? <Check size={15} /> : index + 1}</span><strong>{label}</strong></div>)}</section>
-    <div className="overview-status-grid">{cards.map(([label, value, target]) => <Card key={label} variant="secondary"><Card.Content><span className="eyebrow">{label}</span><strong className="overview-metric">{value}</strong><p>{label === "Variant selection" ? "Choose one image for each scene before video generation." : "Project-scoped production progress."}</p><Button size="sm" variant="secondary" onPress={() => onNavigate(target)}>Open {label}</Button></Card.Content></Card>)}</div>
-    <section className="overview-activity"><PageHeader title="Production activity" description={progress.video_failed_count ? `${progress.video_failed_count} video jobs need attention.` : "No active generation is running."} actions={<Button size="sm" variant="ghost" onPress={() => onNavigate("logs")}>View logs</Button>} /><ProgressBar aria-label="Overall video project completion" value={progress.percentage} color="accent"><ProgressBar.Track><ProgressBar.Fill /></ProgressBar.Track></ProgressBar><p>{progress.percentage}% complete · Generation starts only after you explicitly confirm in Image Review or Video Queue.</p></section>
-  </div>;
+  const activeIndex = Math.max(0, phases.findIndex(([id]) => id === progress.phase));
+  const imageComplete = progress.generated_count >= progress.prompt_count && progress.prompt_count > 0;
+  const selectionComplete = progress.selected_count >= progress.prompt_count && progress.prompt_count > 0;
+  const videoComplete = progress.video_complete_count >= progress.prompt_count && progress.prompt_count > 0;
+  const cards = [
+    { label: "Image Generation", value: `${progress.generated_count}/${progress.prompt_count}`, description: imageComplete ? "All scene variants generated." : `${Math.max(0, progress.prompt_count - progress.generated_count)} scenes still need images.`, action: "Review", target: "images", Icon: Sparkles, tone: imageComplete ? "complete" : "ready", badge: imageComplete ? "Complete" : "Ready" },
+    { label: "Variant Selection", value: `${progress.selected_count}/${progress.prompt_count}`, description: selectionComplete ? "A variant is selected for every scene." : `${Math.max(0, progress.prompt_count - progress.selected_count)} scenes need selection.`, action: selectionComplete ? "Review" : "Select Missing", target: "images", Icon: CheckSquare, tone: selectionComplete ? "complete" : "attention", badge: selectionComplete ? "Complete" : "Attention" },
+    { label: "Video Queue", value: `${progress.video_complete_count}/${progress.prompt_count}`, description: videoComplete ? "All videos are complete." : selectionComplete ? "Prepared for manual launch." : "Select every scene before launch.", action: "Open Queue", target: "video", Icon: PlayCircle, tone: videoComplete ? "complete" : "ready", badge: videoComplete ? "Complete" : "Ready" },
+  ];
+  return (
+    <div className="reference-project-overview">
+      <section className="reference-milestone-section" aria-label="Video project production phases">
+        <div className="reference-milestones">
+          <div className="reference-milestone-lines" aria-hidden="true">{phases.slice(1).map((phase, index) => <span key={phase[0]} className={index < activeIndex ? "complete" : index === activeIndex ? "current" : ""} />)}</div>
+          {phases.map(([id, label], index) => (
+            <div key={id} className={`reference-milestone ${index < activeIndex ? "complete" : index === activeIndex ? "current" : "pending"}`}><span className="reference-milestone-dot">{index < activeIndex ? <Check size={17} /> : index === activeIndex ? <i /> : label === "Complete" ? <Trophy size={14} /> : <i />}</span><strong>{label}</strong></div>
+          ))}
+        </div>
+        <div className="reference-overall-progress"><span><span style={{ width: `${progress.percentage}%` }} /></span><strong>Overall Completion: {progress.percentage}%</strong></div>
+      </section>
+      <section className="reference-production-grid" aria-label="Production status">
+        {cards.map(({ label, value, description, action, target, Icon, tone, badge }) => (
+          <article className={`reference-compact-card tone-${tone}`} key={label}><div><Icon size={19} /><span>{badge}</span></div><strong>{value}</strong><h2>{label}</h2><p>{description}</p><button type="button" onClick={() => onNavigate(target)}>{action}</button></article>
+        ))}
+      </section>
+      <section className="reference-summary-grid">
+        <article className="reference-system-summary"><h2>System Summary</h2><div className="reference-pipeline-state"><span>Active Pipeline</span><p><LoaderCircle size={15} />{progress.phase === "complete" ? "Production complete" : "Waiting for user input"}</p></div><div className="reference-summary-metrics"><div><span>Rate</span><strong>{progress.video_failed_count ? "Attention" : "100%"}</strong></div><div><span>Scenes</span><strong>{progress.prompt_count}</strong></div></div></article>
+        <article className="reference-activity-card"><div><h2>Activity</h2><button type="button" onClick={() => onNavigate("logs")}>View Logs</button></div><ul><li><span className="activity-icon blue"><MousePointerClick size={13} /></span><div><strong>{progress.selected_count} scene selections confirmed</strong><small>Manual checkpoint</small></div></li><li><span className="activity-icon green"><Sparkles size={13} /></span><div><strong>{progress.generated_count} scene images generated</strong><small>Automated Flow</small></div></li><li><span className="activity-icon muted"><FileInput size={13} /></span><div><strong>Project imported from JSON</strong><small>{video.prompt_count} scenes scoped to this project</small></div></li></ul></article>
+      </section>
+      <p className="reference-manual-note">Generation starts only after you explicitly confirm in Image Review or Video Queue.</p>
+    </div>
+  );
 }
 
 function AssetsView({ project, onAdd, onEdit, onDelete }) {
@@ -770,6 +815,84 @@ function LogsView({ logs, onClear }) {
   );
 }
 
+function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, onNavigate, onOpenVideo, onAddVideo, onRefresh }) {
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLowerCase();
+  const recentProjects = videos.filter((video) => !normalizedQuery || video.display_name.toLowerCase().includes(normalizedQuery)).slice(0, 4);
+  const flowConnected = String(flowContext?.status || "disconnected").toLowerCase() === "connected";
+  const channelName = project?.display_name || "Studio workspace";
+  const initials = channelName.split(/\s+/).filter(Boolean).slice(0, 2).map((word) => word[0]).join("").toUpperCase() || "AF";
+  return (
+    <aside className="studio-sidebar">
+      <div className="studio-brand"><span className="brand-symbol"><Layers size={20} /></span><strong>AUTOFLOW <span>STUDIO</span></strong></div>
+      <nav aria-label="Studio navigation">
+        {NAV_ITEMS.map((item) => {
+          const Icon = item.icon;
+          return <button key={item.id} type="button" className={`studio-nav-item ${view === item.id ? "active" : ""}`} onClick={() => onNavigate(item.id)} title={item.label}><Icon size={18} /><span>{item.label}</span></button>;
+        })}
+      </nav>
+      <section className="sidebar-projects" aria-label="Video projects">
+        <div className="sidebar-section-title"><span>Video Projects</span><button type="button" aria-label="Import a video project" onClick={onAddVideo} disabled={!project}><Plus size={15} /></button></div>
+        <label className="sidebar-project-search"><Search size={14} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects..." aria-label="Search video projects" /></label>
+        <div className="sidebar-project-list">
+          {recentProjects.map((video) => {
+            const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+            const presentation = getProjectPresentation(progress);
+            const isActive = activeVideo?.video_id === video.video_id && PROJECT_TABS.some((tab) => tab.id === view);
+            return <button key={video.video_id} type="button" className={`sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`} onClick={() => onOpenVideo(video.video_id, "overview")}><span aria-hidden="true" /><strong>{video.display_name}</strong></button>;
+          })}
+          <button type="button" className="sidebar-view-all" onClick={() => onNavigate("channels")}>View all projects →</button>
+        </div>
+      </section>
+      <footer className="studio-sidebar-footer">
+        <button type="button" className={`studio-nav-item ${view === "logs" ? "active" : ""}`} onClick={() => onNavigate("logs")}><Settings size={18} /><span>Settings</span></button>
+        <div className="studio-channel-card"><span className="studio-channel-avatar">{initials}</span><div><strong>{channelName}</strong><span>{flowConnected ? "Flow Connected" : "Flow Disconnected"}</span></div><button type="button" onClick={onRefresh} aria-label="Refresh Studio"><RefreshCw size={15} /></button></div>
+      </footer>
+    </aside>
+  );
+}
+
+function exportVideoProject(project, video) {
+  if (!project || !video) return;
+  const promptIds = new Set(video.prompt_ids || []);
+  const payload = {
+    channel: { project_id: project.project_id, display_name: project.display_name },
+    video,
+    prompts: (project.prompt_records || []).filter((record) => promptIds.has(record.prompt_id)),
+    image_variants: (project.image_variants || []).filter((variant) => promptIds.has(variant.prompt_id)),
+    video_jobs: (project.video_jobs || []).filter((job) => promptIds.has(job.prompt_id)),
+  };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = `${video.display_name.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "video-project"}.json`;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+function ProjectWorkspaceHeader({ project, video, view, onBack, onNavigate }) {
+  if (!video) return null;
+  const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+  const phaseLabel = ({ imported: "Imported", image_generation: "Image Generation", image_selection: "Image Selection", video_generation: "Video Generation", complete: "Complete" })[progress.phase] || "Imported";
+  const manageTarget = progress.phase === "video_generation" ? "video" : progress.phase === "complete" ? "media" : "images";
+  return (
+    <header className="reference-project-header">
+      <div className="reference-project-header-inner">
+        <div className="reference-project-heading-row">
+          <div className="reference-project-heading">
+            <button type="button" className="reference-back-button" onClick={onBack} aria-label="Back to all video projects"><ArrowLeft size={20} /></button>
+            <div><h1>{video.display_name}</h1><p><span>{video.prompt_count} scenes</span><i /><strong>{phaseLabel}</strong><i /><span>Updated recently</span></p></div>
+          </div>
+          <div className="reference-project-actions"><button type="button" onClick={() => exportVideoProject(project, video)}>Export Data</button><button type="button" onClick={() => onNavigate(manageTarget)}>Manage Project</button></div>
+        </div>
+        <nav className="reference-project-tabs" aria-label="Video project sections">
+          {PROJECT_TABS.map((tab) => <button type="button" key={tab.id} className={view === tab.id ? "active" : ""} aria-current={view === tab.id ? "page" : undefined} onClick={() => onNavigate(tab.id)}>{tab.label}</button>)}
+        </nav>
+      </div>
+    </header>
+  );
+}
+
 function StudioApp() {
   const [snapshot, setSnapshot] = useState(() => captureStudioState());
   const [view, setView] = useState(() => getViewFromLocationHash());
@@ -938,9 +1061,9 @@ function StudioApp() {
 
   let content = null;
   if (view === "channels") {
-    content = <ChannelsView project={project} videos={videos} busy={!!busy} onAddChannel={() => setDialog({ type: "channel-add" })} onRenameChannel={(name) => action("channel-rename", () => studioApi.updateActiveProject({ display_name: name }), "Channel renamed")} onAddVideo={() => setDialog({ type: "video-add" })} onOpenVideo={(videoId) => { setActiveVideoId(videoId); setView("overview"); }} onRenameVideo={(video) => setDialog({ type: "video-rename", video })} onDeleteVideo={(video) => setDialog({ type: "video-delete", video })} />;
+    content = <ReferenceDashboardView project={project} videos={videos} onAddChannel={() => setDialog({ type: "channel-add" })} onAddVideo={() => setDialog({ type: "video-add" })} onOpenVideo={(videoId, target = "overview") => { setActiveVideoId(videoId); setView(target); }} />;
   } else if (view === "overview") {
-    content = <ProjectOverviewView project={project} video={activeVideo} onBack={() => setView("channels")} onNavigate={setView} />;
+    content = <ReferenceProjectOverviewView project={project} video={activeVideo} onNavigate={setView} />;
   } else if (view === "assets") {
     content = <AssetsView project={project} onAdd={() => setDialog({ type: "asset-add" })} onEdit={(asset) => setDialog({ type: "asset-edit", asset })} onDelete={(asset) => setDialog({ type: "asset-delete", asset })} />;
   } else if (view === "import") {
@@ -955,20 +1078,17 @@ function StudioApp() {
     content = <LogsView logs={snapshot.logs} onClear={() => action("clear-logs", () => studioApi.clearStudioLogs(), "Logs cleared")} />;
   }
 
+  const isProjectView = PROJECT_TABS.some((tab) => tab.id === view) && !!activeVideo;
+  if (isProjectView) {
+    content = <div className="reference-project-workspace"><ProjectWorkspaceHeader project={project} video={activeVideo} view={view} onBack={() => setView("channels")} onNavigate={setView} /><div className={`reference-project-body ${view === "overview" ? "overview" : ""}`}>{content}</div></div>;
+  }
+
   return (
     <>
       <div className="studio-shell">
-        <aside className="studio-sidebar">
-          <div className="studio-brand"><span className="brand-symbol"><Video size={20} /></span><div><strong>AutoFlow</strong><span>Studio</span></div></div>
-          <nav>{NAV_ITEMS.map((item) => { const Icon = item.icon; return <button key={item.id} type="button" className={`studio-nav-item ${view === item.id ? "active" : ""}`} onClick={() => setView(item.id)} title={item.label}><Icon size={18} /><span>{item.label}</span></button>; })}</nav>
-          <section className="sidebar-projects" aria-label="Video projects"><div className="sidebar-section-title">Video Projects</div><label className="sidebar-project-search"><Search size={14} /><input placeholder="Search projects" aria-label="Search video projects" /></label>{videos.slice(0, 4).map((video) => <button key={video.video_id} type="button" className={`sidebar-project ${activeVideo?.video_id === video.video_id && view === "overview" ? "active" : ""}`} onClick={() => { setActiveVideoId(video.video_id); setView("overview"); }}><span aria-hidden="true" />{video.display_name}</button>)}<button type="button" className="sidebar-view-all" onClick={() => setView("channels")}>View all projects</button></section>
-        </aside>
+        <ReferenceSidebar project={project} videos={videos} activeVideo={activeVideo} view={view} flowContext={snapshot.flowContext} onNavigate={setView} onOpenVideo={(videoId, target = "overview") => { setActiveVideoId(videoId); setView(target); }} onAddVideo={() => setDialog({ type: "video-add" })} onRefresh={() => refresh()} />
         <div className="studio-main">
-          <header className="studio-toolbar">
-            <span className="studio-workspace-label">{project?.display_name || "Studio workspace"}</span>
-            <Button isIconOnly size="sm" variant="ghost" aria-label="Refresh Studio" onPress={() => refresh()}><RefreshCw size={17} /></Button>
-          </header>
-          <main className="studio-content">{snapshot.lastError ? <div className="fatal-banner"><AlertCircle size={18} />{snapshot.lastError.message}</div> : content}</main>
+          <main className={`studio-content ${view === "channels" ? "reference-surface" : ""} ${isProjectView ? "reference-project-surface" : ""}`}>{snapshot.lastError ? <div className="fatal-banner"><AlertCircle size={18} />{snapshot.lastError.message}</div> : content}</main>
         </div>
       </div>
 

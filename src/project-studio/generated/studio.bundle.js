@@ -33650,35 +33650,93 @@
   ];
   var ArrowDown = createLucideIcon("arrow-down", __iconNode2);
 
-  // node_modules/lucide-react/dist/esm/icons/arrow-up.mjs
+  // node_modules/lucide-react/dist/esm/icons/arrow-left.mjs
   var __iconNode3 = [
+    ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+    ["path", { d: "M19 12H5", key: "x3x0zl" }]
+  ];
+  var ArrowLeft = createLucideIcon("arrow-left", __iconNode3);
+
+  // node_modules/lucide-react/dist/esm/icons/arrow-up.mjs
+  var __iconNode4 = [
     ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
     ["path", { d: "M12 19V5", key: "x0mq9r" }]
   ];
-  var ArrowUp = createLucideIcon("arrow-up", __iconNode3);
+  var ArrowUp = createLucideIcon("arrow-up", __iconNode4);
 
   // node_modules/lucide-react/dist/esm/icons/check.mjs
-  var __iconNode4 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-  var Check = createLucideIcon("check", __iconNode4);
+  var __iconNode5 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+  var Check = createLucideIcon("check", __iconNode5);
 
   // node_modules/lucide-react/dist/esm/icons/circle-alert.mjs
-  var __iconNode5 = [
+  var __iconNode6 = [
     ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
     ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
     ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
   ];
-  var CircleAlert = createLucideIcon("circle-alert", __iconNode5);
+  var CircleAlert = createLucideIcon("circle-alert", __iconNode6);
+
+  // node_modules/lucide-react/dist/esm/icons/circle-check-big.mjs
+  var __iconNode7 = [
+    ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
+    ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+  ];
+  var CircleCheckBig = createLucideIcon("circle-check-big", __iconNode7);
 
   // node_modules/lucide-react/dist/esm/icons/circle-pause.mjs
-  var __iconNode6 = [
+  var __iconNode8 = [
     ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
     ["line", { x1: "10", x2: "10", y1: "15", y2: "9", key: "c1nkhi" }],
     ["line", { x1: "14", x2: "14", y1: "15", y2: "9", key: "h65svq" }]
   ];
-  var CirclePause = createLucideIcon("circle-pause", __iconNode6);
+  var CirclePause = createLucideIcon("circle-pause", __iconNode8);
+
+  // node_modules/lucide-react/dist/esm/icons/circle-play.mjs
+  var __iconNode9 = [
+    [
+      "path",
+      {
+        d: "M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z",
+        key: "kmsa83"
+      }
+    ],
+    ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
+  ];
+  var CirclePlay = createLucideIcon("circle-play", __iconNode9);
+
+  // node_modules/lucide-react/dist/esm/icons/clapperboard.mjs
+  var __iconNode10 = [
+    ["path", { d: "m12.296 3.464 3.02 3.956", key: "qash78" }],
+    [
+      "path",
+      { d: "M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3z", key: "1h7j8b" }
+    ],
+    ["path", { d: "M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z", key: "4lm6w1" }],
+    ["path", { d: "m6.18 5.276 3.1 3.899", key: "zjj9t3" }]
+  ];
+  var Clapperboard = createLucideIcon("clapperboard", __iconNode10);
+
+  // node_modules/lucide-react/dist/esm/icons/cpu.mjs
+  var __iconNode11 = [
+    ["path", { d: "M12 20v2", key: "1lh1kg" }],
+    ["path", { d: "M12 2v2", key: "tus03m" }],
+    ["path", { d: "M17 20v2", key: "1rnc9c" }],
+    ["path", { d: "M17 2v2", key: "11trls" }],
+    ["path", { d: "M2 12h2", key: "1t8f8n" }],
+    ["path", { d: "M2 17h2", key: "7oei6x" }],
+    ["path", { d: "M2 7h2", key: "asdhe0" }],
+    ["path", { d: "M20 12h2", key: "1q8mjw" }],
+    ["path", { d: "M20 17h2", key: "1fpfkl" }],
+    ["path", { d: "M20 7h2", key: "1o8tra" }],
+    ["path", { d: "M7 20v2", key: "4gnj0m" }],
+    ["path", { d: "M7 2v2", key: "1i4yhu" }],
+    ["rect", { x: "4", y: "4", width: "16", height: "16", rx: "2", key: "1vbyd7" }],
+    ["rect", { x: "8", y: "8", width: "8", height: "8", rx: "1", key: "z9xiuo" }]
+  ];
+  var Cpu = createLucideIcon("cpu", __iconNode11);
 
   // node_modules/lucide-react/dist/esm/icons/file-braces.mjs
-  var __iconNode7 = [
+  var __iconNode12 = [
     [
       "path",
       {
@@ -33696,10 +33754,40 @@
       { d: "M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1", key: "mpwhp6" }
     ]
   ];
-  var FileBraces = createLucideIcon("file-braces", __iconNode7);
+  var FileBraces = createLucideIcon("file-braces", __iconNode12);
+
+  // node_modules/lucide-react/dist/esm/icons/file-input.mjs
+  var __iconNode13 = [
+    [
+      "path",
+      {
+        d: "M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1",
+        key: "1q9hii"
+      }
+    ],
+    ["path", { d: "M14 2v5a1 1 0 0 0 1 1h5", key: "wfsgrz" }],
+    ["path", { d: "M2 15h10", key: "jfw4w8" }],
+    ["path", { d: "m9 18 3-3-3-3", key: "112psh" }]
+  ];
+  var FileInput = createLucideIcon("file-input", __iconNode13);
+
+  // node_modules/lucide-react/dist/esm/icons/folder-kanban.mjs
+  var __iconNode14 = [
+    [
+      "path",
+      {
+        d: "M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z",
+        key: "1fr9dc"
+      }
+    ],
+    ["path", { d: "M8 10v4", key: "tgpxqk" }],
+    ["path", { d: "M12 10v2", key: "hh53o1" }],
+    ["path", { d: "M16 10v6", key: "1d6xys" }]
+  ];
+  var FolderKanban = createLucideIcon("folder-kanban", __iconNode14);
 
   // node_modules/lucide-react/dist/esm/icons/folder-open.mjs
-  var __iconNode8 = [
+  var __iconNode15 = [
     [
       "path",
       {
@@ -33708,10 +33796,10 @@
       }
     ]
   ];
-  var FolderOpen = createLucideIcon("folder-open", __iconNode8);
+  var FolderOpen = createLucideIcon("folder-open", __iconNode15);
 
   // node_modules/lucide-react/dist/esm/icons/folder-sync.mjs
-  var __iconNode9 = [
+  var __iconNode16 = [
     [
       "path",
       {
@@ -33724,36 +33812,71 @@
     ["path", { d: "M22 22v-4h-4", key: "1ewp4q" }],
     ["path", { d: "m22 18-1.535 1.605a5 5 0 0 1-8-1.5", key: "14ync0" }]
   ];
-  var FolderSync = createLucideIcon("folder-sync", __iconNode9);
+  var FolderSync = createLucideIcon("folder-sync", __iconNode16);
 
   // node_modules/lucide-react/dist/esm/icons/image.mjs
-  var __iconNode10 = [
+  var __iconNode17 = [
     ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2", key: "1m3agn" }],
     ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }],
     ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }]
   ];
-  var Image = createLucideIcon("image", __iconNode10);
+  var Image = createLucideIcon("image", __iconNode17);
 
   // node_modules/lucide-react/dist/esm/icons/images.mjs
-  var __iconNode11 = [
+  var __iconNode18 = [
     ["path", { d: "m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16", key: "9kzy35" }],
     ["path", { d: "M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2", key: "1t0f0t" }],
     ["circle", { cx: "13", cy: "7", r: "1", fill: "currentColor", key: "1obus6" }],
     ["rect", { x: "8", y: "2", width: "14", height: "14", rx: "2", key: "1gvhby" }]
   ];
-  var Images = createLucideIcon("images", __iconNode11);
+  var Images = createLucideIcon("images", __iconNode18);
+
+  // node_modules/lucide-react/dist/esm/icons/layers.mjs
+  var __iconNode19 = [
+    [
+      "path",
+      {
+        d: "M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z",
+        key: "zw3jo"
+      }
+    ],
+    [
+      "path",
+      {
+        d: "M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12",
+        key: "1wduqc"
+      }
+    ],
+    [
+      "path",
+      {
+        d: "M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17",
+        key: "kqbvx6"
+      }
+    ]
+  ];
+  var Layers = createLucideIcon("layers", __iconNode19);
+
+  // node_modules/lucide-react/dist/esm/icons/layout-dashboard.mjs
+  var __iconNode20 = [
+    ["rect", { width: "7", height: "9", x: "3", y: "3", rx: "1", key: "10lvy0" }],
+    ["rect", { width: "7", height: "5", x: "14", y: "3", rx: "1", key: "16une8" }],
+    ["rect", { width: "7", height: "9", x: "14", y: "12", rx: "1", key: "1hutg5" }],
+    ["rect", { width: "7", height: "5", x: "3", y: "16", rx: "1", key: "ldoo1y" }]
+  ];
+  var LayoutDashboard = createLucideIcon("layout-dashboard", __iconNode20);
 
   // node_modules/lucide-react/dist/esm/icons/layout-grid.mjs
-  var __iconNode12 = [
+  var __iconNode21 = [
     ["rect", { width: "7", height: "7", x: "3", y: "3", rx: "1", key: "1g98yp" }],
     ["rect", { width: "7", height: "7", x: "14", y: "3", rx: "1", key: "6d4xhi" }],
     ["rect", { width: "7", height: "7", x: "14", y: "14", rx: "1", key: "nxv5o0" }],
     ["rect", { width: "7", height: "7", x: "3", y: "14", rx: "1", key: "1bb6yr" }]
   ];
-  var LayoutGrid = createLucideIcon("layout-grid", __iconNode12);
+  var LayoutGrid = createLucideIcon("layout-grid", __iconNode21);
 
   // node_modules/lucide-react/dist/esm/icons/list-video.mjs
-  var __iconNode13 = [
+  var __iconNode22 = [
     ["path", { d: "M21 5H3", key: "1fi0y6" }],
     ["path", { d: "M10 12H3", key: "1ulcyk" }],
     ["path", { d: "M10 19H3", key: "108z41" }],
@@ -33765,14 +33888,30 @@
       }
     ]
   ];
-  var ListVideo = createLucideIcon("list-video", __iconNode13);
+  var ListVideo = createLucideIcon("list-video", __iconNode22);
 
   // node_modules/lucide-react/dist/esm/icons/loader-circle.mjs
-  var __iconNode14 = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-  var LoaderCircle = createLucideIcon("loader-circle", __iconNode14);
+  var __iconNode23 = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+  var LoaderCircle = createLucideIcon("loader-circle", __iconNode23);
+
+  // node_modules/lucide-react/dist/esm/icons/mouse-pointer-click.mjs
+  var __iconNode24 = [
+    ["path", { d: "M14 4.1 12 6", key: "ita8i4" }],
+    ["path", { d: "m5.1 8-2.9-.8", key: "1go3kf" }],
+    ["path", { d: "m6 12-1.9 2", key: "mnht97" }],
+    ["path", { d: "M7.2 2.2 8 5.1", key: "1cfko1" }],
+    [
+      "path",
+      {
+        d: "M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z",
+        key: "s0h3yz"
+      }
+    ]
+  ];
+  var MousePointerClick = createLucideIcon("mouse-pointer-click", __iconNode24);
 
   // node_modules/lucide-react/dist/esm/icons/pencil.mjs
-  var __iconNode15 = [
+  var __iconNode25 = [
     [
       "path",
       {
@@ -33782,10 +33921,10 @@
     ],
     ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
   ];
-  var Pencil = createLucideIcon("pencil", __iconNode15);
+  var Pencil = createLucideIcon("pencil", __iconNode25);
 
   // node_modules/lucide-react/dist/esm/icons/play.mjs
-  var __iconNode16 = [
+  var __iconNode26 = [
     [
       "path",
       {
@@ -33794,26 +33933,26 @@
       }
     ]
   ];
-  var Play = createLucideIcon("play", __iconNode16);
+  var Play = createLucideIcon("play", __iconNode26);
 
   // node_modules/lucide-react/dist/esm/icons/plus.mjs
-  var __iconNode17 = [
+  var __iconNode27 = [
     ["path", { d: "M5 12h14", key: "1ays0h" }],
     ["path", { d: "M12 5v14", key: "s699le" }]
   ];
-  var Plus = createLucideIcon("plus", __iconNode17);
+  var Plus = createLucideIcon("plus", __iconNode27);
 
   // node_modules/lucide-react/dist/esm/icons/refresh-cw.mjs
-  var __iconNode18 = [
+  var __iconNode28 = [
     ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
     ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
     ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
     ["path", { d: "M8 16H3v5", key: "1cv678" }]
   ];
-  var RefreshCw = createLucideIcon("refresh-cw", __iconNode18);
+  var RefreshCw = createLucideIcon("refresh-cw", __iconNode28);
 
   // node_modules/lucide-react/dist/esm/icons/save.mjs
-  var __iconNode19 = [
+  var __iconNode29 = [
     [
       "path",
       {
@@ -33824,75 +33963,108 @@
     ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
     ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
   ];
-  var Save = createLucideIcon("save", __iconNode19);
+  var Save = createLucideIcon("save", __iconNode29);
 
   // node_modules/lucide-react/dist/esm/icons/search.mjs
-  var __iconNode20 = [
+  var __iconNode30 = [
     ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
     ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
   ];
-  var Search = createLucideIcon("search", __iconNode20);
+  var Search = createLucideIcon("search", __iconNode30);
+
+  // node_modules/lucide-react/dist/esm/icons/settings.mjs
+  var __iconNode31 = [
+    [
+      "path",
+      {
+        d: "M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915",
+        key: "1i5ecw"
+      }
+    ],
+    ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
+  ];
+  var Settings = createLucideIcon("settings", __iconNode31);
+
+  // node_modules/lucide-react/dist/esm/icons/sparkles.mjs
+  var __iconNode32 = [
+    [
+      "path",
+      {
+        d: "M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z",
+        key: "1s2grr"
+      }
+    ],
+    ["path", { d: "M20 2v4", key: "1rf3ol" }],
+    ["path", { d: "M22 4h-4", key: "gwowj6" }],
+    ["circle", { cx: "4", cy: "20", r: "2", key: "6kqj1y" }]
+  ];
+  var Sparkles = createLucideIcon("sparkles", __iconNode32);
+
+  // node_modules/lucide-react/dist/esm/icons/square-check-big.mjs
+  var __iconNode33 = [
+    [
+      "path",
+      { d: "M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344", key: "2acyp4" }
+    ],
+    ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+  ];
+  var SquareCheckBig = createLucideIcon("square-check-big", __iconNode33);
 
   // node_modules/lucide-react/dist/esm/icons/square.mjs
-  var __iconNode21 = [
+  var __iconNode34 = [
     ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }]
   ];
-  var Square = createLucideIcon("square", __iconNode21);
+  var Square = createLucideIcon("square", __iconNode34);
 
   // node_modules/lucide-react/dist/esm/icons/trash-2.mjs
-  var __iconNode22 = [
+  var __iconNode35 = [
     ["path", { d: "M10 11v6", key: "nco0om" }],
     ["path", { d: "M14 11v6", key: "outv1u" }],
     ["path", { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6", key: "miytrc" }],
     ["path", { d: "M3 6h18", key: "d0wm0j" }],
     ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2", key: "e791ji" }]
   ];
-  var Trash2 = createLucideIcon("trash-2", __iconNode22);
+  var Trash2 = createLucideIcon("trash-2", __iconNode35);
 
-  // node_modules/lucide-react/dist/esm/icons/tv.mjs
-  var __iconNode23 = [
-    ["path", { d: "m17 2-5 5-5-5", key: "16satq" }],
-    ["rect", { width: "20", height: "15", x: "2", y: "7", rx: "2", key: "1e6viu" }]
+  // node_modules/lucide-react/dist/esm/icons/trophy.mjs
+  var __iconNode36 = [
+    ["path", { d: "M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978", key: "1n3hpd" }],
+    ["path", { d: "M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978", key: "rfe1zi" }],
+    ["path", { d: "M18 9h1.5a1 1 0 0 0 0-5H18", key: "7xy6bh" }],
+    ["path", { d: "M4 22h16", key: "57wxv0" }],
+    ["path", { d: "M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z", key: "1mhfuq" }],
+    ["path", { d: "M6 9H4.5a1 1 0 0 1 0-5H6", key: "tex48p" }]
   ];
-  var Tv = createLucideIcon("tv", __iconNode23);
+  var Trophy = createLucideIcon("trophy", __iconNode36);
 
   // node_modules/lucide-react/dist/esm/icons/upload.mjs
-  var __iconNode24 = [
+  var __iconNode37 = [
     ["path", { d: "M12 3v12", key: "1x0j5s" }],
     ["path", { d: "m17 8-5-5-5 5", key: "7q97r8" }],
     ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }]
   ];
-  var Upload = createLucideIcon("upload", __iconNode24);
-
-  // node_modules/lucide-react/dist/esm/icons/video.mjs
-  var __iconNode25 = [
-    [
-      "path",
-      {
-        d: "m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5",
-        key: "ftymec"
-      }
-    ],
-    ["rect", { x: "2", y: "6", width: "14", height: "12", rx: "2", key: "158x01" }]
-  ];
-  var Video = createLucideIcon("video", __iconNode25);
+  var Upload = createLucideIcon("upload", __iconNode37);
 
   // node_modules/lucide-react/dist/esm/icons/x.mjs
-  var __iconNode26 = [
+  var __iconNode38 = [
     ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
     ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
   ];
-  var X = createLucideIcon("x", __iconNode26);
+  var X = createLucideIcon("x", __iconNode38);
 
   // src/project-studio/react/studio.jsx
   var import_jsx_runtime13 = __toESM(require_jsx_runtime());
   var studioApi = globalThis.TFProjectStudioState;
   var domainApi = globalThis.TFProjectDomain;
   var NAV_ITEMS = [
-    { id: "channels", label: "Dashboard", icon: Tv },
-    { id: "import", label: "Imports", icon: Upload },
-    { id: "assets", label: "Assets", icon: Image },
-    { id: "logs", label: "Settings", icon: Activity }
+    { id: "channels", label: "Dashboard", icon: LayoutDashboard },
+    { id: "import", label: "Imports", icon: FileInput }
+  ];
+  var PROJECT_TABS = [
+    { id: "overview", label: "Overview" },
+    { id: "images", label: "Image Review" },
+    { id: "video", label: "Video Queue" },
+    { id: "media", label: "Media" }
   ];
   function getViewFromLocationHash() {
     const rawHash = String(globalThis.location?.hash || "").replace(/^#/, "");
@@ -33902,7 +34074,7 @@
     } catch (error) {
       hash = rawHash;
     }
-    return NAV_ITEMS.some((item) => item.id === hash) || hash === "overview" ? hash : "channels";
+    return NAV_ITEMS.some((item) => item.id === hash) || PROJECT_TABS.some((item) => item.id === hash) || hash === "assets" || hash === "logs" ? hash : "channels";
   }
   var StudioErrorBoundary = class extends import_react73.default.Component {
     state = { error: null };
@@ -34234,121 +34406,214 @@
       }
     );
   }
-  function ChannelsView({ project, videos, onAddChannel, onRenameChannel, onAddVideo, onOpenVideo, onRenameVideo, onDeleteVideo, busy }) {
-    const [channelName, setChannelName] = (0, import_react73.useState)(project?.display_name || "");
+  function getProjectPresentation(progress) {
+    if (progress.video_failed_count > 0) return { tone: "attention", badge: "Action required", Icon: CircleAlert, detail: `${progress.video_failed_count} video jobs need attention`, action: "Open Video Queue", target: "video" };
+    if (progress.phase === "complete") return { tone: "complete", badge: "Complete", Icon: Trophy, detail: `${progress.video_complete_count} of ${progress.prompt_count} videos complete`, action: "View Media", target: "media" };
+    if (progress.phase === "video_generation") return { tone: "progress", badge: "In progress", Icon: CirclePlay, detail: `${progress.video_complete_count} of ${progress.prompt_count} videos complete`, action: "Open Video Queue", target: "video" };
+    if (progress.phase === "image_selection") return { tone: "attention", badge: "Action required", Icon: MousePointerClick, detail: `${progress.selected_count} of ${progress.prompt_count} scenes selected`, action: "Select Variants", target: "images" };
+    if (progress.phase === "image_generation") return { tone: "progress", badge: "In progress", Icon: Cpu, detail: `${progress.generated_count} of ${progress.prompt_count} scenes generated`, action: "Open Image Review", target: "images" };
+    return { tone: "ready", badge: "Ready", Icon: FileBraces, detail: "Import Phase", action: "Generate Images", target: "images" };
+  }
+  function ReferenceDashboardView({ project, videos, onAddChannel, onAddVideo, onOpenVideo }) {
     const [filter, setFilter] = (0, import_react73.useState)("all");
-    const [query, setQuery] = (0, import_react73.useState)("");
-    (0, import_react73.useEffect)(() => setChannelName(project?.display_name || ""), [project?.project_id, project?.display_name]);
-    const projects = videos.map((video) => ({ video, progress: studioApi.getVideoProjectProgress(project, video.video_id) })).filter(({ video, progress }) => {
-      if (query.trim() && !video.display_name.toLowerCase().includes(query.trim().toLowerCase())) return false;
+    const [sort, setSort] = (0, import_react73.useState)("updated");
+    const items = videos.map((video, index) => {
+      const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+      return { video, progress, presentation: getProjectPresentation(progress), index, importedAt: Date.parse(video.imported_at || "") || 0 };
+    });
+    const filtered = items.filter(({ progress, presentation }) => {
       if (filter === "all") return true;
       if (filter === "complete") return progress.phase === "complete";
-      if (filter === "progress") return progress.phase !== "imported" && progress.phase !== "complete";
-      if (filter === "attention") return progress.video_failed_count > 0;
-      return progress.phase === "imported" || progress.phase === "image_generation";
+      if (filter === "attention") return presentation.tone === "attention";
+      if (filter === "progress") return presentation.tone === "progress";
+      return presentation.tone === "ready";
+    }).sort((left, right) => {
+      if (sort === "attention") return Number(right.presentation.tone === "attention") - Number(left.presentation.tone === "attention");
+      if (sort === "completion") return right.progress.percentage - left.progress.percentage;
+      return right.importedAt - left.importedAt || left.index - right.index;
     });
-    const phaseLabel = (phase) => ({ imported: "Imported", image_generation: "Image generation", image_selection: "Image selection", video_generation: "Video generation", complete: "Complete" })[phase] || "Imported";
-    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
-        PageHeader,
-        {
-          title: "Video Projects",
-          description: project ? `${videos.length} projects in ${project.display_name}` : "Import a prompt JSON file to begin.",
-          actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddVideo, isDisabled: !project, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Upload, { size: 17 }),
-            "Import JSON"
-          ] })
-        }
-      ),
-      project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "dashboard-controls", children: [
+    const activeRuns = items.filter(({ progress }) => progress.phase !== "imported" && progress.phase !== "complete").length;
+    const completed = items.filter(({ progress }) => progress.phase === "complete").length;
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-dashboard", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("header", { className: "reference-dashboard-header", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Channel workspace" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "inline-edit-field", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: channelName, onChange: (event) => setChannelName(event.target.value) }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "secondary", "aria-label": "Save channel name", isDisabled: !channelName.trim() || channelName.trim() === project.display_name || busy, onPress: () => onRenameChannel(channelName.trim()), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Save, { size: 16 }) })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h1", { children: "Video Projects" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Track every video from imported prompts to completed media." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: "reference-primary-action", onClick: onAddVideo, disabled: !project, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 18 }),
+          "Import JSON"
+        ] })
+      ] }),
+      project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("section", { className: "reference-stats", "aria-label": "Channel project statistics", children: [["Total Projects", videos.length, FolderKanban], ["Active Runs", activeRuns, Activity], ["Completed Videos", completed, CircleCheckBig]].map(([label, value, Icon2]) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-stat-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: label }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: value })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "reference-stat-icon", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Icon2, { size: 24 }) })
+        ] }, label)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "reference-project-controls", "aria-label": "Filter and sort video projects", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "reference-filter-pills", children: [["all", "All"], ["ready", "Ready"], ["progress", "In Progress"], ["attention", "Attention"], ["complete", "Complete"]].map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: filter === value ? "active" : "", onClick: () => setFilter(value), children: label }, value)) }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "reference-sort", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Sort by" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: sort, onChange: (event) => setSort(event.target.value), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "updated", children: "Recently Updated" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "attention", children: "Needs Attention" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "completion", children: "Completion %" })
+            ] })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "dashboard-search", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Search, { size: 16 }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: query, onChange: (event) => setQuery(event.target.value), placeholder: "Search projects", "aria-label": "Search video projects" })
-        ] })
-      ] }) : null,
-      !project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { title: "Add your first channel", description: "A channel keeps its videos, assets, images, and queue together.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddChannel, children: [
+        filtered.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("section", { className: "reference-project-grid", "aria-label": "Video projects", children: filtered.map(({ video, progress, presentation }) => {
+          const Icon2 = presentation.Icon;
+          return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: `reference-project-card tone-${presentation.tone}`, role: "button", tabIndex: 0, "aria-label": `Open ${video.display_name}`, onClick: () => onOpenVideo(video.video_id, "overview"), onKeyDown: (event) => {
+            if (event.target !== event.currentTarget) return;
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              onOpenVideo(video.video_id, "overview");
+            }
+          }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-card-heading", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-title-group", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "reference-project-icon", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Icon2, { size: 25 }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: video.display_name }),
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Clapperboard, { size: 13 }),
+                    video.prompt_count,
+                    " scenes"
+                  ] })
+                ] })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "reference-status-badge", children: presentation.badge })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-card-progress", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: presentation.detail }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
+                  progress.percentage,
+                  "%"
+                ] })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "reference-progress-track", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { style: { width: `${progress.percentage}%` } }) })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-card-footer", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: progress.phase === "complete" ? "Production complete" : progress.phase === "imported" ? "Imported and ready" : "Updated recently" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", onClick: (event) => {
+                event.stopPropagation();
+                onOpenVideo(video.video_id, presentation.target);
+              }, children: presentation.action })
+            ] })
+          ] }, video.video_id);
+        }) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { title: "No matching projects", description: "Choose another production status filter." })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { title: "Add your first channel", description: "A channel keeps its videos, assets, images, and queue together.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddChannel, children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 17 }),
         "Add channel"
-      ] }) }) : videos.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "dashboard-filters", children: [["all", "All"], ["ready", "Ready for action"], ["progress", "In progress"], ["attention", "Needs attention"], ["complete", "Complete"]].map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: filter === value ? "secondary" : "ghost", onPress: () => setFilter(value), children: label }, value)) }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "video-list project-list", children: projects.map(({ video, progress }) => {
-          return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { className: "video-card", variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { className: "video-card-content", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "video-icon", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Video, { size: 20 }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "video-card-main", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { children: video.display_name }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
-                video.prompt_count,
-                " scenes \xB7 ",
-                phaseLabel(progress.phase)
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "project-milestones", "aria-label": `Project phase: ${phaseLabel(progress.phase)}`, children: ["Imported", "Images", "Selection", "Videos", "Complete"].map((label, index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: index <= ["imported", "image_generation", "image_selection", "video_generation", "complete"].indexOf(progress.phase) ? "active" : "", children: label }, label)) }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2, { "aria-label": "Project completion progress", value: progress.percentage, color: "accent", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Track, { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Fill, {}) }) })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "row-actions", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", onPress: () => onOpenVideo(video.video_id), children: "Open project" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": `Rename ${video.display_name}`, onPress: () => onRenameVideo(video), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Pencil, { size: 16 }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": `Delete ${video.display_name}`, onPress: () => onDeleteVideo(video), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Trash2, { size: 16 }) })
-            ] })
-          ] }) }, video.video_id);
-        }) })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: FileBraces, title: "No videos yet", description: "Import one JSON file to create a video.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddVideo, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Upload, { size: 17 }),
-        "Import video JSON"
       ] }) })
     ] });
   }
-  function ProjectOverviewView({ project, video, onBack, onNavigate }) {
-    if (!video) return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { title: "Choose a video project", description: "Open a project from the Dashboard to review its production progress.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "primary", onPress: onBack, children: "All video projects" }) });
+  function ReferenceProjectOverviewView({ project, video, onNavigate }) {
+    if (!video) return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { title: "Choose a video project", description: "Open a project from the Dashboard to review its production progress." });
     const progress = studioApi.getVideoProjectProgress(project, video.video_id);
     const phases = [["imported", "Imported"], ["image_generation", "Images"], ["image_selection", "Selection"], ["video_generation", "Videos"], ["complete", "Complete"]];
-    const activeIndex = phases.findIndex(([id]) => id === progress.phase);
-    const cards = [["Image generation", `${progress.generated_count}/${progress.prompt_count}`, "images"], ["Variant selection", `${progress.selected_count}/${progress.prompt_count}`, "images"], ["Video generation", `${progress.video_complete_count}/${progress.prompt_count}`, "video"]];
-    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack project-overview", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("header", { className: "project-header", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "ghost", onPress: onBack, children: "All video projects" }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: video.display_name }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
-            video.prompt_count,
-            " scenes \xB7 ",
-            phases[activeIndex]?.[1] || "Imported"
-          ] })
+    const activeIndex = Math.max(0, phases.findIndex(([id]) => id === progress.phase));
+    const imageComplete = progress.generated_count >= progress.prompt_count && progress.prompt_count > 0;
+    const selectionComplete = progress.selected_count >= progress.prompt_count && progress.prompt_count > 0;
+    const videoComplete = progress.video_complete_count >= progress.prompt_count && progress.prompt_count > 0;
+    const cards = [
+      { label: "Image Generation", value: `${progress.generated_count}/${progress.prompt_count}`, description: imageComplete ? "All scene variants generated." : `${Math.max(0, progress.prompt_count - progress.generated_count)} scenes still need images.`, action: "Review", target: "images", Icon: Sparkles, tone: imageComplete ? "complete" : "ready", badge: imageComplete ? "Complete" : "Ready" },
+      { label: "Variant Selection", value: `${progress.selected_count}/${progress.prompt_count}`, description: selectionComplete ? "A variant is selected for every scene." : `${Math.max(0, progress.prompt_count - progress.selected_count)} scenes need selection.`, action: selectionComplete ? "Review" : "Select Missing", target: "images", Icon: SquareCheckBig, tone: selectionComplete ? "complete" : "attention", badge: selectionComplete ? "Complete" : "Attention" },
+      { label: "Video Queue", value: `${progress.video_complete_count}/${progress.prompt_count}`, description: videoComplete ? "All videos are complete." : selectionComplete ? "Prepared for manual launch." : "Select every scene before launch.", action: "Open Queue", target: "video", Icon: CirclePlay, tone: videoComplete ? "complete" : "ready", badge: videoComplete ? "Complete" : "Ready" }
+    ];
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-overview", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "reference-milestone-section", "aria-label": "Video project production phases", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-milestones", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "reference-milestone-lines", "aria-hidden": "true", children: phases.slice(1).map((phase, index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: index < activeIndex ? "complete" : index === activeIndex ? "current" : "" }, phase[0])) }),
+          phases.map(([id, label], index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `reference-milestone ${index < activeIndex ? "complete" : index === activeIndex ? "current" : "pending"}`, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "reference-milestone-dot", children: index < activeIndex ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Check, { size: 17 }) : index === activeIndex ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}) : label === "Complete" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Trophy, { size: 14 }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}) }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: label })
+          ] }, id))
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "project-tabs", role: "tablist", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", "aria-selected": true, children: "Overview" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "ghost", onPress: () => onNavigate("images"), children: "Image Review" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "ghost", onPress: () => onNavigate("video"), children: "Video Queue" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "ghost", onPress: () => onNavigate("media"), children: "Media" })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-overall-progress", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { style: { width: `${progress.percentage}%` } }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
+            "Overall Completion: ",
+            progress.percentage,
+            "%"
+          ] })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("section", { className: "overview-milestones", "aria-label": "Video project production phases", children: phases.map(([id, label], index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: index < activeIndex ? "complete" : index === activeIndex ? "current" : "pending", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: index < activeIndex ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Check, { size: 15 }) : index + 1 }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: label })
-      ] }, id)) }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "overview-status-grid", children: cards.map(([label, value, target]) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: label }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { className: "overview-metric", children: value }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: label === "Variant selection" ? "Choose one image for each scene before video generation." : "Project-scoped production progress." }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { size: "sm", variant: "secondary", onPress: () => onNavigate(target), children: [
-          "Open ",
-          label
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("section", { className: "reference-production-grid", "aria-label": "Production status", children: cards.map(({ label, value, description, action, target, Icon: Icon2, tone, badge }) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: `reference-compact-card tone-${tone}`, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Icon2, { size: 19 }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: badge })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: value }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: description }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", onClick: () => onNavigate(target), children: action })
+      ] }, label)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "reference-summary-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "reference-system-summary", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "System Summary" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-pipeline-state", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Active Pipeline" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(LoaderCircle, { size: 15 }),
+              progress.phase === "complete" ? "Production complete" : "Waiting for user input"
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-summary-metrics", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Rate" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: progress.video_failed_count ? "Attention" : "100%" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Scenes" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: progress.prompt_count })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "reference-activity-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Activity" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", onClick: () => onNavigate("logs"), children: "View Logs" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("ul", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("li", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "activity-icon blue", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(MousePointerClick, { size: 13 }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
+                  progress.selected_count,
+                  " scene selections confirmed"
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("small", { children: "Manual checkpoint" })
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("li", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "activity-icon green", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Sparkles, { size: 13 }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
+                  progress.generated_count,
+                  " scene images generated"
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("small", { children: "Automated Flow" })
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("li", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "activity-icon muted", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(FileInput, { size: 13 }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "Project imported from JSON" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { children: [
+                  video.prompt_count,
+                  " scenes scoped to this project"
+                ] })
+              ] })
+            ] })
+          ] })
         ] })
-      ] }) }, label)) }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "overview-activity", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Production activity", description: progress.video_failed_count ? `${progress.video_failed_count} video jobs need attention.` : "No active generation is running.", actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "ghost", onPress: () => onNavigate("logs"), children: "View logs" }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2, { "aria-label": "Overall video project completion", value: progress.percentage, color: "accent", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Track, { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProgressBar2.Fill, {}) }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
-          progress.percentage,
-          "% complete \xB7 Generation starts only after you explicitly confirm in Image Review or Video Queue."
-        ] })
-      ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "reference-manual-note", children: "Generation starts only after you explicitly confirm in Image Review or Video Queue." })
     ] });
   }
   function AssetsView({ project, onAdd, onEdit, onDelete }) {
@@ -34695,6 +34960,114 @@
       ] }, entry.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Activity, title: "No matching logs" })
     ] });
   }
+  function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, onNavigate, onOpenVideo, onAddVideo, onRefresh }) {
+    const [query, setQuery] = (0, import_react73.useState)("");
+    const normalizedQuery = query.trim().toLowerCase();
+    const recentProjects = videos.filter((video) => !normalizedQuery || video.display_name.toLowerCase().includes(normalizedQuery)).slice(0, 4);
+    const flowConnected = String(flowContext?.status || "disconnected").toLowerCase() === "connected";
+    const channelName = project?.display_name || "Studio workspace";
+    const initials = channelName.split(/\s+/).filter(Boolean).slice(0, 2).map((word) => word[0]).join("").toUpperCase() || "AF";
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("aside", { className: "studio-sidebar", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "studio-brand", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "brand-symbol", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Layers, { size: 20 }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
+          "AUTOFLOW ",
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "STUDIO" })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { "aria-label": "Studio navigation", children: NAV_ITEMS.map((item) => {
+        const Icon2 = item.icon;
+        return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `studio-nav-item ${view === item.id ? "active" : ""}`, onClick: () => onNavigate(item.id), title: item.label, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Icon2, { size: 18 }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: item.label })
+        ] }, item.id);
+      }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "sidebar-projects", "aria-label": "Video projects", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "sidebar-section-title", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Video Projects" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", "aria-label": "Import a video project", onClick: onAddVideo, disabled: !project, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 15 }) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "sidebar-project-search", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Search, { size: 14 }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: query, onChange: (event) => setQuery(event.target.value), placeholder: "Search projects...", "aria-label": "Search video projects" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "sidebar-project-list", children: [
+          recentProjects.map((video) => {
+            const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+            const presentation = getProjectPresentation(progress);
+            const isActive = activeVideo?.video_id === video.video_id && PROJECT_TABS.some((tab) => tab.id === view);
+            return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`, onClick: () => onOpenVideo(video.video_id, "overview"), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { "aria-hidden": "true" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: video.display_name })
+            ] }, video.video_id);
+          }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "sidebar-view-all", onClick: () => onNavigate("channels"), children: "View all projects \u2192" })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("footer", { className: "studio-sidebar-footer", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `studio-nav-item ${view === "logs" ? "active" : ""}`, onClick: () => onNavigate("logs"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Settings, { size: 18 }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Settings" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "studio-channel-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "studio-channel-avatar", children: initials }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: channelName }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: flowConnected ? "Flow Connected" : "Flow Disconnected" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", onClick: onRefresh, "aria-label": "Refresh Studio", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(RefreshCw, { size: 15 }) })
+        ] })
+      ] })
+    ] });
+  }
+  function exportVideoProject(project, video) {
+    if (!project || !video) return;
+    const promptIds = new Set(video.prompt_ids || []);
+    const payload = {
+      channel: { project_id: project.project_id, display_name: project.display_name },
+      video,
+      prompts: (project.prompt_records || []).filter((record) => promptIds.has(record.prompt_id)),
+      image_variants: (project.image_variants || []).filter((variant) => promptIds.has(variant.prompt_id)),
+      video_jobs: (project.video_jobs || []).filter((job) => promptIds.has(job.prompt_id))
+    };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${video.display_name.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "video-project"}.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+  function ProjectWorkspaceHeader({ project, video, view, onBack, onNavigate }) {
+    if (!video) return null;
+    const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+    const phaseLabel = { imported: "Imported", image_generation: "Image Generation", image_selection: "Image Selection", video_generation: "Video Generation", complete: "Complete" }[progress.phase] || "Imported";
+    const manageTarget = progress.phase === "video_generation" ? "video" : progress.phase === "complete" ? "media" : "images";
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("header", { className: "reference-project-header", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-header-inner", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-heading-row", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-heading", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "reference-back-button", onClick: onBack, "aria-label": "Back to all video projects", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ArrowLeft, { size: 20 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h1", { children: video.display_name }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
+                video.prompt_count,
+                " scenes"
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: phaseLabel }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Updated recently" })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-actions", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", onClick: () => exportVideoProject(project, video), children: "Export Data" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", onClick: () => onNavigate(manageTarget), children: "Manage Project" })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { className: "reference-project-tabs", "aria-label": "Video project sections", children: PROJECT_TABS.map((tab) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: view === tab.id ? "active" : "", "aria-current": view === tab.id ? "page" : void 0, onClick: () => onNavigate(tab.id), children: tab.label }, tab.id)) })
+    ] }) });
+  }
   function StudioApp() {
     const [snapshot, setSnapshot] = (0, import_react73.useState)(() => captureStudioState());
     const [view, setView] = (0, import_react73.useState)(() => getViewFromLocationHash());
@@ -34846,12 +35219,12 @@
     const currentAsset = dialog?.asset || null;
     let content = null;
     if (view === "channels") {
-      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ChannelsView, { project, videos, busy: !!busy, onAddChannel: () => setDialog({ type: "channel-add" }), onRenameChannel: (name) => action("channel-rename", () => studioApi.updateActiveProject({ display_name: name }), "Channel renamed"), onAddVideo: () => setDialog({ type: "video-add" }), onOpenVideo: (videoId) => {
+      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ReferenceDashboardView, { project, videos, onAddChannel: () => setDialog({ type: "channel-add" }), onAddVideo: () => setDialog({ type: "video-add" }), onOpenVideo: (videoId, target = "overview") => {
         setActiveVideoId(videoId);
-        setView("overview");
-      }, onRenameVideo: (video) => setDialog({ type: "video-rename", video }), onDeleteVideo: (video) => setDialog({ type: "video-delete", video }) });
+        setView(target);
+      } });
     } else if (view === "overview") {
-      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProjectOverviewView, { project, video: activeVideo, onBack: () => setView("channels"), onNavigate: setView });
+      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ReferenceProjectOverviewView, { project, video: activeVideo, onNavigate: setView });
     } else if (view === "assets") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(AssetsView, { project, onAdd: () => setDialog({ type: "asset-add" }), onEdit: (asset) => setDialog({ type: "asset-edit", asset }), onDelete: (asset) => setDialog({ type: "asset-delete", asset }) });
     } else if (view === "import") {
@@ -34872,49 +35245,23 @@
     } else {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(LogsView, { logs: snapshot.logs, onClear: () => action("clear-logs", () => studioApi.clearStudioLogs(), "Logs cleared") });
     }
+    const isProjectView = PROJECT_TABS.some((tab) => tab.id === view) && !!activeVideo;
+    if (isProjectView) {
+      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-workspace", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProjectWorkspaceHeader, { project, video: activeVideo, view, onBack: () => setView("channels"), onNavigate: setView }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: `reference-project-body ${view === "overview" ? "overview" : ""}`, children: content })
+      ] });
+    }
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "studio-shell", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("aside", { className: "studio-sidebar", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "studio-brand", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "brand-symbol", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Video, { size: 20 }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "AutoFlow" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Studio" })
-            ] })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { children: NAV_ITEMS.map((item) => {
-            const Icon2 = item.icon;
-            return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `studio-nav-item ${view === item.id ? "active" : ""}`, onClick: () => setView(item.id), title: item.label, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Icon2, { size: 18 }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: item.label })
-            ] }, item.id);
-          }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "sidebar-projects", "aria-label": "Video projects", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "sidebar-section-title", children: "Video Projects" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "sidebar-project-search", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Search, { size: 14 }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { placeholder: "Search projects", "aria-label": "Search video projects" })
-            ] }),
-            videos.slice(0, 4).map((video) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `sidebar-project ${activeVideo?.video_id === video.video_id && view === "overview" ? "active" : ""}`, onClick: () => {
-              setActiveVideoId(video.video_id);
-              setView("overview");
-            }, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { "aria-hidden": "true" }),
-              video.display_name
-            ] }, video.video_id)),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "sidebar-view-all", onClick: () => setView("channels"), children: "View all projects" })
-          ] })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "studio-main", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("header", { className: "studio-toolbar", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "studio-workspace-label", children: project?.display_name || "Studio workspace" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": "Refresh Studio", onPress: () => refresh(), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(RefreshCw, { size: 17 }) })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("main", { className: "studio-content", children: snapshot.lastError ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "fatal-banner", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CircleAlert, { size: 18 }),
-            snapshot.lastError.message
-          ] }) : content })
-        ] })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ReferenceSidebar, { project, videos, activeVideo, view, flowContext: snapshot.flowContext, onNavigate: setView, onOpenVideo: (videoId, target = "overview") => {
+          setActiveVideoId(videoId);
+          setView(target);
+        }, onAddVideo: () => setDialog({ type: "video-add" }), onRefresh: () => refresh() }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "studio-main", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("main", { className: `studio-content ${view === "channels" ? "reference-surface" : ""} ${isProjectView ? "reference-project-surface" : ""}`, children: snapshot.lastError ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "fatal-banner", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CircleAlert, { size: 18 }),
+          snapshot.lastError.message
+        ] }) : content }) })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ChannelDialog, { open: modal === "channel-add", onOpenChange: (open) => !open && setDialog(null), busy: busy === "channel-add", onSave: addChannel }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(VideoDialog, { open: modal === "video-add" || modal === "video-rename", mode: modal === "video-rename" ? "rename" : "add", video: currentVideo, onOpenChange: (open) => !open && setDialog(null), busy: busy === "video-import" || busy === "video-rename", onSave: ({ name, file }) => modal === "video-rename" ? action("video-rename", () => studioApi.renameProjectVideo(currentVideo.video_id, name), "Video renamed").then(() => setDialog(null)) : importVideo(file, name) }),

@@ -526,6 +526,22 @@ async function run() {
   assert.match(studioSource, /getViewFromLocationHash/);
   assert.match(studioSource, /useState\(\(\) => getViewFromLocationHash\(\)\)/);
   assert.match(studioSource, /hashchange/);
+  assert.match(studioSource, /className="reference-dashboard"/);
+  assert.match(studioSource, /className="reference-project-header"/);
+  assert.match(studioSource, /const PROJECT_TABS = \[/);
+  assert.match(
+    studioSource,
+    /\{ id: "channels", label: "Dashboard"[\s\S]*\{ id: "import", label: "Imports"/,
+  );
+  assert.match(studioSource, /<span>Video Projects<\/span>/);
+  assert.match(studioSource, /<span>Settings<\/span>/);
+  assert.match(
+    studioSource,
+    /\{ id: "overview", label: "Overview"[\s\S]*\{ id: "images", label: "Image Review"[\s\S]*\{ id: "video", label: "Video Queue"[\s\S]*\{ id: "media", label: "Media"/,
+  );
+  assert.doesNotMatch(studioSource, /\{ id: "assets", label: "Assets"/);
+  assert.doesNotMatch(studioSource, /toolbar-selectors/);
+  assert.match(studioSource, /Generation starts only after you explicitly confirm/);
   assert.doesNotMatch(studioSource, /<Modal\.Root\s+isOpen=/);
   assert.match(studioSource, /<Modal\.Backdrop\s+[^>]*isOpen=/);
   assert.match(studioHtml, /generated\/studio\.bundle\.js/);
