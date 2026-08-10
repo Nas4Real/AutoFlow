@@ -22,3 +22,11 @@
 - [x] Keep the side panel working through the shared service
 - [ ] Run full automated and browser verification
 - [x] Run code/security review, address findings, and push atomic commits
+
+## Proposed Studio Redesign
+
+- [ ] Establish documented Studio design tokens and shared layout primitives
+- [ ] Implement the Video Projects Dashboard reference
+- [ ] Implement the Video Project Overview reference
+- [ ] Integrate project-scoped Studio navigation
+- [ ] Add verification and accessibility coverage for the new surfaces

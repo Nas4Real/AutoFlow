@@ -107,6 +107,31 @@ Harden AutoFlow without redesigning its side panel or Project Studio. Work proce
 
 ---
 
+# Proposed Plan: Studio Dashboard And Project Overview Redesign
+
+## Scope
+
+Implement the two supplied Superdesign references in Project Studio only: the channel-level Video Projects Dashboard and the opened video project's Overview. The side panel and the existing Image Review, Video Queue, and Media content remain functionally unchanged in this slice.
+
+## Ordered slices
+
+1. **Design-system foundation** — introduce documented semantic Studio tokens and shared layout primitives without changing runtime contracts.
+2. **Dashboard** — replace the current channel list landing view with the searchable/filterable Video Projects command center and project milestone summaries.
+3. **Project overview** — add the project header, secondary project navigation, milestone tracker, status cards, active-work state, and activity timeline.
+4. **Navigation integration** — make project cards and rail entries open/select the project and route to its workspace; keep existing Image Review, Video Queue, and Media as project subviews.
+5. **Quality pass** — add focused state/navigation tests, build Studio, inspect in the browser at practical widths, run accessibility checks, and commit/push atomically.
+
+## Acceptance criteria
+
+- Dashboard shows every project for the active channel with a text-labelled five-stage milestone.
+- Opening a card selects that project and opens its Overview without a top-level video selector.
+- Project Overview routes to existing Image Review, Video Queue, and Media without changing generation behavior.
+- The new documented token system is used by both new Studio surfaces.
+- Manual credit-spending checkpoints remain explicit.
+- Side panel source and styling are untouched.
+
+---
+
 # Implementation Plan: Studio-First Media Workflow
 
 ## Goal

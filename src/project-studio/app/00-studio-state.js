@@ -283,6 +283,38 @@
     );
   }
 
+  function getVideoProjectProgress(project, videoId) {
+    const video = getProjectVideos(project).find((item) => item.video_id === videoId);
+    const records = getVideoPromptRecords(project, videoId);
+    const promptCount = records.length;
+    const variants = getProjectImageVariants(project).filter((item) =>
+      records.some((record) => record.prompt_id === item.prompt_id),
+    );
+    const generatedCount = new Set(variants.map((item) => item.prompt_id)).size;
+    const selectedCount = records.filter((record) => !!record.selected_variant_id).length;
+    const queue = getVideoQueueItems(project, videoId);
+    const completedVideoCount = queue.filter((item) => item.status === "complete").length;
+    const failedVideoCount = queue.filter((item) => item.status === "failed" || item.status === "needs_review").length;
+    const activeImageRun = getProjectImageGenerationRuns(project).find(
+      (item) => item.video_id === videoId && item.status === "generating",
+    );
+    let phase = "imported";
+    if (activeImageRun || generatedCount < promptCount) phase = "image_generation";
+    else if (selectedCount < promptCount) phase = "image_selection";
+    else if (completedVideoCount < promptCount) phase = "video_generation";
+    else phase = "complete";
+    return {
+      video: video || null,
+      phase,
+      prompt_count: promptCount,
+      generated_count: generatedCount,
+      selected_count: selectedCount,
+      video_complete_count: completedVideoCount,
+      video_failed_count: failedVideoCount,
+      percentage: promptCount ? Math.round(((generatedCount + selectedCount + completedVideoCount) / (promptCount * 3)) * 100) : 0,
+    };
+  }
+
   function createPromptId() {
     const domain = getDomain();
     if (domain && typeof domain.createId === "function") {
@@ -3831,6 +3863,7 @@
     getProjectMediaLinks,
     getProjectVideoJobs,
     getProjectVideos,
+    getVideoProjectProgress,
     getSelectedImageFinalizationItems,
     getVideoQueueItems,
     getVideoPromptRecords,
