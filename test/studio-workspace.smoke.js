@@ -503,6 +503,10 @@ async function run() {
     path.join(root, "src/project-studio/index.html"),
     "utf8",
   );
+  const studioCss = fs.readFileSync(
+    path.join(root, "src/project-studio/react/studio-app.css"),
+    "utf8",
+  );
   assert.match(studioSource, /from "@heroui\/react"/);
   assert.doesNotMatch(studioSource, /Create Draft|Update Draft|Create New Draft|onDraft|create_label/);
   assert.doesNotMatch(studioSource, /getVideoQueueItems\(project, video\.video_id\)\.filter\(\(item\) => !!item\.animation_prompt\)/);
@@ -537,6 +541,7 @@ async function run() {
   assert.doesNotMatch(studioSource, /View all projects/);
   assert.match(studioSource, /className="project-number"/);
   assert.match(studioSource, /videos\.findIndex\(\(entry\) => entry\.video_id === video\.video_id\) \+ 1/);
+  assert.match(studioCss, /\.sidebar-project \{[^}]*display: flex;[^}]*align-items: center;/);
   assert.match(studioSource, /<span>Settings<\/span>/);
   assert.match(
     studioSource,

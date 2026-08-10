@@ -1698,6 +1698,9 @@ select:focus-visible {
 .sidebar-project {
   min-width: 0;
   height: 36px;
+  display: flex;
+  align-items: center;
+  width: 100%;
   gap: 12px;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -1711,6 +1714,7 @@ select:focus-visible {
 .sidebar-project.active { border-color: rgba(59, 130, 246, 0.55); background: rgba(37, 99, 235, 0.16); color: #fff; }
 
 .sidebar-project strong {
+  flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
