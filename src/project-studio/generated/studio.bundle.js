@@ -34066,6 +34066,12 @@
     { id: "video", label: "Video Queue" },
     { id: "media", label: "Media" }
   ];
+  var IMPORT_TABS = [
+    { id: "upload", label: "Import JSON" },
+    { id: "references", label: "Needs References" },
+    { id: "history", label: "Import History" },
+    { id: "library", label: "Reference Library" }
+  ];
   function getViewFromLocationHash() {
     const rawHash = String(globalThis.location?.hash || "").replace(/^#/, "");
     let hash = "";
@@ -34641,48 +34647,52 @@
       ] }) })
     ] });
   }
-  function ImportView({ project, videos, onImport, onResolve, busy }) {
+  function ImportView({ project, videos, onImport, onResolve, onOpenProject, onAddAsset, onEditAsset, onDeleteAsset, busy }) {
     const [file, setFile] = (0, import_react73.useState)(null);
     const [name, setName] = (0, import_react73.useState)("");
     const [mapping, setMapping] = (0, import_react73.useState)({});
+    const [tab, setTab] = (0, import_react73.useState)("upload");
     const blockedRecords = studioApi.getProjectPromptRecords(project).filter((record) => record.status === "blocked");
     const assets = studioApi.getActiveAssets(project);
+    const importCount = videos.length;
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Import", description: "One JSON file creates one video." }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "import-layout", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "import-form", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Imports", description: "Create video projects, resolve references, and manage your channel library." }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { className: "studio-subtabs", "aria-label": "Import workflow sections", children: IMPORT_TABS.map((item) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: tab === item.id ? "active" : "", "aria-current": tab === item.id ? "page" : void 0, onClick: () => setTab(item.id), children: [
+        item.label,
+        item.id === "references" && blockedRecords.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: blockedRecords.length }) : null
+      ] }, item.id)) }),
+      !project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: FileBraces, title: "Add a channel before importing", description: "Imports and reference assets are stored in the active channel." }) : null,
+      project && tab === "upload" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "import-layout", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "import-form studio-surface-panel", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Create video project" }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
             "Video name ",
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "optional", children: "Optional" }),
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: name, onChange: (event) => setName(event.target.value) })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropZone, { file, onFile: setFile, accept: ".json,application/json", label: "Drop the video JSON here", hint: "file_name and image_prompt are required; animation_prompt is optional" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "muted-copy", children: "Reviewing or importing JSON never starts image generation. You will explicitly confirm that later in Image Review." }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", isDisabled: !file || busy, onPress: () => onImport(file, name.trim()), children: [
             busy ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(LoaderCircle, { className: "spin", size: 17 }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Upload, { size: 17 }),
-            "Import video"
+            "Create video project"
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "import-history", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Videos" }),
-          videos.length ? videos.map((video) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "compact-row", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(FileBraces, { size: 16 }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: video.display_name }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { children: [
-              video.prompt_count,
-              " scenes"
-            ] })
-          ] }, video.video_id)) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "muted-copy", children: "No video JSON imported yet." })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("aside", { className: "import-history studio-surface-panel", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Import summary" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { className: "import-summary-count", children: importCount }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "muted-copy", children: importCount === 1 ? "video project in this channel" : "video projects in this channel" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "muted-copy", children: "After import, resolve any missing references or open the project Overview." })
         ] })
-      ] }),
-      blockedRecords.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "resolve-section", children: [
+      ] }) : null,
+      project && tab === "references" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "resolve-section studio-surface-panel", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "section-heading", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { children: "Needs a reference" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Map missing names to a channel asset." })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Needs References" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Map missing names to a reusable channel asset before generation." })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Chip, { color: "warning", variant: "soft", children: blockedRecords.length })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "resolve-list", children: blockedRecords.flatMap((record) => (record.blocked_references || []).map((reference) => {
+        blockedRecords.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "resolve-list", children: blockedRecords.flatMap((record) => (record.blocked_references || []).map((reference) => {
           const key = `${record.prompt_id}:${reference.reference_index}`;
           return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "resolve-row", children: [
             /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
@@ -34695,7 +34705,54 @@
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", isDisabled: !mapping[key], onPress: () => onResolve(record.prompt_id, reference.reference_index, mapping[key]), children: "Use asset" })
           ] }, key);
-        })) })
+        })) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: CircleCheckBig, title: "All references are resolved", description: "Every imported scene is ready for the next production step.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "secondary", onPress: () => setTab("library"), children: "Open Reference Library" }) })
+      ] }) : null,
+      project && tab === "history" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "studio-surface-panel import-history-list", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "section-heading", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Import History" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Each JSON import creates one project-scoped video workspace." })
+        ] }) }),
+        videos.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "compact-list", children: videos.map((video) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "compact-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(FileBraces, { size: 17 }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: video.display_name }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { children: [
+              video.source_name || "Imported JSON",
+              " \xB7 ",
+              video.prompt_count,
+              " scenes"
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", onPress: () => onOpenProject(video.video_id), children: "Open Project Overview" })
+        ] }, video.video_id)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: FileBraces, title: "No video projects yet", description: "Import a JSON file to create the first one.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "primary", onPress: () => setTab("upload"), children: "Import JSON" }) })
+      ] }) : null,
+      project && tab === "library" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "studio-surface-panel import-library", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "section-heading", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Reference Library" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Reusable channel assets for resolving imported scene references." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddAsset, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 17 }),
+            "Add reference"
+          ] })
+        ] }),
+        assets.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "asset-grid", children: assets.map((asset) => {
+          const file2 = primaryAssetFile(asset);
+          return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { className: "asset-card", variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "asset-preview", children: file2?.data_url ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("img", { src: file2.data_url, alt: asset.display_name }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Image, { size: 26 }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "asset-card-footer", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: asset.display_name }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "row-actions", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": `Edit ${asset.display_name}`, onPress: () => onEditAsset(asset), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Pencil, { size: 16 }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": `Delete ${asset.display_name}`, onPress: () => onDeleteAsset(asset), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Trash2, { size: 16 }) })
+              ] })
+            ] })
+          ] }) }, asset.asset_id);
+        }) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Image, title: "No reference assets yet", description: "Add a reusable image before mapping references.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddAsset, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 17 }),
+          "Add reference"
+        ] }) })
       ] }) : null
     ] });
   }
@@ -35228,7 +35285,10 @@
     } else if (view === "assets") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(AssetsView, { project, onAdd: () => setDialog({ type: "asset-add" }), onEdit: (asset) => setDialog({ type: "asset-edit", asset }), onDelete: (asset) => setDialog({ type: "asset-delete", asset }) });
     } else if (view === "import") {
-      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ImportView, { project, videos, busy: !!busy, onImport: importVideo, onResolve: (promptId, referenceIndex, assetId) => action("resolve", () => studioApi.mapPromptReferenceToAsset(promptId, referenceIndex, assetId), "Reference resolved") });
+      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ImportView, { project, videos, busy: !!busy, onImport: importVideo, onResolve: (promptId, referenceIndex, assetId) => action("resolve", () => studioApi.mapPromptReferenceToAsset(promptId, referenceIndex, assetId), "Reference resolved"), onOpenProject: (videoId) => {
+        setActiveVideoId(videoId);
+        setView("overview");
+      }, onAddAsset: () => setDialog({ type: "asset-add" }), onEditAsset: (asset) => setDialog({ type: "asset-edit", asset }), onDeleteAsset: (asset) => setDialog({ type: "asset-delete", asset }) });
     } else if (view === "images") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ImageReviewView, { project, video: activeVideo, flowContext: snapshot.flowContext, busy, onRefreshConnection: () => action("flow-refresh", () => studioApi.refreshFlowContext(), "Flow connection refreshed"), onGenerate: (settings) => action("generate-images", () => studioApi.startImageGenerationRun(activeVideo.video_id, settings), "Image generation started"), onStop: (runId) => action("stop-images", () => studioApi.stopImageGenerationRun(runId), "Image generation stopped"), onRetry: (runId) => action("retry-images", () => studioApi.retryImageGenerationRun(runId), "Retry started"), onSelect: (promptId, variantId) => action("select-image", () => studioApi.selectImageVariant(promptId, variantId), "Image selected") });
     } else if (view === "video") {

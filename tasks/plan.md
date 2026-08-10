@@ -107,6 +107,43 @@ Harden AutoFlow without redesigning its side panel or Project Studio. Work proce
 
 ---
 
+# Implementation Plan: Studio UX Completion
+
+## Objective
+
+Complete the Studio-first workflow using the approved dark AutoFlow design system. The Studio owns channel-level project management, imports, reference resolution, project production, and diagnostics. The side panel and generation runtime contracts remain unchanged.
+
+## Commands
+
+- Build: `npm run build:studio`
+- Focused Studio test: `node test/studio-workspace.smoke.js`
+- Full test suite: `npm test`
+- Syntax check: `npm run check:syntax`
+
+## Delivery slices
+
+1. **UX contract and shared primitives**: keep the approved token system, rail hierarchy, card styling, radius scale, and status vocabulary consistent across all Studio views.
+2. **Imports**: add Import JSON, Needs References, Import History, and Reference Library subviews. Import remains non-credit-spending.
+3. **Settings**: add channel, generation-default, Flow connection, storage/cache, diagnostics, and advanced-data sections using existing state APIs only.
+4. **Project workspace**: retain Overview, Image Review, Video Queue, and Media. Add lightweight sub-navigation only where it supports a distinct task: Generate/Select in Image Review and All/Images/Videos in Media. Do not auto-start generation from a selection.
+5. **Verification**: source/regression assertions, build, full suite, browser verification where the environment permits, code review, and atomic commits.
+
+## Boundaries
+
+- Always: preserve project scoping, explicit image/video confirmations, accessible native controls, and the Studio token system.
+- Ask first: new dependencies, changed runtime messages, changed storage schema, side-panel changes, or paid-generation behavior.
+- Never: start generation from Dashboard/Overview, use a global project selector, or redesign the side panel.
+
+## Success criteria
+
+- Every Studio destination follows the documented dark theme, spacing, border, radius, typography, and status tokens.
+- Imports exposes a clear path from validation to reference resolution to opening the created project.
+- Settings exposes existing operational controls without duplicating runtime logic.
+- All project subviews retain the opened project's context and manual checkpoints.
+- The focused Studio test, full test suite, build, and syntax checks pass.
+
+---
+
 # Proposed Plan: Studio Dashboard And Project Overview Redesign
 
 ## Scope

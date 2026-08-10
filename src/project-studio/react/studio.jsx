@@ -59,6 +59,13 @@ const PROJECT_TABS = [
   { id: "media", label: "Media" },
 ];
 
+const IMPORT_TABS = [
+  { id: "upload", label: "Import JSON" },
+  { id: "references", label: "Needs References" },
+  { id: "history", label: "Import History" },
+  { id: "library", label: "Reference Library" },
+];
+
 function getViewFromLocationHash() {
   const rawHash = String(globalThis.location?.hash || "").replace(/^#/, "");
   let hash = "";
@@ -604,44 +611,57 @@ function AssetsView({ project, onAdd, onEdit, onDelete }) {
   );
 }
 
-function ImportView({ project, videos, onImport, onResolve, busy }) {
+function ImportView({ project, videos, onImport, onResolve, onOpenProject, onAddAsset, onEditAsset, onDeleteAsset, busy }) {
   const [file, setFile] = useState(null);
   const [name, setName] = useState("");
   const [mapping, setMapping] = useState({});
+  const [tab, setTab] = useState("upload");
   const blockedRecords = studioApi.getProjectPromptRecords(project).filter((record) => record.status === "blocked");
   const assets = studioApi.getActiveAssets(project);
+  const importCount = videos.length;
   return (
     <div className="view-stack">
-      <PageHeader title="Import" description="One JSON file creates one video." />
-      <section className="import-layout">
-        <div className="import-form">
-          <label className="field-label">Video name <span className="optional">Optional</span><input value={name} onChange={(event) => setName(event.target.value)} /></label>
-          <DropZone file={file} onFile={setFile} accept=".json,application/json" label="Drop the video JSON here" hint="file_name and image_prompt are required; animation_prompt is optional" />
-          <Button variant="primary" isDisabled={!file || busy} onPress={() => onImport(file, name.trim())}>{busy ? <LoaderCircle className="spin" size={17} /> : <Upload size={17} />}Import video</Button>
-        </div>
-        <div className="import-history">
-          <span className="eyebrow">Videos</span>
-          {videos.length ? videos.map((video) => <div className="compact-row" key={video.video_id}><FileJson size={16} /><span>{video.display_name}</span><small>{video.prompt_count} scenes</small></div>) : <p className="muted-copy">No video JSON imported yet.</p>}
-        </div>
-      </section>
-      {blockedRecords.length ? (
-        <section className="resolve-section">
-          <div className="section-heading"><div><h3>Needs a reference</h3><p>Map missing names to a channel asset.</p></div><Chip color="warning" variant="soft">{blockedRecords.length}</Chip></div>
-          <div className="resolve-list">
-            {blockedRecords.flatMap((record) => (record.blocked_references || []).map((reference) => {
-              const key = `${record.prompt_id}:${reference.reference_index}`;
-              return (
-                <div className="resolve-row" key={key}>
-                  <div><strong>{studioApi.sceneTitleFromFileName(record.file_name)}</strong><span>{reference.name || "Unnamed reference"}</span></div>
-                  <select value={mapping[key] || ""} onChange={(event) => setMapping((current) => ({ ...current, [key]: event.target.value }))}>
-                    <option value="">Choose asset</option>
-                    {assets.map((asset) => <option key={asset.asset_id} value={asset.asset_id}>{asset.display_name}</option>)}
-                  </select>
-                  <Button size="sm" variant="secondary" isDisabled={!mapping[key]} onPress={() => onResolve(record.prompt_id, reference.reference_index, mapping[key])}>Use asset</Button>
-                </div>
-              );
-            }))}
+      <PageHeader title="Imports" description="Create video projects, resolve references, and manage your channel library." />
+      <nav className="studio-subtabs" aria-label="Import workflow sections">
+        {IMPORT_TABS.map((item) => <button key={item.id} type="button" className={tab === item.id ? "active" : ""} aria-current={tab === item.id ? "page" : undefined} onClick={() => setTab(item.id)}>{item.label}{item.id === "references" && blockedRecords.length ? <span>{blockedRecords.length}</span> : null}</button>)}
+      </nav>
+      {!project ? <EmptyState icon={FileJson} title="Add a channel before importing" description="Imports and reference assets are stored in the active channel." /> : null}
+      {project && tab === "upload" ? (
+        <section className="import-layout">
+          <div className="import-form studio-surface-panel">
+            <span className="eyebrow">Create video project</span>
+            <label className="field-label">Video name <span className="optional">Optional</span><input value={name} onChange={(event) => setName(event.target.value)} /></label>
+            <DropZone file={file} onFile={setFile} accept=".json,application/json" label="Drop the video JSON here" hint="file_name and image_prompt are required; animation_prompt is optional" />
+            <p className="muted-copy">Reviewing or importing JSON never starts image generation. You will explicitly confirm that later in Image Review.</p>
+            <Button variant="primary" isDisabled={!file || busy} onPress={() => onImport(file, name.trim())}>{busy ? <LoaderCircle className="spin" size={17} /> : <Upload size={17} />}Create video project</Button>
           </div>
+          <aside className="import-history studio-surface-panel">
+            <span className="eyebrow">Import summary</span>
+            <strong className="import-summary-count">{importCount}</strong>
+            <p className="muted-copy">{importCount === 1 ? "video project in this channel" : "video projects in this channel"}</p>
+            <p className="muted-copy">After import, resolve any missing references or open the project Overview.</p>
+          </aside>
+        </section>
+      ) : null}
+      {project && tab === "references" ? (
+        <section className="resolve-section studio-surface-panel">
+          <div className="section-heading"><div><h2>Needs References</h2><p>Map missing names to a reusable channel asset before generation.</p></div><Chip color="warning" variant="soft">{blockedRecords.length}</Chip></div>
+          {blockedRecords.length ? <div className="resolve-list">{blockedRecords.flatMap((record) => (record.blocked_references || []).map((reference) => {
+            const key = `${record.prompt_id}:${reference.reference_index}`;
+            return <div className="resolve-row" key={key}><div><strong>{studioApi.sceneTitleFromFileName(record.file_name)}</strong><span>{reference.name || "Unnamed reference"}</span></div><select value={mapping[key] || ""} onChange={(event) => setMapping((current) => ({ ...current, [key]: event.target.value }))}><option value="">Choose asset</option>{assets.map((asset) => <option key={asset.asset_id} value={asset.asset_id}>{asset.display_name}</option>)}</select><Button size="sm" variant="secondary" isDisabled={!mapping[key]} onPress={() => onResolve(record.prompt_id, reference.reference_index, mapping[key])}>Use asset</Button></div>;
+          }))}</div> : <EmptyState icon={CheckCircle} title="All references are resolved" description="Every imported scene is ready for the next production step." action={<Button variant="secondary" onPress={() => setTab("library")}>Open Reference Library</Button>} />}
+        </section>
+      ) : null}
+      {project && tab === "history" ? (
+        <section className="studio-surface-panel import-history-list">
+          <div className="section-heading"><div><h2>Import History</h2><p>Each JSON import creates one project-scoped video workspace.</p></div></div>
+          {videos.length ? <div className="compact-list">{videos.map((video) => <div className="compact-row" key={video.video_id}><FileJson size={17} /><div><strong>{video.display_name}</strong><small>{video.source_name || "Imported JSON"} · {video.prompt_count} scenes</small></div><Button size="sm" variant="secondary" onPress={() => onOpenProject(video.video_id)}>Open Project Overview</Button></div>)}</div> : <EmptyState icon={FileJson} title="No video projects yet" description="Import a JSON file to create the first one." action={<Button variant="primary" onPress={() => setTab("upload")}>Import JSON</Button>} />}
+        </section>
+      ) : null}
+      {project && tab === "library" ? (
+        <section className="studio-surface-panel import-library">
+          <div className="section-heading"><div><h2>Reference Library</h2><p>Reusable channel assets for resolving imported scene references.</p></div><Button variant="primary" onPress={onAddAsset}><Plus size={17} />Add reference</Button></div>
+          {assets.length ? <div className="asset-grid">{assets.map((asset) => { const file = primaryAssetFile(asset); return <Card key={asset.asset_id} className="asset-card" variant="secondary"><Card.Content><div className="asset-preview">{file?.data_url ? <img src={file.data_url} alt={asset.display_name} /> : <ImageIcon size={26} />}</div><div className="asset-card-footer"><strong>{asset.display_name}</strong><div className="row-actions"><Button isIconOnly size="sm" variant="ghost" aria-label={`Edit ${asset.display_name}`} onPress={() => onEditAsset(asset)}><Pencil size={16} /></Button><Button isIconOnly size="sm" variant="ghost" aria-label={`Delete ${asset.display_name}`} onPress={() => onDeleteAsset(asset)}><Trash2 size={16} /></Button></div></div></Card.Content></Card>; })}</div> : <EmptyState icon={ImageIcon} title="No reference assets yet" description="Add a reusable image before mapping references." action={<Button variant="primary" onPress={onAddAsset}><Plus size={17} />Add reference</Button>} />}
         </section>
       ) : null}
     </div>
@@ -1067,7 +1087,7 @@ function StudioApp() {
   } else if (view === "assets") {
     content = <AssetsView project={project} onAdd={() => setDialog({ type: "asset-add" })} onEdit={(asset) => setDialog({ type: "asset-edit", asset })} onDelete={(asset) => setDialog({ type: "asset-delete", asset })} />;
   } else if (view === "import") {
-    content = <ImportView project={project} videos={videos} busy={!!busy} onImport={importVideo} onResolve={(promptId, referenceIndex, assetId) => action("resolve", () => studioApi.mapPromptReferenceToAsset(promptId, referenceIndex, assetId), "Reference resolved")} />;
+    content = <ImportView project={project} videos={videos} busy={!!busy} onImport={importVideo} onResolve={(promptId, referenceIndex, assetId) => action("resolve", () => studioApi.mapPromptReferenceToAsset(promptId, referenceIndex, assetId), "Reference resolved")} onOpenProject={(videoId) => { setActiveVideoId(videoId); setView("overview"); }} onAddAsset={() => setDialog({ type: "asset-add" })} onEditAsset={(asset) => setDialog({ type: "asset-edit", asset })} onDeleteAsset={(asset) => setDialog({ type: "asset-delete", asset })} />;
   } else if (view === "images") {
     content = <ImageReviewView project={project} video={activeVideo} flowContext={snapshot.flowContext} busy={busy} onRefreshConnection={() => action("flow-refresh", () => studioApi.refreshFlowContext(), "Flow connection refreshed")} onGenerate={(settings) => action("generate-images", () => studioApi.startImageGenerationRun(activeVideo.video_id, settings), "Image generation started")} onStop={(runId) => action("stop-images", () => studioApi.stopImageGenerationRun(runId), "Image generation stopped")} onRetry={(runId) => action("retry-images", () => studioApi.retryImageGenerationRun(runId), "Retry started")} onSelect={(promptId, variantId) => action("select-image", () => studioApi.selectImageVariant(promptId, variantId), "Image selected")} />;
   } else if (view === "video") {

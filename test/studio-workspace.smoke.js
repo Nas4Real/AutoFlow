@@ -542,6 +542,12 @@ async function run() {
   assert.doesNotMatch(studioSource, /\{ id: "assets", label: "Assets"/);
   assert.doesNotMatch(studioSource, /toolbar-selectors/);
   assert.match(studioSource, /Generation starts only after you explicitly confirm/);
+  assert.match(studioSource, /const IMPORT_TABS = \[/);
+  assert.match(
+    studioSource,
+    /\{ id: "upload", label: "Import JSON"[\s\S]*\{ id: "references", label: "Needs References"[\s\S]*\{ id: "history", label: "Import History"[\s\S]*\{ id: "library", label: "Reference Library"/,
+  );
+  assert.match(studioSource, /Open Project Overview/);
   assert.doesNotMatch(studioSource, /<Modal\.Root\s+isOpen=/);
   assert.match(studioSource, /<Modal\.Backdrop\s+[^>]*isOpen=/);
   assert.match(studioHtml, /generated\/studio\.bundle\.js/);

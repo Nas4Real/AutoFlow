@@ -25,8 +25,16 @@
 
 ## Proposed Studio Redesign
 
-- [ ] Establish documented Studio design tokens and shared layout primitives
-- [ ] Implement the Video Projects Dashboard reference
-- [ ] Implement the Video Project Overview reference
-- [ ] Integrate project-scoped Studio navigation
-- [ ] Add verification and accessibility coverage for the new surfaces
+- [x] Establish documented Studio design tokens and shared layout primitives
+- [x] Implement the Video Projects Dashboard reference
+- [x] Implement the Video Project Overview reference
+- [x] Integrate project-scoped Studio navigation
+- [x] Add verification and accessibility coverage for the new surfaces
+
+## Studio UX Completion
+
+- [x] Implement Imports subviews: Import JSON, Needs References, History, and Reference Library
+- [ ] Implement Settings sections using existing Studio state APIs
+- [ ] Add Image Review Generate/Select sub-navigation without changing checkpoints
+- [ ] Add Media All/Images/Videos sub-navigation and project-scoped filtering
+- [ ] Verify, review, commit, and push each completed slice
