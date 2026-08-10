@@ -252,6 +252,12 @@ select:focus-visible {
   gap: 3px;
 }
 
+.sidebar-projects { display: grid; gap: 5px; margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--studio-border); }
+.sidebar-section-title { padding: 0 8px; color: var(--studio-text-muted); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.sidebar-project-search { display: flex; align-items: center; gap: 6px; padding: 0 8px; color: var(--studio-text-muted); }.sidebar-project-search input { height: 31px; padding: 0 7px; font-size: 11px; }
+.sidebar-project, .sidebar-view-all { width: 100%; display: flex; align-items: center; gap: 8px; border: 0; border-radius: 6px; background: transparent; color: var(--studio-text-soft); padding: 8px; text-align: left; font-size: 12px; }.sidebar-project:hover, .sidebar-project.active { background: var(--studio-accent-soft); color: var(--studio-accent); }.sidebar-project span { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }.sidebar-view-all { color: var(--studio-blue); font-weight: 600; }
+.studio-workspace-label { color: var(--studio-text-soft); font-size: 12px; font-weight: 600; }
+
 .dashboard-controls,
 .dashboard-filters {
   display: flex;

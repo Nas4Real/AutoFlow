@@ -33890,12 +33890,9 @@
   var domainApi = globalThis.TFProjectDomain;
   var NAV_ITEMS = [
     { id: "channels", label: "Dashboard", icon: Tv },
+    { id: "import", label: "Imports", icon: Upload },
     { id: "assets", label: "Assets", icon: Image },
-    { id: "import", label: "Import", icon: Upload },
-    { id: "images", label: "Image Review", icon: Images },
-    { id: "video", label: "Video Queue", icon: ListVideo },
-    { id: "media", label: "Media", icon: LayoutGrid },
-    { id: "logs", label: "Logs", icon: Activity }
+    { id: "logs", label: "Settings", icon: Activity }
   ];
   function getViewFromLocationHash() {
     const rawHash = String(globalThis.location?.hash || "").replace(/^#/, "");
@@ -34891,20 +34888,26 @@
               /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Icon2, { size: 18 }),
               /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: item.label })
             ] }, item.id);
-          }) })
+          }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "sidebar-projects", "aria-label": "Video projects", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "sidebar-section-title", children: "Video Projects" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "sidebar-project-search", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Search, { size: 14 }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { placeholder: "Search projects", "aria-label": "Search video projects" })
+            ] }),
+            videos.slice(0, 4).map((video) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `sidebar-project ${activeVideo?.video_id === video.video_id && view === "overview" ? "active" : ""}`, onClick: () => {
+              setActiveVideoId(video.video_id);
+              setView("overview");
+            }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { "aria-hidden": "true" }),
+              video.display_name
+            ] }, video.video_id)),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "sidebar-view-all", onClick: () => setView("channels"), children: "View all projects" })
+          ] })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "studio-main", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("header", { className: "studio-toolbar", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "toolbar-selectors", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "YouTube channel" }),
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("select", { value: project?.project_id || "", onChange: (event) => selectProject(event.target.value), disabled: !projects.length, children: projects.length ? projects.map((item) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: item.project_id, children: item.display_name }, item.project_id)) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "", children: "No channels" }) })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Video" }),
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("select", { value: activeVideo?.video_id || "", onChange: (event) => setActiveVideoId(event.target.value), disabled: !videos.length, children: videos.length ? videos.map((item) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: item.video_id, children: item.display_name }, item.video_id)) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "", children: "No videos" }) })
-              ] })
-            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "studio-workspace-label", children: project?.display_name || "Studio workspace" }),
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": "Refresh Studio", onPress: () => refresh(), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(RefreshCw, { size: 17 }) })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("main", { className: "studio-content", children: snapshot.lastError ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "fatal-banner", children: [

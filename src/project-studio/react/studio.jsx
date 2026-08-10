@@ -36,12 +36,9 @@ const domainApi = globalThis.TFProjectDomain;
 
 const NAV_ITEMS = [
   { id: "channels", label: "Dashboard", icon: Tv },
+  { id: "import", label: "Imports", icon: Upload },
   { id: "assets", label: "Assets", icon: ImageIcon },
-  { id: "import", label: "Import", icon: Upload },
-  { id: "images", label: "Image Review", icon: Images },
-  { id: "video", label: "Video Queue", icon: ListVideo },
-  { id: "media", label: "Media", icon: LayoutGrid },
-  { id: "logs", label: "Logs", icon: Activity },
+  { id: "logs", label: "Settings", icon: Activity },
 ];
 
 function getViewFromLocationHash() {
@@ -964,13 +961,11 @@ function StudioApp() {
         <aside className="studio-sidebar">
           <div className="studio-brand"><span className="brand-symbol"><Video size={20} /></span><div><strong>AutoFlow</strong><span>Studio</span></div></div>
           <nav>{NAV_ITEMS.map((item) => { const Icon = item.icon; return <button key={item.id} type="button" className={`studio-nav-item ${view === item.id ? "active" : ""}`} onClick={() => setView(item.id)} title={item.label}><Icon size={18} /><span>{item.label}</span></button>; })}</nav>
+          <section className="sidebar-projects" aria-label="Video projects"><div className="sidebar-section-title">Video Projects</div><label className="sidebar-project-search"><Search size={14} /><input placeholder="Search projects" aria-label="Search video projects" /></label>{videos.slice(0, 4).map((video) => <button key={video.video_id} type="button" className={`sidebar-project ${activeVideo?.video_id === video.video_id && view === "overview" ? "active" : ""}`} onClick={() => { setActiveVideoId(video.video_id); setView("overview"); }}><span aria-hidden="true" />{video.display_name}</button>)}<button type="button" className="sidebar-view-all" onClick={() => setView("channels")}>View all projects</button></section>
         </aside>
         <div className="studio-main">
           <header className="studio-toolbar">
-            <div className="toolbar-selectors">
-              <label><span>YouTube channel</span><select value={project?.project_id || ""} onChange={(event) => selectProject(event.target.value)} disabled={!projects.length}>{projects.length ? projects.map((item) => <option key={item.project_id} value={item.project_id}>{item.display_name}</option>) : <option value="">No channels</option>}</select></label>
-              <label><span>Video</span><select value={activeVideo?.video_id || ""} onChange={(event) => setActiveVideoId(event.target.value)} disabled={!videos.length}>{videos.length ? videos.map((item) => <option key={item.video_id} value={item.video_id}>{item.display_name}</option>) : <option value="">No videos</option>}</select></label>
-            </div>
+            <span className="studio-workspace-label">{project?.display_name || "Studio workspace"}</span>
             <Button isIconOnly size="sm" variant="ghost" aria-label="Refresh Studio" onPress={() => refresh()}><RefreshCw size={17} /></Button>
           </header>
           <main className="studio-content">{snapshot.lastError ? <div className="fatal-banner"><AlertCircle size={18} />{snapshot.lastError.message}</div> : content}</main>
