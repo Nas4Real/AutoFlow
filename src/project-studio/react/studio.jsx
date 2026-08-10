@@ -66,6 +66,13 @@ const IMPORT_TABS = [
   { id: "library", label: "Reference Library" },
 ];
 
+const SETTINGS_TABS = [
+  { id: "channel", label: "Channel" },
+  { id: "defaults", label: "Generation Defaults" },
+  { id: "connection", label: "Flow Connection" },
+  { id: "diagnostics", label: "Diagnostics" },
+];
+
 function getViewFromLocationHash() {
   const rawHash = String(globalThis.location?.hash || "").replace(/^#/, "");
   let hash = "";
@@ -74,7 +81,7 @@ function getViewFromLocationHash() {
   } catch (error) {
     hash = rawHash;
   }
-  return NAV_ITEMS.some((item) => item.id === hash) || PROJECT_TABS.some((item) => item.id === hash) || hash === "assets" || hash === "logs" ? hash : "channels";
+  return NAV_ITEMS.some((item) => item.id === hash) || PROJECT_TABS.some((item) => item.id === hash) || hash === "assets" || hash === "settings" || hash === "logs" ? hash : "channels";
 }
 
 class StudioErrorBoundary extends React.Component {
@@ -678,6 +685,29 @@ function getProjectImageSettings(project) {
   };
 }
 
+function SettingsView({ project, flowContext, logs, busy, onUpdateProject, onRefreshConnection, onClearLogs }) {
+  const [tab, setTab] = useState("channel");
+  const [channelName, setChannelName] = useState(project?.display_name || "");
+  const [defaults, setDefaults] = useState(() => getProjectImageSettings(project));
+  useEffect(() => {
+    setChannelName(project?.display_name || "");
+    setDefaults(getProjectImageSettings(project));
+  }, [project?.project_id, project?.display_name]);
+  const flowStatus = String(flowContext?.status || "disconnected").toLowerCase();
+  const connected = flowStatus === "connected";
+  const saveDefaults = () => onUpdateProject({ settings: { ...(project?.settings || {}), image_model: defaults.imageModel, image_ratio: defaults.imageRatio, image_count: Number(defaults.imageCount), image_speed_mode: defaults.speedMode } });
+  return (
+    <div className="view-stack">
+      <PageHeader title="Settings" description="Channel-level Studio preferences and operational diagnostics." />
+      <nav className="studio-subtabs" aria-label="Settings sections">{SETTINGS_TABS.map((item) => <button key={item.id} type="button" className={tab === item.id ? "active" : ""} aria-current={tab === item.id ? "page" : undefined} onClick={() => setTab(item.id)}>{item.label}</button>)}</nav>
+      {tab === "channel" ? <section className="settings-grid"><article className="studio-surface-panel settings-card"><span className="eyebrow">Active channel</span><h2>{project?.display_name || "No active channel"}</h2><p>Projects, imports, assets, and references remain scoped to this channel.</p><label className="field-label">Channel name<input value={channelName} onChange={(event) => setChannelName(event.target.value)} disabled={!project} /></label><Button variant="primary" isDisabled={!project || !channelName.trim() || channelName.trim() === project?.display_name || busy} onPress={() => onUpdateProject({ display_name: channelName.trim() })}><Save size={17} />Save channel</Button></article><article className="studio-surface-panel settings-card"><span className="eyebrow">Channel summary</span><div className="settings-metrics"><div><strong>{studioApi.getProjectVideos(project).length}</strong><span>Video projects</span></div><div><strong>{studioApi.getActiveAssets(project).length}</strong><span>Reference assets</span></div><div><strong>{studioApi.getProjectPromptRecords(project).length}</strong><span>Imported scenes</span></div></div></article></section> : null}
+      {tab === "defaults" ? <section className="studio-surface-panel settings-card settings-form"><div><span className="eyebrow">Manual checkpoint defaults</span><h2>Generation Defaults</h2><p>These values prefill Image Review. They never begin a run without your confirmation.</p></div><div className="settings-controls"><label className="field-label">Image model<select value={defaults.imageModel} onChange={(event) => setDefaults((current) => ({ ...current, imageModel: event.target.value }))}><option value="NARWHAL">NARWHAL</option><option value="GEM_PIX_2">GEM PIX 2</option></select></label><label className="field-label">Aspect ratio<select value={defaults.imageRatio} onChange={(event) => setDefaults((current) => ({ ...current, imageRatio: event.target.value }))}><option value="IMAGE_ASPECT_RATIO_LANDSCAPE">Landscape</option><option value="IMAGE_ASPECT_RATIO_SQUARE">Square</option><option value="IMAGE_ASPECT_RATIO_PORTRAIT">Portrait</option></select></label><label className="field-label">Images per prompt<select value={defaults.imageCount} onChange={(event) => setDefaults((current) => ({ ...current, imageCount: Number(event.target.value) }))}><option value={1}>1</option><option value={2}>2</option><option value={3}>3</option><option value={4}>4</option></select></label><label className="field-label">Speed mode<select value={defaults.speedMode} onChange={(event) => setDefaults((current) => ({ ...current, speedMode: event.target.value }))}><option value="fast">Fast</option><option value="balanced">Balanced</option></select></label></div><Button variant="primary" isDisabled={!project || busy} onPress={saveDefaults}><Save size={17} />Save defaults</Button></section> : null}
+      {tab === "connection" ? <section className="settings-grid"><article className="studio-surface-panel settings-card"><span className="eyebrow">Flow connection</span><h2>{connected ? "Connected" : "Disconnected"}</h2><p>{flowContext?.flow_context_id ? `Context: ${flowContext.flow_context_id}` : "No Flow context is currently available."}</p><Chip color={connected ? "success" : "warning"} variant="soft">{flowStatus}</Chip><Button variant="secondary" isDisabled={busy} onPress={onRefreshConnection}><RefreshCw size={17} />Refresh connection</Button></article><article className="studio-surface-panel settings-card"><span className="eyebrow">Generation safety</span><h2>Manual confirmation enabled</h2><p>Image generation and video generation remain separate, explicit checkpoints. Saving defaults or refreshing Flow never starts a paid run.</p></article></section> : null}
+      {tab === "diagnostics" ? <section className="studio-surface-panel settings-card diagnostics-panel"><div className="section-heading"><div><span className="eyebrow">Studio activity</span><h2>Diagnostics</h2><p>Recent Studio and generation events for the active channel.</p></div><Button variant="ghost" onPress={onClearLogs}>Clear logs</Button></div>{logs.length ? <div className="log-list">{logs.slice().reverse().map((entry) => <div className={`log-row log-${entry.type}`} key={entry.id}><span>{entry.time || ""}</span><Chip size="sm" color={statusColor(entry.type === "error" ? "failed" : entry.type === "warn" ? "paused" : "draft")} variant="soft">{entry.type}</Chip><p>{entry.message}</p></div>)}</div> : <EmptyState icon={Activity} title="No diagnostics yet" description="Studio events will appear here as you import and generate media." />}</section> : null}
+    </div>
+  );
+}
+
 function ImageReviewView({ project, video, flowContext, busy, onRefreshConnection, onGenerate, onStop, onRetry, onSelect }) {
   const [settings, setSettings] = useState(() => getProjectImageSettings(project));
   useEffect(() => setSettings(getProjectImageSettings(project)), [project?.project_id]);
@@ -865,7 +895,7 @@ function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, onN
         </div>
       </section>
       <footer className="studio-sidebar-footer">
-        <button type="button" className={`studio-nav-item ${view === "logs" ? "active" : ""}`} onClick={() => onNavigate("logs")}><Settings size={18} /><span>Settings</span></button>
+        <button type="button" className={`studio-nav-item ${view === "settings" ? "active" : ""}`} onClick={() => onNavigate("settings")}><Settings size={18} /><span>Settings</span></button>
         <div className="studio-channel-card"><span className="studio-channel-avatar">{initials}</span><div><strong>{channelName}</strong><span>{flowConnected ? "Flow Connected" : "Flow Disconnected"}</span></div><button type="button" onClick={onRefresh} aria-label="Refresh Studio"><RefreshCw size={15} /></button></div>
       </footer>
     </aside>
@@ -1094,6 +1124,8 @@ function StudioApp() {
     content = <VideoQueueView project={project} video={activeVideo} runner={runner} onRunAll={() => { const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "" }; setRunnerState(next); runNext(activeVideo.video_id); }} onPause={() => setRunnerState((current) => ({ ...current, status: "paused", error: "Paused after the current job." }))} onContinue={() => { setRunnerState((current) => ({ ...current, status: "running", error: "" })); runNext(activeVideo.video_id); }} onQueue={(promptId) => action("queue", () => studioApi.queuePromptVideo(promptId), "Added to queue")} onRun={(jobId) => action("run", () => studioApi.runVideoJob(jobId), "Video started")} onStop={stopVideo} onHold={(jobId) => action("hold", () => studioApi.holdVideoJob(jobId), "Video held")} onMove={(jobId, direction) => action(`move-${direction}`, () => studioApi.moveVideoJob(jobId, direction))} onRemove={(jobId) => action("remove", () => studioApi.removeVideoJob(jobId), "Removed from queue")} onOpenImages={() => setView("images")} />;
   } else if (view === "media") {
     content = <MediaView project={project} video={activeVideo} busy={!!busy} onFinalize={() => action("finalize", () => studioApi.finalizeSelectedImages(), "Selected images finalized")} onSync={(files) => action("sync", () => studioApi.syncProjectMediaFromFiles(files), "Folder synced")} />;
+  } else if (view === "settings") {
+    content = <SettingsView project={project} flowContext={snapshot.flowContext} logs={snapshot.logs} busy={!!busy} onUpdateProject={(updates) => action("settings-save", () => studioApi.updateActiveProject(updates), "Settings saved")} onRefreshConnection={() => action("flow-refresh", () => studioApi.refreshFlowContext(), "Flow connection refreshed")} onClearLogs={() => action("clear-logs", () => studioApi.clearStudioLogs(), "Logs cleared")} />;
   } else {
     content = <LogsView logs={snapshot.logs} onClear={() => action("clear-logs", () => studioApi.clearStudioLogs(), "Logs cleared")} />;
   }

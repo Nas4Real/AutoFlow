@@ -34,7 +34,7 @@
 ## Studio UX Completion
 
 - [x] Implement Imports subviews: Import JSON, Needs References, History, and Reference Library
-- [ ] Implement Settings sections using existing Studio state APIs
+- [x] Implement Settings sections using existing Studio state APIs
 - [ ] Add Image Review Generate/Select sub-navigation without changing checkpoints
 - [ ] Add Media All/Images/Videos sub-navigation and project-scoped filtering
 - [ ] Verify, review, commit, and push each completed slice

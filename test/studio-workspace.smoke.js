@@ -548,6 +548,12 @@ async function run() {
     /\{ id: "upload", label: "Import JSON"[\s\S]*\{ id: "references", label: "Needs References"[\s\S]*\{ id: "history", label: "Import History"[\s\S]*\{ id: "library", label: "Reference Library"/,
   );
   assert.match(studioSource, /Open Project Overview/);
+  assert.match(studioSource, /const SETTINGS_TABS = \[/);
+  assert.match(
+    studioSource,
+    /\{ id: "channel", label: "Channel"[\s\S]*\{ id: "defaults", label: "Generation Defaults"[\s\S]*\{ id: "connection", label: "Flow Connection"[\s\S]*\{ id: "diagnostics", label: "Diagnostics"/,
+  );
+  assert.match(studioSource, /function SettingsView/);
   assert.doesNotMatch(studioSource, /<Modal\.Root\s+isOpen=/);
   assert.match(studioSource, /<Modal\.Backdrop\s+[^>]*isOpen=/);
   assert.match(studioHtml, /generated\/studio\.bundle\.js/);

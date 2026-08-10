@@ -34072,6 +34072,12 @@
     { id: "history", label: "Import History" },
     { id: "library", label: "Reference Library" }
   ];
+  var SETTINGS_TABS = [
+    { id: "channel", label: "Channel" },
+    { id: "defaults", label: "Generation Defaults" },
+    { id: "connection", label: "Flow Connection" },
+    { id: "diagnostics", label: "Diagnostics" }
+  ];
   function getViewFromLocationHash() {
     const rawHash = String(globalThis.location?.hash || "").replace(/^#/, "");
     let hash = "";
@@ -34080,7 +34086,7 @@
     } catch (error) {
       hash = rawHash;
     }
-    return NAV_ITEMS.some((item) => item.id === hash) || PROJECT_TABS.some((item) => item.id === hash) || hash === "assets" || hash === "logs" ? hash : "channels";
+    return NAV_ITEMS.some((item) => item.id === hash) || PROJECT_TABS.some((item) => item.id === hash) || hash === "assets" || hash === "settings" || hash === "logs" ? hash : "channels";
   }
   var StudioErrorBoundary = class extends import_react73.default.Component {
     state = { error: null };
@@ -34765,6 +34771,130 @@
       speedMode: settings.image_speed_mode || settings.speedMode || "fast"
     };
   }
+  function SettingsView({ project, flowContext, logs, busy, onUpdateProject, onRefreshConnection, onClearLogs }) {
+    const [tab, setTab] = (0, import_react73.useState)("channel");
+    const [channelName, setChannelName] = (0, import_react73.useState)(project?.display_name || "");
+    const [defaults, setDefaults] = (0, import_react73.useState)(() => getProjectImageSettings(project));
+    (0, import_react73.useEffect)(() => {
+      setChannelName(project?.display_name || "");
+      setDefaults(getProjectImageSettings(project));
+    }, [project?.project_id, project?.display_name]);
+    const flowStatus = String(flowContext?.status || "disconnected").toLowerCase();
+    const connected = flowStatus === "connected";
+    const saveDefaults = () => onUpdateProject({ settings: { ...project?.settings || {}, image_model: defaults.imageModel, image_ratio: defaults.imageRatio, image_count: Number(defaults.imageCount), image_speed_mode: defaults.speedMode } });
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Settings", description: "Channel-level Studio preferences and operational diagnostics." }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { className: "studio-subtabs", "aria-label": "Settings sections", children: SETTINGS_TABS.map((item) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: tab === item.id ? "active" : "", "aria-current": tab === item.id ? "page" : void 0, onClick: () => setTab(item.id), children: item.label }, item.id)) }),
+      tab === "channel" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "settings-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "studio-surface-panel settings-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Active channel" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: project?.display_name || "No active channel" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Projects, imports, assets, and references remain scoped to this channel." }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
+            "Channel name",
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: channelName, onChange: (event) => setChannelName(event.target.value), disabled: !project })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", isDisabled: !project || !channelName.trim() || channelName.trim() === project?.display_name || busy, onPress: () => onUpdateProject({ display_name: channelName.trim() }), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Save, { size: 17 }),
+            "Save channel"
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "studio-surface-panel settings-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Channel summary" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "settings-metrics", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: studioApi.getProjectVideos(project).length }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Video projects" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: studioApi.getActiveAssets(project).length }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Reference assets" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: studioApi.getProjectPromptRecords(project).length }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Imported scenes" })
+            ] })
+          ] })
+        ] })
+      ] }) : null,
+      tab === "defaults" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "studio-surface-panel settings-card settings-form", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Manual checkpoint defaults" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Generation Defaults" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "These values prefill Image Review. They never begin a run without your confirmation." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "settings-controls", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
+            "Image model",
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: defaults.imageModel, onChange: (event) => setDefaults((current) => ({ ...current, imageModel: event.target.value })), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "NARWHAL", children: "NARWHAL" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "GEM_PIX_2", children: "GEM PIX 2" })
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
+            "Aspect ratio",
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: defaults.imageRatio, onChange: (event) => setDefaults((current) => ({ ...current, imageRatio: event.target.value })), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_LANDSCAPE", children: "Landscape" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_SQUARE", children: "Square" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_PORTRAIT", children: "Portrait" })
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
+            "Images per prompt",
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: defaults.imageCount, onChange: (event) => setDefaults((current) => ({ ...current, imageCount: Number(event.target.value) })), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: 1, children: "1" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: 2, children: "2" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: 3, children: "3" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: 4, children: "4" })
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
+            "Speed mode",
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: defaults.speedMode, onChange: (event) => setDefaults((current) => ({ ...current, speedMode: event.target.value })), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "fast", children: "Fast" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "balanced", children: "Balanced" })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", isDisabled: !project || busy, onPress: saveDefaults, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Save, { size: 17 }),
+          "Save defaults"
+        ] })
+      ] }) : null,
+      tab === "connection" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "settings-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "studio-surface-panel settings-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Flow connection" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: connected ? "Connected" : "Disconnected" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: flowContext?.flow_context_id ? `Context: ${flowContext.flow_context_id}` : "No Flow context is currently available." }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Chip, { color: connected ? "success" : "warning", variant: "soft", children: flowStatus }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "secondary", isDisabled: busy, onPress: onRefreshConnection, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(RefreshCw, { size: 17 }),
+            "Refresh connection"
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "studio-surface-panel settings-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Generation safety" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Manual confirmation enabled" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Image generation and video generation remain separate, explicit checkpoints. Saving defaults or refreshing Flow never starts a paid run." })
+        ] })
+      ] }) : null,
+      tab === "diagnostics" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "studio-surface-panel settings-card diagnostics-panel", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "section-heading", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Studio activity" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Diagnostics" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Recent Studio and generation events for the active channel." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "ghost", onPress: onClearLogs, children: "Clear logs" })
+        ] }),
+        logs.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "log-list", children: logs.slice().reverse().map((entry) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `log-row log-${entry.type}`, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: entry.time || "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Chip, { size: "sm", color: statusColor(entry.type === "error" ? "failed" : entry.type === "warn" ? "paused" : "draft"), variant: "soft", children: entry.type }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: entry.message })
+        ] }, entry.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Activity, title: "No diagnostics yet", description: "Studio events will appear here as you import and generate media." })
+      ] }) : null
+    ] });
+  }
   function ImageReviewView({ project, video, flowContext, busy, onRefreshConnection, onGenerate, onStop, onRetry, onSelect }) {
     const [settings, setSettings] = (0, import_react73.useState)(() => getProjectImageSettings(project));
     (0, import_react73.useEffect)(() => setSettings(getProjectImageSettings(project)), [project?.project_id]);
@@ -35062,7 +35192,7 @@
         ] })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("footer", { className: "studio-sidebar-footer", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `studio-nav-item ${view === "logs" ? "active" : ""}`, onClick: () => onNavigate("logs"), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `studio-nav-item ${view === "settings" ? "active" : ""}`, onClick: () => onNavigate("settings"), children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Settings, { size: 18 }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Settings" })
         ] }),
@@ -35302,6 +35432,8 @@
       }, onQueue: (promptId) => action("queue", () => studioApi.queuePromptVideo(promptId), "Added to queue"), onRun: (jobId) => action("run", () => studioApi.runVideoJob(jobId), "Video started"), onStop: stopVideo, onHold: (jobId) => action("hold", () => studioApi.holdVideoJob(jobId), "Video held"), onMove: (jobId, direction) => action(`move-${direction}`, () => studioApi.moveVideoJob(jobId, direction)), onRemove: (jobId) => action("remove", () => studioApi.removeVideoJob(jobId), "Removed from queue"), onOpenImages: () => setView("images") });
     } else if (view === "media") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(MediaView, { project, video: activeVideo, busy: !!busy, onFinalize: () => action("finalize", () => studioApi.finalizeSelectedImages(), "Selected images finalized"), onSync: (files) => action("sync", () => studioApi.syncProjectMediaFromFiles(files), "Folder synced") });
+    } else if (view === "settings") {
+      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(SettingsView, { project, flowContext: snapshot.flowContext, logs: snapshot.logs, busy: !!busy, onUpdateProject: (updates) => action("settings-save", () => studioApi.updateActiveProject(updates), "Settings saved"), onRefreshConnection: () => action("flow-refresh", () => studioApi.refreshFlowContext(), "Flow connection refreshed"), onClearLogs: () => action("clear-logs", () => studioApi.clearStudioLogs(), "Logs cleared") });
     } else {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(LogsView, { logs: snapshot.logs, onClear: () => action("clear-logs", () => studioApi.clearStudioLogs(), "Logs cleared") });
     }
