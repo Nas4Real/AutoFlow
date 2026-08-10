@@ -15,10 +15,10 @@
 
 ## Studio-First Media Workflow
 
-- [ ] Add selected-video image-generation contract tests
-- [ ] Extract shared image batch construction and orchestration
-- [ ] Add Studio image generation, stop, retry, and runtime progress state
-- [ ] Add settings, connection status, and queue controls to Image Review
-- [ ] Keep the side panel working through the shared service
+- [x] Add selected-video image-generation contract tests
+- [x] Extract shared image batch construction and orchestration
+- [x] Add Studio image generation, stop, retry, and runtime progress state
+- [x] Add settings, connection status, and queue controls to Image Review
+- [x] Keep the side panel working through the shared service
 - [ ] Run full automated and browser verification
-- [ ] Run code/security review, address findings, and push atomic commits
+- [x] Run code/security review, address findings, and push atomic commits

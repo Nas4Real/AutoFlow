@@ -126,36 +126,36 @@ Make Project Studio the complete daily workflow for importing prompt JSON, gener
 
 ### Slice 1: Lock The Contracts
 
-- [ ] Add failing tests for selected-video image readiness and batch construction.
-- [ ] Cover settings normalization, prompt ordering, blocked prompts, and retryable failures.
-- [ ] Use the four-prompt offline-cache JSON shape as an acceptance fixture.
+- [x] Add failing tests for selected-video image readiness and batch construction.
+- [x] Cover settings normalization, prompt ordering, blocked prompts, and retryable failures.
+- [x] Use the four-prompt offline-cache JSON shape as an acceptance fixture.
 
 ### Slice 2: Share Image Orchestration
 
-- [ ] Extract pure image batch construction into a shared project-generation service.
-- [ ] Preserve the existing `START_BATCH` and `STOP_BATCH` background messages.
-- [ ] Adapt the side panel to consume the shared service.
+- [x] Extract pure image batch construction into a shared project-generation service.
+- [x] Preserve the existing `START_BATCH` and `STOP_BATCH` background messages.
+- [x] Adapt the side panel to consume the shared service.
 
 ### Slice 3: Complete Studio Runtime State
 
-- [ ] Add selected-video image generation, stop, and failed-prompt retry commands.
-- [ ] Persist generation settings and image-run progress in project state.
-- [ ] Map preview, cache, completion, and error events to the exact Studio run.
-- [ ] Guard the background runner's global stop boundary against conflicting image/video starts.
+- [x] Add selected-video image generation, stop, and failed-prompt retry commands.
+- [x] Persist generation settings and image-run progress in project state.
+- [x] Map preview, cache, completion, and error events to the exact Studio run.
+- [x] Guard the background runner's global stop boundary against conflicting image/video starts.
 
 ### Slice 4: Complete Image Review
 
-- [ ] Add Flow connection status and refresh action.
-- [ ] Add image model, aspect ratio, and variant-count controls.
-- [ ] Add ready/blocked counts, explicit generate action, queue/progress, stop, and retry.
-- [ ] Preserve existing image cards and variant-selection behavior.
+- [x] Add Flow connection status and refresh action.
+- [x] Add image model, aspect ratio, and variant-count controls.
+- [x] Add ready/blocked counts, explicit generate action, queue/progress, stop, and retry.
+- [x] Preserve existing image cards and variant-selection behavior.
 
 ### Slice 5: Verify And Harden
 
-- [ ] Run focused tests after each slice, then the full test/build/static suite.
+- [x] Run focused tests after each slice, then the full test/build/static suite.
 - [ ] Verify import through media review in the unpacked extension without redesigning Studio.
-- [ ] Run code-quality and security reviews and address confirmed findings.
-- [ ] Push small atomic commits and verify GitHub Actions on Ubuntu and Windows.
+- [x] Run code-quality and security reviews and address confirmed findings.
+- [x] Push small atomic commits and verify GitHub Actions on Ubuntu and Windows.
 
 ## Acceptance Criteria
 
