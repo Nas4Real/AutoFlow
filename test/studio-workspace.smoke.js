@@ -480,6 +480,24 @@ async function run() {
   assert.equal(affectedPrompt.status, "blocked");
   assert.equal(project.video_jobs.length, jobsBeforeAssetDelete);
 
+  const replacementJack = await studio.createAssetWithFile(
+    { display_name: "Jack" },
+    [
+      {
+        name: "jack-replacement.png",
+        type: "image/png",
+        size: 32,
+        lastModified: 124,
+        dataUrl: "data:image/png;base64,SmFjaw==",
+      },
+    ],
+  );
+  project = studio.getState().activeProject;
+  const repairedPrompt = project.prompt_records.find((record) => record.prompt_id === firstPromptId);
+  assert.equal(repairedPrompt.status, "ready");
+  assert.equal(repairedPrompt.references[0].asset_id, replacementJack.asset_id);
+  assert.equal(repairedPrompt.references[0].resolution_source, "auto");
+
   await studio.renameProjectVideo(secondVideoId, "Daily Market Update");
   project = studio.getState().activeProject;
   assert.equal(

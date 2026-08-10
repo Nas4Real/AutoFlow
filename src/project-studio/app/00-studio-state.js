@@ -2413,7 +2413,12 @@
       created_at: timestamp,
       updated_at: timestamp,
     };
-    await updateActiveProject({ assets: getProjectAssets(project).concat(asset) });
+    const assets = getProjectAssets(project).concat(asset);
+    const promptRecords = resolvePromptRecordsForProject(
+      Object.assign({}, project, { assets }),
+      getProjectPromptRecords(project),
+    );
+    await updateActiveProject({ assets, prompt_records: promptRecords });
     return asset;
   }
 
