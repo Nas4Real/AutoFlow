@@ -8,4 +8,5 @@ dist/
 .serena/
 .tokensave/
 opencode.json
+.superdesign/
 node_modules/
