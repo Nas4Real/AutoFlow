@@ -498,6 +498,27 @@ async function run() {
   assert.equal(repairedPrompt.references[0].asset_id, replacementJack.asset_id);
   assert.equal(repairedPrompt.references[0].resolution_source, "auto");
 
+  await domain.updateProject(project.project_id, {
+    prompt_records: project.prompt_records.map((record) => record.prompt_id === firstPromptId
+      ? Object.assign({}, record, {
+          status: "blocked",
+          can_generate_images: false,
+          references: record.references.map((reference) => ({
+            name: reference.name,
+            type: reference.type,
+            required: reference.required,
+            resolution_status: "missing",
+          })),
+          blocked_references: [{ name: "Jack", reference_index: 0, reason: "missing" }],
+        })
+      : record),
+  });
+  await studio.loadProjectState();
+  project = studio.getState().activeProject;
+  const reconciledExistingPrompt = project.prompt_records.find((record) => record.prompt_id === firstPromptId);
+  assert.equal(reconciledExistingPrompt.status, "ready");
+  assert.equal(reconciledExistingPrompt.references[0].asset_id, replacementJack.asset_id);
+
   await studio.renameProjectVideo(secondVideoId, "Daily Market Update");
   project = studio.getState().activeProject;
   assert.equal(

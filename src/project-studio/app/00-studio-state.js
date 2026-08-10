@@ -1898,6 +1898,7 @@
       const domainState = await domain.load();
       studioState.domainState = domainState;
       studioState.activeProject = resolveActiveProject(domainState);
+      await resolveActiveProjectPromptReferences({ throwOnEmpty: false });
       studioState.flowContext = getStoredFlowContext(studioState.activeProject);
       studioState.lastError = null;
       return studioState;
@@ -2728,7 +2729,7 @@
     return { video_id: key, deleted: true };
   }
 
-  async function resolveActiveProjectPromptReferences() {
+  async function resolveActiveProjectPromptReferences(options) {
     const project = studioState.activeProject;
     if (!project) {
       throw new Error("No active YouTube Channel selected.");
@@ -2736,14 +2737,23 @@
 
     const promptRecords = getProjectPromptRecords(project);
     if (!promptRecords.length) {
-      throw new Error("No Prompt Records to resolve.");
+      if (options?.throwOnEmpty !== false) {
+        throw new Error("No Prompt Records to resolve.");
+      }
+      return { records: [], summary: summarizePromptResolution([]), changed: false };
     }
 
     const resolvedRecords = resolvePromptRecordsForProject(project, promptRecords);
-    await updateActiveProject({ prompt_records: resolvedRecords });
+    const changed = promptRecords.some((record, index) => {
+      return getPromptResolutionSignature(record) !== getPromptResolutionSignature(resolvedRecords[index]);
+    });
+    if (changed) {
+      await updateActiveProject({ prompt_records: resolvedRecords });
+    }
     return {
       records: resolvedRecords,
       summary: summarizePromptResolution(resolvedRecords),
+      changed,
     };
   }
 
