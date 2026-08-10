@@ -535,6 +535,8 @@ async function run() {
   );
   assert.match(studioSource, /<span>Video Projects<\/span>/);
   assert.doesNotMatch(studioSource, /View all projects/);
+  assert.match(studioSource, /className="project-number"/);
+  assert.match(studioSource, /videos\.findIndex\(\(entry\) => entry\.video_id === video\.video_id\) \+ 1/);
   assert.match(studioSource, /<span>Settings<\/span>/);
   assert.match(
     studioSource,

@@ -35199,8 +35199,9 @@
           const progress = studioApi.getVideoProjectProgress(project, video.video_id);
           const presentation = getProjectPresentation(progress);
           const isActive = activeVideo?.video_id === video.video_id && PROJECT_TABS.some((tab) => tab.id === view);
+          const projectNumber = videos.findIndex((entry) => entry.video_id === video.video_id) + 1;
           return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`, onClick: () => onOpenVideo(video.video_id, "overview"), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { "aria-hidden": "true" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "project-number", "aria-hidden": "true", children: projectNumber }),
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: video.display_name })
           ] }, video.video_id);
         }) })

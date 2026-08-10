@@ -907,7 +907,8 @@ function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, onN
             const progress = studioApi.getVideoProjectProgress(project, video.video_id);
             const presentation = getProjectPresentation(progress);
             const isActive = activeVideo?.video_id === video.video_id && PROJECT_TABS.some((tab) => tab.id === view);
-            return <button key={video.video_id} type="button" className={`sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`} onClick={() => onOpenVideo(video.video_id, "overview")}><span aria-hidden="true" /><strong>{video.display_name}</strong></button>;
+            const projectNumber = videos.findIndex((entry) => entry.video_id === video.video_id) + 1;
+            return <button key={video.video_id} type="button" className={`sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`} onClick={() => onOpenVideo(video.video_id, "overview")}><span className="project-number" aria-hidden="true">{projectNumber}</span><strong>{video.display_name}</strong></button>;
           })}
         </div>
       </section>
