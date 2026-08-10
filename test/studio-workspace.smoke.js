@@ -55,7 +55,7 @@ class FakeFileReader {
   }
 }
 
-function createContext(storage) {
+function createContext(storage, runtimeMessages) {
   let id = 0;
   const context = vm.createContext({
     Array,
@@ -81,7 +81,12 @@ function createContext(storage) {
     setTimeout,
     chrome: {
       runtime: {
-        async sendMessage() {
+        async sendMessage(message) {
+          runtimeMessages.push(JSON.parse(JSON.stringify(message)));
+          if (message.type === "UPLOAD_IMAGE") {
+            assert.equal(message.base64Data, "SmFjaw==");
+            return { ok: true, mediaId: "flow-media-jack-reference" };
+          }
           return { ok: true };
         },
       },
@@ -100,13 +105,15 @@ function createContext(storage) {
   loadScript(context, "src/shared/project-domain/02-project-prompt-import.js");
   loadScript(context, "src/shared/project-services/project-schema.js");
   loadScript(context, "src/shared/project-services/media-link-contracts.js");
+  loadScript(context, "src/shared/project-services/image-generation-contracts.js");
   loadScript(context, "src/project-studio/app/00-studio-state.js");
   return context;
 }
 
 async function run() {
   const storage = createStorage();
-  const context = createContext(storage);
+  const runtimeMessages = [];
+  const context = createContext(storage, runtimeMessages);
   const domain = context.TFProjectDomain;
   const importer = context.TFProjectPromptImport;
   const studio = context.TFProjectStudioState;
@@ -169,7 +176,125 @@ async function run() {
   const firstPromptId = firstImport.records[0].prompt_id;
   const secondPromptId = firstImport.records[1].prompt_id;
   await studio.loadProjectState();
-  const imageRun = await studio.startImageGenerationRun();
+  const firstVideoGate = studio.getImageGenerationGate(project, firstVideoId);
+  const secondVideoGate = studio.getImageGenerationGate(project, secondVideoId);
+  assert.equal(firstVideoGate.prompt_count, 2);
+  assert.equal(firstVideoGate.ready_count, 2);
+  assert.deepEqual(
+    Array.from(firstVideoGate.items, (item) => item.prompt_id),
+    firstImport.records.map((record) => record.prompt_id),
+  );
+  assert.equal(secondVideoGate.prompt_count, 1);
+  assert.equal(secondVideoGate.ready_count, 1);
+  assert.equal(secondVideoGate.items[0].prompt_id, secondImport.records[0].prompt_id);
+
+  const imageRun = await studio.startImageGenerationRun(firstVideoId, {
+    imageModel: "GEM_PIX_2",
+    imageRatio: "IMAGE_ASPECT_RATIO_SQUARE",
+    imageCount: 3,
+    speedMode: "balanced",
+  });
+  assert.equal(imageRun.run.video_id, firstVideoId);
+  assert.equal(imageRun.run.image_count, 3);
+  assert.deepEqual(
+    Array.from(imageRun.run.request_items, (item) => item.prompt_id),
+    firstImport.records.map((record) => record.prompt_id),
+  );
+  const startImageMessage = runtimeMessages.find((message) => message.type === "START_BATCH");
+  assert.ok(startImageMessage);
+  assert.equal(startImageMessage.batchId, imageRun.run.image_run_id);
+  assert.deepEqual(startImageMessage.prompts, [
+    "Jack checks his budget",
+    "A clean budget chart",
+  ]);
+  assert.equal(startImageMessage.settings.imageModel, "GEM_PIX_2");
+  assert.equal(startImageMessage.settings.aspectRatio, "IMAGE_ASPECT_RATIO_SQUARE");
+  assert.equal(startImageMessage.settings.imageCount, 3);
+  assert.equal(startImageMessage.settings.speedMode, "balanced");
+  assert.deepEqual(startImageMessage.settings.perPromptReferences, {
+    0: ["flow-media-jack-reference"],
+  });
+  assert.equal(
+    studio.getState().activeProject.assets[0].flow_media_id,
+    "flow-media-jack-reference",
+  );
+
+  assert.equal(
+    await studio.handleVideoRuntimeMessage({
+      type: "FROM_BACKGROUND",
+      subType: "PREVIEW_READY",
+      uiBatchId: imageRun.run.image_run_id,
+      mediaType: "image",
+      mediaId: "flow-media-runtime-preview",
+      fifeUrl: "https://example.test/runtime-preview.png",
+      promptIndex: 0,
+      fileName: "scenes/jack_checks_his_budget__1.png",
+    }),
+    true,
+  );
+  project = studio.getState().activeProject;
+  const runtimeVariant = project.image_variants.find(
+    (variant) => variant.media_id === "flow-media-runtime-preview",
+  );
+  assert.ok(runtimeVariant);
+  assert.equal(runtimeVariant.prompt_id, firstPromptId);
+  assert.equal(runtimeVariant.image_run_id, imageRun.run.image_run_id);
+  assert.equal(runtimeVariant.thumbnail_url, "https://example.test/runtime-preview.png");
+  assert.equal(
+    project.image_generation_runs.find(
+      (run) => run.image_run_id === imageRun.run.image_run_id,
+    ).status,
+    "generating",
+  );
+  assert.equal(
+    await studio.handleVideoRuntimeMessage({
+      type: "FROM_BACKGROUND",
+      subType: "PROMPT_STATUS",
+      uiBatchId: imageRun.run.image_run_id,
+      promptIndex: 1,
+      status: "failed",
+      error: "Flow rejected this prompt.",
+    }),
+    true,
+  );
+  project = studio.getState().activeProject;
+  assert.equal(
+    project.prompt_records.find((record) => record.prompt_id === secondPromptId)
+      .image_generation_state,
+    "failed",
+  );
+  assert.equal(
+    await studio.handleVideoRuntimeMessage({
+      type: "FROM_BACKGROUND",
+      subType: "BATCH_GENERATION_DONE",
+      uiBatchId: imageRun.run.image_run_id,
+      successfulPrompts: 1,
+      failedPrompts: 1,
+      totalImages: 1,
+    }),
+    true,
+  );
+  project = studio.getState().activeProject;
+  assert.equal(
+    project.image_generation_runs.find(
+      (run) => run.image_run_id === imageRun.run.image_run_id,
+    ).status,
+    "partial",
+  );
+  const retryRun = await studio.retryImageGenerationRun(imageRun.run.image_run_id);
+  assert.equal(retryRun.run.retry_of_image_run_id, imageRun.run.image_run_id);
+  assert.equal(retryRun.run.video_id, firstVideoId);
+  assert.deepEqual(
+    Array.from(retryRun.run.request_items, (item) => item.prompt_id),
+    [secondPromptId],
+  );
+  const retryStartMessage = runtimeMessages.filter(
+    (message) => message.type === "START_BATCH",
+  )[1];
+  assert.deepEqual(retryStartMessage.prompts, ["A clean budget chart"]);
+  const stoppedRetry = await studio.stopImageGenerationRun(retryRun.run.image_run_id);
+  assert.equal(stoppedRetry.status, "stopped");
+  assert.equal(runtimeMessages.at(-1).type, "STOP_BATCH");
   const firstCacheKey = `sha256:${"b".repeat(64)}`;
   const recorded = await studio.recordImageGenerationRunVariants(imageRun.run.image_run_id, [
     {
@@ -387,6 +512,13 @@ async function run() {
   assert.match(studioSource, /items\.find\(\(item\) => item\.status === "ready"\)/);
   assert.doesNotMatch(studioSource, /items\.find\(\(item\) => item\.status === "failed"\)/);
   assert.match(studioSource, /appendStudioLog\(`Video queue paused:/);
+  assert.match(studioSource, /studioApi\.startImageGenerationRun\(activeVideo\.video_id/);
+  assert.match(studioSource, /studioApi\.stopImageGenerationRun/);
+  assert.match(studioSource, /studioApi\.retryImageGenerationRun/);
+  assert.match(studioSource, /Generate images<\/Button>/);
+  assert.match(studioSource, /<span>Images per prompt<\/span>/);
+  assert.match(studioSource, /Flow connection/);
+  assert.match(studioSource, /setView\("images"\)/);
   assert.match(studioSource, /getViewFromLocationHash/);
   assert.match(studioSource, /useState\(\(\) => getViewFromLocationHash\(\)\)/);
   assert.match(studioSource, /hashchange/);

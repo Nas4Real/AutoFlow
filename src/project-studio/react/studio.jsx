@@ -213,10 +213,10 @@ function CachedPreviewImage({ value, alt, placeholderClassName = "preview-placeh
 }
 
 function statusColor(status) {
-  if (status === "complete" || status === "ready") return "success";
+  if (["complete", "completed", "ready", "submitted"].includes(status)) return "success";
   if (status === "failed" || status === "needs_review") return "danger";
-  if (status === "running") return "accent";
-  if (status === "paused") return "warning";
+  if (status === "running" || status === "generating") return "accent";
+  if (["paused", "partial", "stopped"].includes(status)) return "warning";
   return "default";
 }
 
@@ -579,17 +579,74 @@ function ImportView({ project, videos, onImport, onResolve, busy }) {
   );
 }
 
-function ImageReviewView({ project, video, onSelect }) {
+function getProjectImageSettings(project) {
+  const settings = project?.settings || {};
+  return {
+    imageModel: settings.image_model || settings.imageModel || "NARWHAL",
+    imageRatio: settings.image_ratio || settings.imageRatio || "IMAGE_ASPECT_RATIO_LANDSCAPE",
+    imageCount: Number(settings.image_count || settings.imageCount || 2),
+    speedMode: settings.image_speed_mode || settings.speedMode || "fast",
+  };
+}
+
+function ImageReviewView({ project, video, flowContext, busy, onRefreshConnection, onGenerate, onStop, onRetry, onSelect }) {
+  const [settings, setSettings] = useState(() => getProjectImageSettings(project));
+  useEffect(() => setSettings(getProjectImageSettings(project)), [project?.project_id]);
   if (!video) return <EmptyState icon={Images} title="Choose a video" description="Image Review is organized one video at a time." />;
   const records = studioApi.getVideoPromptRecords(project, video.video_id);
   const variants = studioApi.getProjectImageVariants(project);
+  const gate = studioApi.getImageGenerationGate(project, video.video_id);
+  const runs = studioApi.getProjectImageGenerationRuns(project)
+    .filter((run) => run.video_id === video.video_id)
+    .sort((left, right) => String(right.created_at || "").localeCompare(String(left.created_at || "")));
+  const activeRun = runs.find((run) => run.status === "generating") || null;
+  const latestRun = activeRun || runs[0] || null;
+  const retryableRun = runs.find((run) => ["failed", "partial", "stopped"].includes(run.status)) || null;
+  const expectedVariants = latestRun ? Number(latestRun.prompt_count || 0) * Number(latestRun.image_count || 1) : 0;
+  const generatedVariants = latestRun
+    ? variants.filter((variant) => variant.image_run_id === latestRun.image_run_id).length
+    : 0;
+  const progress = expectedVariants ? Math.min(100, Math.round((generatedVariants / expectedVariants) * 100)) : 0;
+  const flowStatus = String(flowContext?.status || "disconnected").toLowerCase();
+  const connected = flowStatus === "connected";
   const rows = records.map((record) => ({
     record,
     variants: variants.filter((variant) => variant.prompt_id === record.prompt_id).sort((left, right) => Number(left.variant_index || 0) - Number(right.variant_index || 0)),
   })).filter((row) => row.variants.length);
   return (
     <div className="view-stack">
-      <PageHeader title="Image Review" description={video.display_name} />
+      <PageHeader title="Image Review" description={video.display_name} actions={
+        <div className="flow-connection" aria-live="polite">
+          <span className={`connection-dot ${connected ? "connected" : "disconnected"}`} aria-hidden="true" />
+          <span><strong>Flow connection</strong>{connected ? "Connected" : "Disconnected"}</span>
+          <Button isIconOnly size="sm" variant="ghost" aria-label="Refresh Flow connection" onPress={onRefreshConnection}><RefreshCw size={16} /></Button>
+        </div>
+      } />
+      <section className="generation-console" aria-labelledby="image-generation-heading">
+        <div className="generation-console-heading">
+          <div><span className="eyebrow">Manual checkpoint</span><h3 id="image-generation-heading">Generate image variants</h3><p>Review the settings, then start only this video's ready scenes.</p></div>
+          <div className="generation-counts"><Chip size="sm" color="success" variant="soft">{gate.ready_count} ready</Chip>{gate.blocked_count ? <Chip size="sm" color="warning" variant="soft">{gate.blocked_count} blocked</Chip> : null}</div>
+        </div>
+        <fieldset className="generation-settings" disabled={!!activeRun || !!busy}>
+          <legend>Image generation settings</legend>
+          <label htmlFor="studio-image-model"><span>Model</span><select id="studio-image-model" value={settings.imageModel} onChange={(event) => setSettings((current) => ({ ...current, imageModel: event.target.value }))}><option value="GEM_PIX_2">Nano Banana Pro</option><option value="NARWHAL">Nano Banana 2</option></select></label>
+          <label htmlFor="studio-image-ratio"><span>Aspect ratio</span><select id="studio-image-ratio" value={settings.imageRatio} onChange={(event) => setSettings((current) => ({ ...current, imageRatio: event.target.value }))}><option value="IMAGE_ASPECT_RATIO_LANDSCAPE">16:9</option><option value="IMAGE_ASPECT_RATIO_LANDSCAPE_FOUR_THREE">4:3</option><option value="IMAGE_ASPECT_RATIO_SQUARE">1:1</option><option value="IMAGE_ASPECT_RATIO_PORTRAIT_THREE_FOUR">3:4</option><option value="IMAGE_ASPECT_RATIO_PORTRAIT">9:16</option></select></label>
+          <label htmlFor="studio-image-count"><span>Images per prompt</span><select id="studio-image-count" value={settings.imageCount} onChange={(event) => setSettings((current) => ({ ...current, imageCount: Number(event.target.value) }))}>{[1, 2, 3, 4].map((count) => <option key={count} value={count}>{count}</option>)}</select></label>
+          <label htmlFor="studio-image-speed"><span>Speed</span><select id="studio-image-speed" value={settings.speedMode} onChange={(event) => setSettings((current) => ({ ...current, speedMode: event.target.value }))}><option value="fast">Fast</option><option value="balanced">Balanced</option><option value="slow">Slow</option></select></label>
+        </fieldset>
+        <div className="generation-actions">
+          <div><strong>{connected ? `${gate.ready_count} scenes can start` : "Open Google Flow to connect"}</strong><span>Generation spends Flow credits only after you press Generate images.</span></div>
+          <Button variant="primary" isDisabled={!connected || !gate.ready_count || !!activeRun || !!busy} onPress={() => onGenerate(settings)}>{busy === "generate-images" ? <LoaderCircle className="spin" size={17} /> : <Play size={17} />}Generate images</Button>
+        </div>
+        {latestRun ? (
+          <div className={`image-run-summary status-${latestRun.status}`}>
+            <div className="image-run-title"><div><strong>{activeRun ? "Generation in progress" : `Last run: ${latestRun.status}`}</strong><span>{generatedVariants} of {expectedVariants} variants received</span></div><Chip size="sm" color={statusColor(latestRun.status)} variant="soft">{latestRun.status}</Chip></div>
+            <ProgressBar aria-label="Image generation progress" value={progress} color="accent"><ProgressBar.Track><ProgressBar.Fill /></ProgressBar.Track></ProgressBar>
+            <div className="image-run-actions">{activeRun ? <Button size="sm" variant="danger-soft" isDisabled={!!busy} onPress={() => onStop(activeRun.image_run_id)}><Square size={15} />Stop</Button> : null}{!activeRun && retryableRun ? <Button size="sm" variant="outline" isDisabled={!!busy} onPress={() => onRetry(retryableRun.image_run_id)}><RefreshCw size={15} />Retry failed</Button> : null}</div>
+            {latestRun.request_items?.length ? <div className="image-prompt-queue" aria-label="Image prompt queue">{latestRun.request_items.map((item) => { const promptStatus = latestRun.prompt_statuses?.[item.prompt_id]?.status || (latestRun.status === "generating" ? "queued" : latestRun.status); return <div key={item.prompt_id}><span>{studioApi.sceneTitleFromFileName(item.file_name)}</span><Chip size="sm" color={statusColor(promptStatus)} variant="soft">{promptStatus}</Chip></div>; })}</div> : null}
+          </div>
+        ) : null}
+      </section>
       {rows.length ? <div className="review-list">{rows.map(({ record, variants: sceneVariants }) => (
         <section className="scene-review" key={record.prompt_id}>
           <div className="scene-review-heading"><h3>{studioApi.sceneTitleFromFileName(record.file_name)}</h3><span>{sceneVariants.length} options</span></div>
@@ -702,6 +759,7 @@ function StudioApp() {
   const capture = useCallback(() => setSnapshot(captureStudioState()), []);
   const refresh = useCallback(async () => {
     await studioApi.loadProjectState();
+    await studioApi.refreshFlowContext({ persist: false });
     capture();
   }, [capture]);
 
@@ -845,6 +903,7 @@ function StudioApp() {
     const content = await studioApi.readTextFile(file);
     const result = await action("video-import", () => studioApi.importProjectPromptJson(content, file.name, name), "Video imported");
     setActiveVideoId(result.import_record.import_id);
+    setView("images");
     setDialog(null);
     return result;
   }
@@ -861,7 +920,7 @@ function StudioApp() {
   } else if (view === "import") {
     content = <ImportView project={project} videos={videos} busy={!!busy} onImport={importVideo} onResolve={(promptId, referenceIndex, assetId) => action("resolve", () => studioApi.mapPromptReferenceToAsset(promptId, referenceIndex, assetId), "Reference resolved")} />;
   } else if (view === "images") {
-    content = <ImageReviewView project={project} video={activeVideo} onSelect={(promptId, variantId) => action("select-image", () => studioApi.selectImageVariant(promptId, variantId), "Image selected")} />;
+    content = <ImageReviewView project={project} video={activeVideo} flowContext={snapshot.flowContext} busy={busy} onRefreshConnection={() => action("flow-refresh", () => studioApi.refreshFlowContext(), "Flow connection refreshed")} onGenerate={(settings) => action("generate-images", () => studioApi.startImageGenerationRun(activeVideo.video_id, settings), "Image generation started")} onStop={(runId) => action("stop-images", () => studioApi.stopImageGenerationRun(runId), "Image generation stopped")} onRetry={(runId) => action("retry-images", () => studioApi.retryImageGenerationRun(runId), "Retry started")} onSelect={(promptId, variantId) => action("select-image", () => studioApi.selectImageVariant(promptId, variantId), "Image selected")} />;
   } else if (view === "video") {
     content = <VideoQueueView project={project} video={activeVideo} runner={runner} onRunAll={() => { const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "" }; setRunnerState(next); runNext(activeVideo.video_id); }} onPause={() => setRunnerState((current) => ({ ...current, status: "paused", error: "Paused after the current job." }))} onContinue={() => { setRunnerState((current) => ({ ...current, status: "running", error: "" })); runNext(activeVideo.video_id); }} onQueue={(promptId) => action("queue", () => studioApi.queuePromptVideo(promptId), "Added to queue")} onRun={(jobId) => action("run", () => studioApi.runVideoJob(jobId), "Video started")} onStop={stopVideo} onHold={(jobId) => action("hold", () => studioApi.holdVideoJob(jobId), "Video held")} onMove={(jobId, direction) => action(`move-${direction}`, () => studioApi.moveVideoJob(jobId, direction))} onRemove={(jobId) => action("remove", () => studioApi.removeVideoJob(jobId), "Removed from queue")} onOpenImages={() => setView("images")} />;
   } else if (view === "media") {

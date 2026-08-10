@@ -56,6 +56,16 @@ function run() {
   assert.equal(unknown.ok, false);
   assert.match(unknown.errors.join(" "), /Unknown runtime event/);
 
+  const imageGenerationSource = fs.readFileSync(
+    path.join(root, "src/background/runtime/02b-image-generation.js"),
+    "utf8",
+  );
+  assert.match(
+    imageGenerationSource,
+    /zt\("BATCH_GENERATION_DONE", \{[\s\S]*?uiBatchId: t\.uiBatchId \|\| null,[\s\S]*?successfulPrompts:/,
+    "image completion events must retain the Studio run ID",
+  );
+
   console.log("runtime event contract smoke tests passed");
 }
 

@@ -703,9 +703,12 @@
     };
   }
 
-  function getImageGenerationGate(project) {
+  function getImageGenerationGate(project, videoId) {
     const sourceProject = project || studioState.activeProject;
-    const promptRecords = getProjectPromptRecords(sourceProject);
+    const videoKey = String(videoId || "").trim();
+    const promptRecords = videoKey
+      ? getVideoPromptRecords(sourceProject, videoKey)
+      : getProjectPromptRecords(sourceProject);
     const assets = getProjectAssets(sourceProject);
     const items = promptRecords.map((record) => buildImageGateItem(record, assets));
     const included = items.filter((item) => item.can_generate && item.state === "ready");
@@ -1991,6 +1994,115 @@
     );
   }
 
+  async function recordImagePreviewFromRuntimeMessage(message) {
+    if (
+      !message ||
+      message.type !== "FROM_BACKGROUND" ||
+      message.subType !== "PREVIEW_READY" ||
+      message.mediaType === "video" ||
+      !message.uiBatchId ||
+      !message.mediaId
+    ) {
+      return false;
+    }
+
+    const domain = getDomain();
+    let domainState = studioState.domainState;
+    if (domain && typeof domain.load === "function") {
+      domainState = await domain.load();
+      studioState.domainState = domainState;
+      studioState.activeProject = resolveActiveProject(domainState);
+      studioState.flowContext = getStoredFlowContext(studioState.activeProject);
+    }
+
+    const runMatch = findProjectByImageRunId(domainState, message.uiBatchId);
+    const project = runMatch?.project;
+    const runRecord = runMatch?.run;
+    if (!project || !runRecord || String(runRecord.status || "") !== "generating") return false;
+
+    const promptIndex = Number(message.promptIndex || 0);
+    const requestItems = Array.isArray(runRecord.request_items)
+      ? runRecord.request_items.filter(isObject)
+      : [];
+    const requestItem =
+      requestItems.find((item) => Number(item.source_index || 0) === promptIndex) ||
+      requestItems[promptIndex];
+    if (!requestItem?.prompt_id) return false;
+
+    const timestamp = new Date().toISOString();
+    const variants = getProjectImageVariants(project).slice();
+    const existingVariant =
+      variants.find(
+        (variant) =>
+          variant.image_run_id === runRecord.image_run_id &&
+          getVariantMediaId(variant) === String(message.mediaId),
+      ) || null;
+    const promptVariants = variants.filter(
+      (variant) =>
+        variant.image_run_id === runRecord.image_run_id &&
+        variant.prompt_id === requestItem.prompt_id,
+    );
+    const fallbackIndex = existingVariant
+      ? Number(existingVariant.variant_index || 0)
+      : promptVariants.reduce(
+          (highest, variant) => Math.max(highest, Number(variant.variant_index || 0)),
+          -1,
+        ) + 1;
+    const variant = Object.assign(
+      buildImageVariantRecord(
+        project,
+        runRecord,
+        requestItem,
+        {
+          media_id: message.mediaId,
+          file_name: message.fileName,
+          thumbnail_url: message.fifeUrl,
+          fife_url: message.fifeUrl,
+          file_state: "remote",
+        },
+        fallbackIndex,
+        existingVariant,
+        timestamp,
+      ),
+      {
+        cache_state: existingVariant?.cache_state || "pending",
+        file_state: existingVariant?.file_state === "available" ? "available" : "remote",
+        repair_state: "",
+        status: "available",
+      },
+    );
+    upsertImageVariant(variants, variant);
+
+    const mediaLinks = getProjectMediaLinks(project).slice();
+    syncVariantMediaLink(mediaLinks, project, variant, timestamp);
+    await updateProjectById(project.project_id, {
+      image_variants: variants,
+      media_links: mediaLinks,
+      image_generation_runs: getProjectImageGenerationRuns(project).map((run) =>
+        run.image_run_id === runRecord.image_run_id
+          ? Object.assign({}, run, {
+              status: "generating",
+              variant_count: variants.filter(
+                (item) => item.image_run_id === runRecord.image_run_id,
+              ).length,
+              updated_at: timestamp,
+            })
+          : run,
+      ),
+      prompt_records: getProjectPromptRecords(project).map((record) =>
+        record.prompt_id === requestItem.prompt_id
+          ? Object.assign({}, record, {
+              active_image_run_id: runRecord.image_run_id,
+              image_generation_state: "generated",
+              image_generation_completed_at: timestamp,
+              updated_at: timestamp,
+            })
+          : record,
+      ),
+    });
+    return true;
+  }
+
   async function recordCachedPreviewFromRuntimeMessage(message) {
     if (!message || message.type !== "FROM_BACKGROUND" || message.subType !== "PREVIEW_CACHED") {
       return false;
@@ -2049,6 +2161,113 @@
     await updateProjectById(project.project_id, {
       image_variants: nextVariants,
       media_links: nextMediaLinks,
+    });
+    return true;
+  }
+
+  async function recordImageRunStatusFromRuntimeMessage(message) {
+    if (
+      !message ||
+      message.type !== "FROM_BACKGROUND" ||
+      !message.uiBatchId ||
+      (message.subType !== "PROMPT_STATUS" && message.subType !== "BATCH_GENERATION_DONE")
+    ) {
+      return false;
+    }
+
+    const domain = getDomain();
+    let domainState = studioState.domainState;
+    if (domain && typeof domain.load === "function") {
+      domainState = await domain.load();
+      studioState.domainState = domainState;
+      studioState.activeProject = resolveActiveProject(domainState);
+      studioState.flowContext = getStoredFlowContext(studioState.activeProject);
+    }
+    const runMatch = findProjectByImageRunId(domainState, message.uiBatchId);
+    const project = runMatch?.project;
+    const runRecord = runMatch?.run;
+    if (!project || !runRecord) return false;
+
+    const timestamp = new Date().toISOString();
+    const requestItems = Array.isArray(runRecord.request_items)
+      ? runRecord.request_items.filter(isObject)
+      : [];
+    const promptIds = new Set(requestItems.map((item) => item.prompt_id).filter(Boolean));
+    const promptStatuses = Object.assign({}, runRecord.prompt_statuses || {});
+    let nextRun = runRecord;
+    let nextPromptRecords = getProjectPromptRecords(project);
+
+    if (message.subType === "PROMPT_STATUS") {
+      const promptIndex = Number(message.promptIndex || 0);
+      const requestItem =
+        requestItems.find((item) => Number(item.source_index || 0) === promptIndex) ||
+        requestItems[promptIndex];
+      if (!requestItem?.prompt_id) return false;
+      const status = String(message.status || "").toLowerCase();
+      if (!["running", "submitted", "failed"].includes(status)) return false;
+      promptStatuses[requestItem.prompt_id] = {
+        status,
+        error: status === "failed" ? String(message.error || "Image generation failed.") : "",
+        updated_at: timestamp,
+      };
+      const failedCount = Object.values(promptStatuses).filter(
+        (item) => item?.status === "failed",
+      ).length;
+      nextRun = Object.assign({}, runRecord, {
+        status: "generating",
+        prompt_statuses: promptStatuses,
+        failed_prompt_count: failedCount,
+        updated_at: timestamp,
+      });
+      nextPromptRecords = nextPromptRecords.map((record) => {
+        if (record.prompt_id !== requestItem.prompt_id) return record;
+        return Object.assign({}, record, {
+          active_image_run_id: runRecord.image_run_id,
+          image_generation_state:
+            status === "failed" ? "failed" : status === "submitted" ? "generated" : "generating",
+          image_generation_error:
+            status === "failed" ? String(message.error || "Image generation failed.") : "",
+          updated_at: timestamp,
+        });
+      });
+    } else {
+      const successfulPrompts = Math.max(0, Number(message.successfulPrompts || 0));
+      const failedPrompts = Math.max(0, Number(message.failedPrompts || 0));
+      const status = failedPrompts ? (successfulPrompts ? "partial" : "failed") : "completed";
+      nextRun = Object.assign({}, runRecord, {
+        status,
+        successful_prompt_count: successfulPrompts,
+        failed_prompt_count: failedPrompts,
+        total_image_count: Math.max(0, Number(message.totalImages || 0)),
+        completed_at: timestamp,
+        updated_at: timestamp,
+      });
+      const variants = getProjectImageVariants(project);
+      nextPromptRecords = nextPromptRecords.map((record) => {
+        if (!promptIds.has(record.prompt_id)) return record;
+        const promptStatus = promptStatuses[record.prompt_id];
+        const hasVariant = variants.some(
+          (variant) =>
+            variant.image_run_id === runRecord.image_run_id &&
+            variant.prompt_id === record.prompt_id,
+        );
+        const failed = promptStatus?.status === "failed" || (status === "failed" && !hasVariant);
+        return Object.assign({}, record, {
+          image_generation_state: failed ? "failed" : "generated",
+          image_generation_error: failed
+            ? promptStatus?.error || record.image_generation_error || "Image generation failed."
+            : "",
+          image_generation_completed_at: failed ? record.image_generation_completed_at : timestamp,
+          updated_at: timestamp,
+        });
+      });
+    }
+
+    await updateProjectById(project.project_id, {
+      image_generation_runs: getProjectImageGenerationRuns(project).map((run) =>
+        run.image_run_id === runRecord.image_run_id ? nextRun : run,
+      ),
+      prompt_records: nextPromptRecords,
     });
     return true;
   }
@@ -2560,24 +2779,62 @@
     };
   }
 
-  async function startImageGenerationRun() {
+  async function startImageGenerationRun(videoId, requestedSettings, options) {
     /** @type {any} */
     const project = studioState.activeProject;
     if (!project) {
       throw new Error("No active YouTube Channel selected.");
     }
 
-    const gate = getImageGenerationGate(project);
-    if (!gate.included.length) {
+    const videoKey = String(videoId || "").trim();
+    const gate = getImageGenerationGate(project, videoKey);
+    const requestedPromptIds = new Set(
+      (Array.isArray(options?.promptIds) ? options.promptIds : [])
+        .map((value) => String(value || "").trim())
+        .filter(Boolean),
+    );
+    const included = requestedPromptIds.size
+      ? gate.included.filter((item) => requestedPromptIds.has(item.prompt_id))
+      : gate.included;
+    if (!included.length) {
       throw new Error("No Ready prompts are eligible for image generation.");
+    }
+    const effectiveGate = Object.assign({}, gate, {
+      included,
+      ready_count: included.length,
+    });
+
+    const activeImageRun = getProjectImageGenerationRuns(project).find(
+      (run) => String(run.status || "").toLowerCase() === "generating",
+    );
+    const activeVideoJob = getProjectVideoJobs(project).find(
+      (job) => normalizeVideoJobStatus(job) === "running",
+    );
+    if (activeImageRun || activeVideoJob) {
+      throw new Error("Another image or video generation run is already active.");
+    }
+
+    const imageGeneration = root.TFProjectImageGeneration;
+    if (!imageGeneration?.buildImageBatchDescriptor || !imageGeneration?.buildStartBatchMessage) {
+      throw new Error("Image generation service is unavailable.");
     }
 
     const timestamp = new Date().toISOString();
     const imageRunId = createImageRunId();
     const projectSettings = Object(project).settings;
     const settings = isObject(projectSettings) ? projectSettings : {};
-    const imageCount = Number(settings.image_count || settings.imageCount || 2);
-    const requestItems = gate.included.map((item, index) => {
+    const generationSettings = imageGeneration.normalizeSettings(
+      Object.assign(
+        {
+          imageModel: settings.image_model || settings.imageModel,
+          imageRatio: settings.image_ratio || settings.imageRatio,
+          imageCount: settings.image_count || settings.imageCount,
+          speedMode: settings.image_speed_mode || settings.speedMode,
+        },
+        isObject(requestedSettings) ? requestedSettings : {},
+      ),
+    );
+    const requestItems = included.map((item, index) => {
       return {
         prompt_id: item.prompt_id,
         source_index: index,
@@ -2586,12 +2843,44 @@
         references: item.references.map((reference) => Object.assign({}, reference)),
       };
     });
+    const video = getProjectVideos(project).find((item) => item.video_id === videoKey) || null;
+    const projectName = String(project.display_name || "Imported video").trim() || "Imported video";
+    const baseDescriptor = imageGeneration.buildImageBatchDescriptor({
+      projectId: project.project_id,
+      projectName,
+      projectFolder: imageGeneration.safeFolderName(projectName, "turboflow"),
+      sourceImportName: video?.source_name || video?.display_name || "imported-json",
+      records: requestItems,
+      settings: generationSettings,
+    });
+    const preparedReferences = await imageGeneration.prepareReferenceMedia({
+      project,
+      descriptor: baseDescriptor,
+      flowProjectId:
+        studioState.flowContext?.project_id || project.flow_context?.project_id || "",
+      uploadImage: async (file) => {
+        const response = await root.chrome?.runtime?.sendMessage?.({
+          type: "UPLOAD_IMAGE",
+          base64Data: file.base64Data,
+          fileName: file.fileName,
+          mimeType: file.mimeType,
+        });
+        return response || { ok: false, error: "Flow reference upload is unavailable." };
+      },
+    });
+    const descriptor = preparedReferences.descriptor;
     const runRecord = {
       image_run_id: imageRunId,
+      video_id: videoKey,
+      retry_of_image_run_id: String(options?.retryOfRunId || "").trim(),
       status: "generating",
-      image_count: imageCount > 0 ? imageCount : 2,
+      image_model: generationSettings.imageModel,
+      image_ratio: generationSettings.imageRatio,
+      image_count: generationSettings.imageCount,
+      speed_mode: generationSettings.speedMode,
+      output_folder: descriptor.folder,
       prompt_count: requestItems.length,
-      excluded_prompt_count: gate.blocked.length,
+      excluded_prompt_count: gate.prompt_count - requestItems.length,
       request_items: requestItems,
       created_at: timestamp,
       updated_at: timestamp,
@@ -2608,14 +2897,140 @@
     });
 
     await updateActiveProject({
+      assets: preparedReferences.assets,
+      settings: Object.assign({}, settings, {
+        image_model: generationSettings.imageModel,
+        image_ratio: generationSettings.imageRatio,
+        image_count: generationSettings.imageCount,
+        image_speed_mode: generationSettings.speedMode,
+      }),
       prompt_records: promptRecords,
       image_generation_runs: getProjectImageGenerationRuns(project).concat(runRecord),
     });
 
+    const startMessage = imageGeneration.buildStartBatchMessage(descriptor, imageRunId, {
+      speedMode: generationSettings.speedMode,
+    });
+    try {
+      const response = await root.chrome?.runtime?.sendMessage?.(startMessage);
+      if (!response?.ok) {
+        throw new Error(response?.error || "Flow did not accept the image generation run.");
+      }
+    } catch (error) {
+      const failedAt = new Date().toISOString();
+      const failedProject = studioState.activeProject || project;
+      await updateActiveProject({
+        image_generation_runs: getProjectImageGenerationRuns(failedProject).map((run) =>
+          run.image_run_id === imageRunId
+            ? Object.assign({}, run, {
+                status: "failed",
+                error_message: error?.message || String(error),
+                failed_at: failedAt,
+                updated_at: failedAt,
+              })
+            : run,
+        ),
+        prompt_records: getProjectPromptRecords(failedProject).map((record) =>
+          includedPromptIds.has(record.prompt_id)
+            ? Object.assign({}, record, {
+                image_generation_state: "failed",
+                image_generation_error: error?.message || String(error),
+                updated_at: failedAt,
+              })
+            : record,
+        ),
+      });
+      throw error;
+    }
+
     return {
       run: runRecord,
-      gate,
+      gate: effectiveGate,
+      message: startMessage,
     };
+  }
+
+  async function stopImageGenerationRun(imageRunId) {
+    const project = studioState.activeProject;
+    if (!project) throw new Error("No active YouTube Channel selected.");
+    const runKey = String(imageRunId || "").trim();
+    const runRecord = findImageGenerationRun(project, runKey);
+    if (!runRecord) throw new Error(`Image generation run not found: ${runKey}.`);
+    if (String(runRecord.status || "").toLowerCase() !== "generating") {
+      throw new Error("Only a generating image run can be stopped.");
+    }
+
+    const response = await root.chrome?.runtime?.sendMessage?.({ type: "STOP_BATCH" });
+    if (response && response.ok === false) {
+      throw new Error(response.error || "Flow did not stop the image generation run.");
+    }
+    const timestamp = new Date().toISOString();
+    const promptIds = new Set(
+      (Array.isArray(runRecord.request_items) ? runRecord.request_items : [])
+        .map((item) => String(item?.prompt_id || "").trim())
+        .filter(Boolean),
+    );
+    const stoppedRun = Object.assign({}, runRecord, {
+      status: "stopped",
+      error_message: "Stopped by user.",
+      stopped_at: timestamp,
+      completed_at: timestamp,
+      updated_at: timestamp,
+    });
+    await updateActiveProject({
+      image_generation_runs: getProjectImageGenerationRuns(project).map((run) =>
+        run.image_run_id === runKey ? stoppedRun : run,
+      ),
+      prompt_records: getProjectPromptRecords(project).map((record) =>
+        promptIds.has(record.prompt_id) && record.active_image_run_id === runKey
+          ? Object.assign({}, record, {
+              image_generation_state: "failed",
+              image_generation_error: "Stopped by user.",
+              updated_at: timestamp,
+            })
+          : record,
+      ),
+    });
+    return stoppedRun;
+  }
+
+  async function retryImageGenerationRun(imageRunId) {
+    const project = studioState.activeProject;
+    if (!project) throw new Error("No active YouTube Channel selected.");
+    const runKey = String(imageRunId || "").trim();
+    const runRecord = findImageGenerationRun(project, runKey);
+    if (!runRecord) throw new Error(`Image generation run not found: ${runKey}.`);
+    if (!["failed", "partial", "stopped"].includes(String(runRecord.status || "").toLowerCase())) {
+      throw new Error("Only failed, partial, or stopped image runs can be retried.");
+    }
+
+    const promptRecords = new Map(
+      getProjectPromptRecords(project).map((record) => [record.prompt_id, record]),
+    );
+    const variants = getProjectImageVariants(project);
+    const promptStatuses = isObject(runRecord.prompt_statuses) ? runRecord.prompt_statuses : {};
+    const promptIds = (Array.isArray(runRecord.request_items) ? runRecord.request_items : [])
+      .map((item) => String(item?.prompt_id || "").trim())
+      .filter((promptId) => {
+        if (!promptId) return false;
+        if (promptStatuses[promptId]?.status === "failed") return true;
+        if (promptRecords.get(promptId)?.image_generation_state === "failed") return true;
+        return !variants.some(
+          (variant) => variant.image_run_id === runKey && variant.prompt_id === promptId,
+        );
+      });
+    if (!promptIds.length) throw new Error("This image run has no failed prompts to retry.");
+
+    return startImageGenerationRun(
+      runRecord.video_id,
+      {
+        imageModel: runRecord.image_model,
+        imageRatio: runRecord.image_ratio,
+        imageCount: runRecord.image_count,
+        speedMode: runRecord.speed_mode,
+      },
+      { promptIds, retryOfRunId: runKey },
+    );
   }
 
   async function recordImageGenerationRunVariants(imageRunId, completionItems) {
@@ -3232,8 +3647,18 @@
   }
 
   async function handleVideoRuntimeMessage(message) {
+    const imagePreviewRecorded = await recordImagePreviewFromRuntimeMessage(message);
+    if (imagePreviewRecorded) {
+      return true;
+    }
+
     const cachedPreviewRecorded = await recordCachedPreviewFromRuntimeMessage(message);
     if (cachedPreviewRecorded) {
+      return true;
+    }
+
+    const imageStatusRecorded = await recordImageRunStatusFromRuntimeMessage(message);
+    if (imageStatusRecorded) {
       return true;
     }
 
@@ -3441,6 +3866,8 @@
     selectImageVariant,
     sceneTitleFromFileName,
     startImageGenerationRun,
+    stopImageGenerationRun,
+    retryImageGenerationRun,
     runVideoJob,
     syncProjectMediaFromFiles,
     stopVideoJob,

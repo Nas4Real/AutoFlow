@@ -104,3 +104,77 @@ Harden AutoFlow without redesigning its side panel or Project Studio. Work proce
 ## Open Questions
 
 - None blocking. The project supports Node.js 22 and 24 LTS; the GitHub matrix pins Node.js 22 across Ubuntu and Windows.
+
+---
+
+# Implementation Plan: Studio-First Media Workflow
+
+## Goal
+
+Make Project Studio the complete daily workflow for importing prompt JSON, generating and selecting image variants, generating videos, and reviewing or downloading media. Keep the side panel available as an optional compatibility fallback.
+
+## Product Invariants
+
+- Preserve the existing Studio navigation, layout, and visual language.
+- Keep image generation and video generation as separate manual, credit-spending checkpoints.
+- Scope settings, queues, progress, retry, and review to the currently selected video/import.
+- Let active runtime jobs continue while the user navigates between Studio pages.
+- Reuse background/runtime contracts and shared project state; do not duplicate the side-panel orchestration.
+- Keep the legacy side panel functional without making it part of the required workflow.
+
+## Ordered Slices
+
+### Slice 1: Lock The Contracts
+
+- [x] Add failing tests for selected-video image readiness and batch construction.
+- [x] Cover settings normalization, prompt ordering, blocked prompts, and retryable failures.
+- [x] Use the four-prompt offline-cache JSON shape as an acceptance fixture.
+
+### Slice 2: Share Image Orchestration
+
+- [x] Extract pure image batch construction into a shared project-generation service.
+- [x] Preserve the existing `START_BATCH` and `STOP_BATCH` background messages.
+- [x] Adapt the side panel to consume the shared service.
+
+### Slice 3: Complete Studio Runtime State
+
+- [x] Add selected-video image generation, stop, and failed-prompt retry commands.
+- [x] Persist generation settings and image-run progress in project state.
+- [x] Map preview, cache, completion, and error events to the exact Studio run.
+- [x] Guard the background runner's global stop boundary against conflicting image/video starts.
+
+### Slice 4: Complete Image Review
+
+- [x] Add Flow connection status and refresh action.
+- [x] Add image model, aspect ratio, and variant-count controls.
+- [x] Add ready/blocked counts, explicit generate action, queue/progress, stop, and retry.
+- [x] Preserve existing image cards and variant-selection behavior.
+
+### Slice 5: Verify And Harden
+
+- [x] Run focused tests after each slice, then the full test/build/static suite.
+- [ ] Verify import through media review in the unpacked extension without redesigning Studio.
+- [x] Run code-quality and security reviews and address confirmed findings.
+- [x] Push small atomic commits and verify GitHub Actions on Ubuntu and Windows.
+
+## Acceptance Criteria
+
+- Importing `examples/offline-cache-test-prompt-index.json` creates and selects one video with four ready image prompts.
+- Image Review can configure and explicitly start a run for only that selected video.
+- Navigating away does not lose or stop the active run.
+- Progress, cached previews, completion, stopping, and retry are reflected in Studio.
+- Successful prompts are not regenerated when retrying failures.
+- Selecting image variants does not automatically start video generation.
+- Video Queue remains the explicit second checkpoint.
+- Media can be reviewed and downloaded without opening the side panel.
+- The legacy side panel remains operational.
+
+## Risks And Mitigations
+
+| Risk | Impact | Mitigation |
+| --- | --- | --- |
+| Global background stop affects an unrelated run | High | Enforce one active generation owner and disable conflicting starts |
+| Runtime event is applied to the wrong video | High | Correlate every event by batch/run ID and selected import ownership |
+| Shared extraction changes legacy behavior | High | Characterization tests before adapting the side panel |
+| Studio reload loses progress | Medium | Persist run state and reconcile it with background stats/events |
+| UI change becomes a redesign | Medium | Extend existing Image Review components and CSS patterns only |

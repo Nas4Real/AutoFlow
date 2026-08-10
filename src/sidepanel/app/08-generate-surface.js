@@ -149,37 +149,6 @@
     return currentRecords().filter(isReady);
   }
 
-  function projectAssets(project) {
-    return Array.isArray(project?.assets) ? project.assets : [];
-  }
-
-  function primaryAssetFile(asset) {
-    const files = Array.isArray(asset?.files) ? asset.files : [];
-    return (
-      files.find((file) => file.asset_file_id === asset?.primary_file_id) ||
-      files.find((file) => file.is_primary || file.role === "primary") ||
-      files[0] ||
-      null
-    );
-  }
-
-  function promptAssetIds(record) {
-    return Array.from(
-      new Set(
-        (Array.isArray(record?.references) ? record.references : [])
-          .filter((reference) => reference?.resolution_status === "resolved")
-          .map((reference) => String(reference?.asset_id || "").trim())
-          .filter(Boolean),
-      ),
-    );
-  }
-
-  function dataUrlBase64(dataUrl) {
-    const value = String(dataUrl || "");
-    const commaIndex = value.indexOf(",");
-    return commaIndex >= 0 ? value.slice(commaIndex + 1) : value;
-  }
-
   async function ensureProjectReferencesForBatch(batch) {
     const settings = batch?.settings || {};
     const assetMap = settings.perPromptAssetIds || {};
@@ -197,59 +166,26 @@
 
     const flowProjectId =
       typeof tfCurrentFlowProjectId === "function" ? await tfCurrentFlowProjectId() : "";
-    const assets = projectAssets(project).map((asset) => Object.assign({}, asset));
-    const mediaByAssetId = new Map();
-
-    for (const assetId of assetIds) {
-      const assetIndex = assets.findIndex((asset) => asset.asset_id === assetId);
-      const asset = assetIndex >= 0 ? assets[assetIndex] : null;
-      const file = primaryAssetFile(asset);
-      if (!asset || !file?.data_url) {
-        throw new Error(`Reference ${asset?.display_name || assetId} has no stored image file.`);
-      }
-
-      let mediaId =
-        asset.flow_upload_state === "ready" &&
-        asset.flow_project_id === flowProjectId &&
-        asset.flow_asset_file_id === file.asset_file_id
-          ? String(asset.flow_media_id || "")
-          : "";
-      if (!mediaId) {
-        Te(`Uploading reference "${asset.display_name || file.file_name}"...`, "info");
-        const response = await chrome.runtime.sendMessage({
-          type: "UPLOAD_IMAGE",
-          base64Data: dataUrlBase64(file.data_url),
-          fileName: file.file_name || `${asset.display_name || "reference"}.png`,
-          mimeType: file.mime_type || "image/png",
-        });
-        if (!response?.ok || !response?.mediaId) {
-          throw new Error(response?.error || `Could not upload ${asset.display_name || assetId}.`);
-        }
-        mediaId = response.mediaId;
-        assets[assetIndex] = Object.assign({}, asset, {
-          flow_upload_state: "ready",
-          flow_project_id: flowProjectId,
-          flow_media_id: mediaId,
-          flow_asset_file_id: file.asset_file_id,
-          flow_uploaded_at: new Date().toISOString(),
-        });
-      }
-      mediaByAssetId.set(assetId, { mediaId });
+    const imageGeneration = root.TFProjectImageGeneration;
+    if (!imageGeneration?.prepareReferenceMedia) {
+      throw new Error("Image generation service is unavailable.");
     }
-
-    const perPromptReferences = {};
-    const perPromptThumbnails = {};
-    Object.keys(assetMap).forEach((promptIndex) => {
-      const mediaIds = (assetMap[promptIndex] || [])
-        .map((assetId) => mediaByAssetId.get(assetId)?.mediaId)
-        .filter(Boolean);
-      if (mediaIds.length) perPromptReferences[promptIndex] = mediaIds;
+    const prepared = await imageGeneration.prepareReferenceMedia({
+      project,
+      descriptor: batch,
+      flowProjectId,
+      uploadImage: async (file) => {
+        Te(`Uploading reference "${file.fileName}"...`, "info");
+        return chrome.runtime.sendMessage({
+          type: "UPLOAD_IMAGE",
+          base64Data: file.base64Data,
+          fileName: file.fileName,
+          mimeType: file.mimeType,
+        });
+      },
     });
-    settings.referenceMode = "mapped";
-    settings.perPromptReferences = perPromptReferences;
-    settings.perPromptThumbnails = perPromptThumbnails;
-    settings.imageReferenceMediaIds = [];
-    const persisted = await domain.updateProject(projectId, { assets });
+    batch.settings = prepared.descriptor.settings;
+    const persisted = await domain.updateProject(projectId, { assets: prepared.assets });
     if (persisted?.ok && state.activeProject?.project_id === projectId) {
       state.activeProject = persisted.project;
     }
@@ -819,59 +755,26 @@
   async function createBatchFromReady() {
     const records = readyRecords();
     if (!records.length) return null;
-    const importName = currentImportName(),
-      batchName = tfBatchNameFromFile(importName || "imported-json"),
-      projectFolder = queueFolderName(),
-      firstFile = tfCleanDownloadPath(records[0]?.file_name || "media/item.png", "png"),
-      mediaFolder = tfFolderFromPath(firstFile),
-      perPromptFileNames = {};
-
-    records.forEach((record, index) => {
-      perPromptFileNames[index] = tfPrefixDownloadPath(
-        tfCleanDownloadPath(record.file_name, "png"),
-        projectFolder,
-      );
-    });
-
-    const perPromptAssetIds = {};
-    const perPromptIds = {};
-    records.forEach((record, index) => {
-      const assetIds = promptAssetIds(record);
-      if (assetIds.length) perPromptAssetIds[index] = assetIds;
-      perPromptIds[index] = record.prompt_id;
-    });
-    const hasReferences = Object.keys(perPromptAssetIds).length > 0;
-    const batch = tfCreatePromptIndexBatch({
-      name: `${projectName(state.activeProject)} - images`,
-      folder: `${projectFolder}/${mediaFolder}`,
-      prompts: records.map((record) => ({ text: record.image_prompt })),
-      projectName: projectName(state.activeProject),
-      projectFolder,
-      batchKind: "images",
-      settings: {
-        mode: "image",
-        imageModel: l.settings.imageModel,
-        imageRatio: l.settings.imageRatio || "IMAGE_ASPECT_RATIO_LANDSCAPE",
-        imageCount: l.settings.imageCount || 2,
-        imageReferenceMediaIds: [],
-        requiresJackReference: !1,
+    const imageGeneration = root.TFProjectImageGeneration;
+    if (!imageGeneration?.buildImageBatchDescriptor) {
+      throw new Error("Image generation service is unavailable.");
+    }
+    const activeProjectName = projectName(state.activeProject);
+    const batch = tfCreatePromptIndexBatch(
+      imageGeneration.buildImageBatchDescriptor({
         projectId: state.activeProject.project_id,
-        perPromptIds,
-        perPromptAssetIds,
-        perPromptReferences: null,
-        perPromptThumbnails: {},
-        naming: "numbered",
-        namingPrefix: "",
-        namingSeparator: "-",
-        startNumber: 1,
-        perPromptFileNames,
-        referenceMode: hasReferences ? "mapped" : "shared",
-        projectName: projectName(state.activeProject),
-        projectFolder,
-        batchKind: "images",
-        sourceImportName: batchName,
-      },
-    });
+        projectName: activeProjectName,
+        projectFolder: queueFolderName(),
+        sourceImportName: tfBatchNameFromFile(currentImportName() || "imported-json"),
+        records,
+        settings: {
+          imageModel: l.settings.imageModel,
+          imageRatio: l.settings.imageRatio,
+          imageCount: l.settings.imageCount,
+          speedMode: l.speedMode,
+        },
+      }),
+    );
     X();
     Sn();
     return batch;

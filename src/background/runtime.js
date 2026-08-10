@@ -6,6 +6,7 @@
   "../shared/project-services/command-result.js",
   "../shared/project-services/read-model-contracts.js",
   "../shared/project-services/media-link-contracts.js",
+  "../shared/project-services/image-generation-contracts.js",
   "../shared/project-services/migration-shims.js",
   "../shared/project-services/legacy-project-normalizer.js",
   "runtime/contracts/runtime-events.js",
