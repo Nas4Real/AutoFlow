@@ -909,7 +909,6 @@ function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, onN
             const isActive = activeVideo?.video_id === video.video_id && PROJECT_TABS.some((tab) => tab.id === view);
             return <button key={video.video_id} type="button" className={`sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`} onClick={() => onOpenVideo(video.video_id, "overview")}><span aria-hidden="true" /><strong>{video.display_name}</strong></button>;
           })}
-          <button type="button" className="sidebar-view-all" onClick={() => onNavigate("channels")}>View all projects →</button>
         </div>
       </section>
       <footer className="studio-sidebar-footer">

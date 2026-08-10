@@ -35195,18 +35195,15 @@
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Search, { size: 14 }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: query, onChange: (event) => setQuery(event.target.value), placeholder: "Search projects...", "aria-label": "Search video projects" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "sidebar-project-list", children: [
-          recentProjects.map((video) => {
-            const progress = studioApi.getVideoProjectProgress(project, video.video_id);
-            const presentation = getProjectPresentation(progress);
-            const isActive = activeVideo?.video_id === video.video_id && PROJECT_TABS.some((tab) => tab.id === view);
-            return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`, onClick: () => onOpenVideo(video.video_id, "overview"), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { "aria-hidden": "true" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: video.display_name })
-            ] }, video.video_id);
-          }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "sidebar-view-all", onClick: () => onNavigate("channels"), children: "View all projects \u2192" })
-        ] })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "sidebar-project-list", children: recentProjects.map((video) => {
+          const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+          const presentation = getProjectPresentation(progress);
+          const isActive = activeVideo?.video_id === video.video_id && PROJECT_TABS.some((tab) => tab.id === view);
+          return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`, onClick: () => onOpenVideo(video.video_id, "overview"), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { "aria-hidden": "true" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: video.display_name })
+          ] }, video.video_id);
+        }) })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("footer", { className: "studio-sidebar-footer", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `studio-nav-item ${view === "settings" ? "active" : ""}`, onClick: () => onNavigate("settings"), children: [

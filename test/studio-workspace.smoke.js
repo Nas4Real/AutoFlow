@@ -534,6 +534,7 @@ async function run() {
     /\{ id: "channels", label: "Dashboard"[\s\S]*\{ id: "import", label: "Imports"/,
   );
   assert.match(studioSource, /<span>Video Projects<\/span>/);
+  assert.doesNotMatch(studioSource, /View all projects/);
   assert.match(studioSource, /<span>Settings<\/span>/);
   assert.match(
     studioSource,
