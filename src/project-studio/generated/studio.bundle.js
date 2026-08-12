@@ -34055,12 +34055,23 @@
   ];
   var UserRound = createLucideIcon("user-round", __iconNode38);
 
-  // node_modules/lucide-react/dist/esm/icons/x.mjs
+  // node_modules/lucide-react/dist/esm/icons/video-off.mjs
   var __iconNode39 = [
+    [
+      "path",
+      { d: "M10.66 6H14a2 2 0 0 1 2 2v2.5l5.248-3.062A.5.5 0 0 1 22 7.87v8.196", key: "w8jjjt" }
+    ],
+    ["path", { d: "M16 16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2", key: "1xawa7" }],
+    ["path", { d: "m2 2 20 20", key: "1ooewy" }]
+  ];
+  var VideoOff = createLucideIcon("video-off", __iconNode39);
+
+  // node_modules/lucide-react/dist/esm/icons/x.mjs
+  var __iconNode40 = [
     ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
     ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
   ];
-  var X = createLucideIcon("x", __iconNode39);
+  var X = createLucideIcon("x", __iconNode40);
 
   // src/project-studio/react/studio.jsx
   var import_jsx_runtime13 = __toESM(require_jsx_runtime());
@@ -34439,6 +34450,17 @@
     if (progress.phase === "image_generation") return { tone: "progress", badge: "In progress", Icon: Cpu, detail: `${progress.generated_count} of ${progress.prompt_count} scenes generated`, action: "Open Image Review", target: "images" };
     return { tone: "ready", badge: "Ready", Icon: FileBraces, detail: "Import Phase", action: "Generate Images", target: "images" };
   }
+  function ReferenceEmptyDashboard({ onCreateProject }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "reference-empty-dashboard", "aria-labelledby": "empty-dashboard-title", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "reference-empty-dashboard-icon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(VideoOff, { size: 42 }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { id: "empty-dashboard-title", children: "Create your first video project" }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Start by creating a channel. Then import a JSON prompt file to track every stage of your video production." }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: "reference-primary-action", onClick: onCreateProject, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 18 }),
+        "Create Project"
+      ] })
+    ] });
+  }
   function ReferenceDashboardView({ project, videos, onAddChannel, onAddVideo, onOpenVideo }) {
     const [filter, setFilter] = (0, import_react73.useState)("all");
     const [sort, setSort] = (0, import_react73.useState)("updated");
@@ -34465,9 +34487,9 @@
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h1", { children: "Video Projects" }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Track every video from imported prompts to completed media." })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: "reference-primary-action", onClick: onAddVideo, disabled: !project, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: "reference-primary-action", onClick: project ? onAddVideo : onAddChannel, children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 18 }),
-          "Import JSON"
+          project ? "Import JSON" : "New Project"
         ] })
       ] }),
       project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
@@ -34531,10 +34553,16 @@
             ] })
           ] }, video.video_id);
         }) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { title: "No matching projects", description: "Choose another production status filter." })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { title: "Add your first channel", description: "A channel keeps its videos, assets, images, and queue together.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddChannel, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 17 }),
-        "Add channel"
-      ] }) })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("section", { className: "reference-stats", "aria-label": "Channel project statistics", children: [["Total Projects", 0, FolderKanban], ["Active Runs", 0, Activity], ["Completed Videos", 0, CircleCheckBig]].map(([label, value, Icon2]) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-stat-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: label }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: value })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "reference-stat-icon", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Icon2, { size: 24 }) })
+        ] }, label)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ReferenceEmptyDashboard, { onCreateProject: onAddChannel })
+      ] })
     ] });
   }
   function ReferenceProjectOverviewView({ project, video, onNavigate }) {

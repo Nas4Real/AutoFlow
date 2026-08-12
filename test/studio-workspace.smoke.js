@@ -621,6 +621,9 @@ async function run() {
   assert.match(studioSource, /useState\(\(\) => getViewFromLocationHash\(\)\)/);
   assert.match(studioSource, /hashchange/);
   assert.match(studioSource, /className="reference-dashboard"/);
+  assert.match(studioSource, /function ReferenceEmptyDashboard/);
+  assert.match(studioSource, /className="reference-empty-dashboard"/);
+  assert.match(studioSource, /Create your first video project/);
   assert.match(studioSource, /className="reference-project-header"/);
   assert.match(studioSource, /const PROJECT_TABS = \[/);
   assert.match(
@@ -675,6 +678,8 @@ async function run() {
   assert.match(studioCss, /--studio-surface:\s*#080808/);
   assert.match(studioCss, /--studio-border:\s*#111111/);
   assert.match(studioCss, /\.reference-dashboard\s*\{[^}]*width:\s*100%/);
+  assert.match(studioCss, /\.reference-empty-dashboard\s*\{[\s\S]*?min-height:\s*450px/);
+  assert.match(studioCss, /\.reference-empty-dashboard\s*\{[\s\S]*?border-radius:\s*32px/);
   assert.match(studioCss, /\.reference-project-header-inner\s*\{[^}]*width:\s*100%/);
   assert.match(studioCss, /\.reference-project-body\s*\{[^}]*width:\s*100%/);
   assert.doesNotMatch(studioSource, /<Modal\.Root\s+isOpen=/);

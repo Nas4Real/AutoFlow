@@ -1639,7 +1639,7 @@ select:focus-visible {
   flex-basis: 32px;
   border: 0;
   border-radius: 8px;
-  background: #2563eb;
+  background: #1a3a80;
   color: #fff;
   box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.2);
 }
@@ -1942,7 +1942,7 @@ select:focus-visible {
   transition: background 160ms ease, transform 160ms ease;
 }
 
-.reference-primary-action:hover { background: #3b82f6; }
+.reference-primary-action:hover { background: #1d4ed8; }
 .reference-primary-action:active { transform: scale(0.95); }
 .reference-primary-action:disabled { opacity: 0.45; }
 
@@ -1992,6 +1992,50 @@ select:focus-visible {
   border-radius: 12px;
   background: rgba(37, 99, 235, 0.2);
   color: #60a5fa;
+}
+
+.reference-empty-dashboard {
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #111111;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(26, 58, 128, 0.18), transparent 38%),
+    #080808;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.reference-empty-dashboard-icon {
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 24px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 24px;
+  background: rgba(26, 58, 128, 0.2);
+  color: #60a5fa;
+}
+
+.reference-empty-dashboard h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.reference-empty-dashboard p {
+  max-width: 500px;
+  margin: 10px 0 24px;
+  color: #a0a8b8;
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 .reference-project-controls {

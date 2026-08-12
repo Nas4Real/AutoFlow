@@ -42,6 +42,7 @@ import {
   Upload,
   UserRound,
   Video,
+  VideoOff,
   X,
 } from "lucide-react";
 
@@ -486,6 +487,17 @@ function getProjectPresentation(progress) {
   return { tone: "ready", badge: "Ready", Icon: FileJson, detail: "Import Phase", action: "Generate Images", target: "images" };
 }
 
+function ReferenceEmptyDashboard({ onCreateProject }) {
+  return (
+    <section className="reference-empty-dashboard" aria-labelledby="empty-dashboard-title">
+      <div className="reference-empty-dashboard-icon" aria-hidden="true"><VideoOff size={42} /></div>
+      <h2 id="empty-dashboard-title">Create your first video project</h2>
+      <p>Start by creating a channel. Then import a JSON prompt file to track every stage of your video production.</p>
+      <button type="button" className="reference-primary-action" onClick={onCreateProject}><Plus size={18} />Create Project</button>
+    </section>
+  );
+}
+
 function ReferenceDashboardView({ project, videos, onAddChannel, onAddVideo, onOpenVideo }) {
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState("updated");
@@ -511,7 +523,7 @@ function ReferenceDashboardView({ project, videos, onAddChannel, onAddVideo, onO
     <div className="reference-dashboard">
       <header className="reference-dashboard-header">
         <div><h1>Video Projects</h1><p>Track every video from imported prompts to completed media.</p></div>
-        <button type="button" className="reference-primary-action" onClick={onAddVideo} disabled={!project}><Plus size={18} />Import JSON</button>
+        <button type="button" className="reference-primary-action" onClick={project ? onAddVideo : onAddChannel}><Plus size={18} />{project ? "Import JSON" : "New Project"}</button>
       </header>
       {project ? (
         <>
@@ -546,7 +558,16 @@ function ReferenceDashboardView({ project, videos, onAddChannel, onAddVideo, onO
             </section>
           ) : <EmptyState title="No matching projects" description="Choose another production status filter." />}
         </>
-      ) : <EmptyState title="Add your first channel" description="A channel keeps its videos, assets, images, and queue together." action={<Button variant="primary" onPress={onAddChannel}><Plus size={17} />Add channel</Button>} />}
+      ) : (
+        <>
+          <section className="reference-stats" aria-label="Channel project statistics">
+            {[["Total Projects", 0, FolderKanban], ["Active Runs", 0, Activity], ["Completed Videos", 0, CheckCircle]].map(([label, value, Icon]) => (
+              <div className="reference-stat-card" key={label}><div><span>{label}</span><strong>{value}</strong></div><span className="reference-stat-icon"><Icon size={24} /></span></div>
+            ))}
+          </section>
+          <ReferenceEmptyDashboard onCreateProject={onAddChannel} />
+        </>
+      )}
     </div>
   );
 }
