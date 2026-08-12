@@ -1689,6 +1689,13 @@ select:focus-visible {
   border: 0;
 }
 
+.sidebar-projects-empty {
+  margin: 10px 12px 0;
+  color: #808090;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .sidebar-section-title {
   display: flex;
   align-items: center;

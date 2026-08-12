@@ -931,8 +931,8 @@ function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, rec
         })}
       </nav>
       <section className="sidebar-projects" aria-label="Video projects">
-        <div className="sidebar-section-title"><span>Video Projects</span><button type="button" aria-label="Import a video project" onClick={onAddVideo} disabled={!project}><Plus size={15} /></button></div>
-        <label className="sidebar-project-search"><Search size={14} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects..." aria-label="Search video projects" /></label>
+        <div className="sidebar-section-title"><span>Video Projects</span>{project ? <button type="button" aria-label="Import a video project" onClick={onAddVideo}><Plus size={15} /></button> : null}</div>
+        {project ? <><label className="sidebar-project-search"><Search size={14} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects..." aria-label="Search video projects" /></label>
         <div className="sidebar-project-list">
           {recentProjects.map((video) => {
             const progress = studioApi.getVideoProjectProgress(project, video.video_id);
@@ -941,7 +941,7 @@ function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, rec
             const projectNumber = videos.findIndex((entry) => entry.video_id === video.video_id) + 1;
             return <button key={video.video_id} type="button" className={`sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`} onClick={() => onOpenVideo(video.video_id, "overview")}><span className="project-number" aria-hidden="true">{projectNumber}</span><strong>{video.display_name}</strong></button>;
           })}
-        </div>
+        </div></> : <p className="sidebar-projects-empty">No projects created</p>}
       </section>
       <footer className="studio-sidebar-footer">
         <div className={`sidebar-flow-status status-${flowStatus}`} role="status"><span aria-hidden="true" /><strong>{flowLabel}</strong></div>

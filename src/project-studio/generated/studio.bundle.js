@@ -35164,22 +35164,24 @@
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "sidebar-projects", "aria-label": "Video projects", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "sidebar-section-title", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Video Projects" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", "aria-label": "Import a video project", onClick: onAddVideo, disabled: !project, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 15 }) })
+          project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", "aria-label": "Import a video project", onClick: onAddVideo, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 15 }) }) : null
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "sidebar-project-search", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Search, { size: 14 }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: query, onChange: (event) => setQuery(event.target.value), placeholder: "Search projects...", "aria-label": "Search video projects" })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "sidebar-project-list", children: recentProjects.map((video) => {
-          const progress = studioApi.getVideoProjectProgress(project, video.video_id);
-          const presentation = getProjectPresentation(progress);
-          const isActive = activeVideo?.video_id === video.video_id && PROJECT_TABS.some((tab) => tab.id === view);
-          const projectNumber = videos.findIndex((entry) => entry.video_id === video.video_id) + 1;
-          return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`, onClick: () => onOpenVideo(video.video_id, "overview"), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "project-number", "aria-hidden": "true", children: projectNumber }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: video.display_name })
-          ] }, video.video_id);
-        }) })
+        project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "sidebar-project-search", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Search, { size: 14 }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: query, onChange: (event) => setQuery(event.target.value), placeholder: "Search projects...", "aria-label": "Search video projects" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "sidebar-project-list", children: recentProjects.map((video) => {
+            const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+            const presentation = getProjectPresentation(progress);
+            const isActive = activeVideo?.video_id === video.video_id && PROJECT_TABS.some((tab) => tab.id === view);
+            const projectNumber = videos.findIndex((entry) => entry.video_id === video.video_id) + 1;
+            return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `sidebar-project tone-${presentation.tone} ${isActive ? "active" : ""}`, onClick: () => onOpenVideo(video.video_id, "overview"), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "project-number", "aria-hidden": "true", children: projectNumber }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: video.display_name })
+            ] }, video.video_id);
+          }) })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "sidebar-projects-empty", children: "No projects created" })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("footer", { className: "studio-sidebar-footer", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `sidebar-flow-status status-${flowStatus}`, role: "status", children: [
