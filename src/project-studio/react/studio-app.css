@@ -2559,6 +2559,27 @@ select:focus-visible {
   .studio-sidebar-footer { padding: 16px; }
 }
 
+/* Exact Superdesign draft: AutoFlow Studio V2 | Empty Dashboard (b0db4dd3-c232-410d-8824-76f1e9bd5329). */
+.reference-dashboard { padding: 40px 48px; }
+.reference-primary-action { height: 44px; background: #1a3a80; }
+.reference-primary-action:hover { background: rgba(26, 58, 128, 0.8); }
+.reference-stat-card { border-color: rgba(59, 130, 246, 0.1); background: linear-gradient(135deg, rgba(10, 20, 60, 0.04), rgba(0, 0, 0, 0.02)); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); }
+.reference-stat-card strong { background: linear-gradient(to bottom right, #2563eb, #1a3a80); color: #2563eb; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.reference-empty-dashboard { min-height: 450px; border: 1px solid #050505; border-radius: 0; background: rgba(5, 5, 5, 0.4); padding: 32px; }
+.reference-empty-dashboard-illustration { position: relative; display: grid; place-items: center; width: 96px; height: 96px; margin-bottom: 32px; overflow: hidden; }
+.reference-empty-dashboard-glow { position: absolute; inset: 0; opacity: 0.3; background: radial-gradient(circle at center, rgba(59, 130, 246, 0.2) 0%, transparent 70%); }
+.reference-empty-dashboard-video { position: relative; color: rgba(59, 130, 246, 0.4); }
+.reference-empty-dashboard-underline { position: absolute; right: 0; bottom: 0; left: 0; height: 4px; background: linear-gradient(to right, transparent, rgba(59, 130, 246, 0.4), transparent); }
+.reference-empty-dashboard-copy { max-width: 384px; text-align: center; }
+.reference-empty-dashboard-copy h2 { margin: 0 0 12px; color: #fff; font-size: 24px; line-height: 1.25; font-weight: 700; }
+.reference-empty-dashboard-copy p { margin: 0 0 32px; color: #a0a8b8; font-size: 14px; line-height: 1.7; }
+.reference-empty-dashboard-cta { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 0; background: #2563eb; padding: 12px 32px; color: #fff; font-family: inherit; font-size: 14px; font-weight: 700; box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.1); transition: background 160ms ease, transform 160ms ease; }
+.reference-empty-dashboard-cta:hover { background: rgba(29, 78, 216, 0.9); }
+.reference-empty-dashboard-cta:active { transform: scale(0.95); }
+.reference-empty-dashboard-features { display: flex; flex-direction: row; align-items: center; gap: 32px; margin-top: 48px; }
+.reference-empty-dashboard-features span { display: inline-flex; align-items: center; gap: 8px; color: #808090; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; }
+.reference-empty-dashboard-features svg { color: #3b82f6; }
+
 @media (max-width: 840px) {
   .reference-stats,
   .reference-production-grid { grid-template-columns: 1fr; }

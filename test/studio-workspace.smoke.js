@@ -624,7 +624,8 @@ async function run() {
   assert.match(studioSource, /<Zap size=\{20\} \/>/);
   assert.match(studioSource, /function ReferenceEmptyDashboard/);
   assert.match(studioSource, /className="reference-empty-dashboard"/);
-  assert.match(studioSource, /Create your first video project/);
+  assert.match(studioSource, /No video projects yet/);
+  assert.match(studioSource, /Fast Generation/);
   assert.match(studioSource, /className="reference-project-header"/);
   assert.match(studioSource, /const PROJECT_TABS = \[/);
   assert.match(

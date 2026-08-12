@@ -9,6 +9,7 @@ import {
   ArrowUp,
   Check,
   CheckCircle,
+  CheckCircle2,
   CheckSquare,
   Clapperboard,
   CirclePause,
@@ -43,6 +44,7 @@ import {
   UserRound,
   Video,
   VideoOff,
+  Wand2,
   X,
   Zap,
 } from "lucide-react";
@@ -491,10 +493,21 @@ function getProjectPresentation(progress) {
 function ReferenceEmptyDashboard({ onCreateProject }) {
   return (
     <section className="reference-empty-dashboard" aria-labelledby="empty-dashboard-title">
-      <div className="reference-empty-dashboard-icon" aria-hidden="true"><VideoOff size={42} /></div>
-      <h2 id="empty-dashboard-title">Create your first video project</h2>
-      <p>Start by creating a channel. Then import a JSON prompt file to track every stage of your video production.</p>
-      <button type="button" className="reference-primary-action" onClick={onCreateProject}><Plus size={18} />Create Project</button>
+      <div className="reference-empty-dashboard-illustration" aria-hidden="true">
+        <span className="reference-empty-dashboard-glow" />
+        <span className="reference-empty-dashboard-video"><VideoOff size={48} /></span>
+        <span className="reference-empty-dashboard-underline" />
+      </div>
+      <div className="reference-empty-dashboard-copy">
+        <h2 id="empty-dashboard-title">No video projects yet</h2>
+        <p>Start creating high-quality AI videos by importing your first prompt file.</p>
+        <button type="button" className="reference-empty-dashboard-cta" onClick={onCreateProject}><Wand2 size={20} />Create First Project</button>
+      </div>
+      <div className="reference-empty-dashboard-features" aria-label="Project capabilities">
+        <span><Zap size={16} />Fast Generation</span>
+        <span><Clapperboard size={16} />HD Resolution</span>
+        <span><FileInput size={16} />Batch Processing</span>
+      </div>
     </section>
   );
 }
@@ -562,7 +575,7 @@ function ReferenceDashboardView({ project, videos, onAddChannel, onAddVideo, onO
       ) : (
         <>
           <section className="reference-stats" aria-label="Channel project statistics">
-            {[["Total Projects", 0, FolderKanban], ["Active Runs", 0, Activity], ["Completed Videos", 0, CheckCircle]].map(([label, value, Icon]) => (
+            {[["Total Projects", 0, Layers], ["Active Runs", 0, PlayCircle], ["Completed Videos", 0, CheckCircle2]].map(([label, value, Icon]) => (
               <div className="reference-stat-card" key={label}><div><span>{label}</span><strong>{value}</strong></div><span className="reference-stat-icon"><Icon size={24} /></span></div>
             ))}
           </section>
