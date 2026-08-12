@@ -1468,6 +1468,45 @@
     });
   }
 
+async function downloadMediaItem(item, options = {}) {
+    if (!item || (item.type !== "image" && item.type !== "video")) {
+      throw new Error("A valid media item is required.");
+    }
+    const sourceUrl = item.type === "video" ? item.video_url : item.preview_url;
+    if (!sourceUrl) throw new Error("This media item has no downloadable source.");
+
+    const channelFolder = safeFolderName(options.projectName || studioState.activeProject?.display_name);
+    const videoFolder = safeFolderName(options.videoName || "Video Project");
+    const rawFileName = item.type === "video"
+      ? item.output_file_name || item.expected_file_name || "video.mp4"
+      : item.finalized_as_file_name || item.generated_file_name || item.expected_file_name || item.prompt_file_name || "image.png";
+    const fileNameParts = normalizeRelativeFileName(rawFileName);
+    const downloadPath = ["AutoFlow", channelFolder, videoFolder, "media", item.type]
+      .concat(fileNameParts)
+      .join("/");
+    const downloadId = await downloadFile(sourceUrl, downloadPath);
+    return { item, download_id: downloadId, download_path: downloadPath };
+  }
+
+  async function downloadMediaItems(items, options = {}) {
+    const results = [];
+    const failures = [];
+    for (const item of Array.isArray(items) ? items : []) {
+      try {
+        results.push(await downloadMediaItem(item, options));
+      } catch (error) {
+        failures.push({ item, error_message: error.message || "Download failed." });
+      }
+    }
+    if (failures.length) {
+      const error = new Error(`${failures.length} media item${failures.length === 1 ? "" : "s"} could not be downloaded.`);
+      error.failures = failures;
+      error.downloaded = results;
+      throw error;
+    }
+    return results;
+  }
+
   async function finalizeSelectedImages() {
     const project = studioState.activeProject;
     if (!project) {
@@ -3864,6 +3903,8 @@
     createAssetWithFile,
     deleteAsset,
     deleteProjectVideo,
+    downloadMediaItem,
+    downloadMediaItems,
     formatDate,
     finalizeSelectedImages,
     getAssetTypeDefinition,

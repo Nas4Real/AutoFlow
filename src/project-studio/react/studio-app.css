@@ -1172,6 +1172,18 @@ select:focus-visible {
   align-items: center;
 }
 
+.media-card-copy {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.media-card-copy strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .media-card img,
 .media-card video,
 .media-placeholder {

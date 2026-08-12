@@ -13,6 +13,7 @@ import {
   Clapperboard,
   CirclePause,
   Cpu,
+  Download,
   FileInput,
   FileJson,
   FolderKanban,
@@ -879,18 +880,27 @@ function VideoQueueView({ project, video, runner, onRunAll, onRunSelected, onPau
   );
 }
 
-function MediaView({ project, video, onFinalize, onSync, busy }) {
+function MediaView({ project, video, onSync, onDownload, onDownloadAll, busy }) {
   const folderInput = useRef(null);
   const [tab, setTab] = useState("all");
   if (!video) return <EmptyState icon={LayoutGrid} title="Choose a video" description="Media is organized one video at a time." />;
+
   const promptIds = new Set(video.prompt_ids || []);
-  const media = studioApi.getProjectGalleryItems(project).items.filter((item) => promptIds.has(item.prompt_id));
+  const projectMedia = studioApi.getProjectGalleryItems(project).items.filter((item) => promptIds.has(item.prompt_id));
+  const media = projectMedia.filter((item) => item.type === "video" || item.is_selected);
   const visibleMedia = media.filter((item) => tab === "all" || item.type === tab.slice(0, -1));
+  const countForTab = (tabId) => tabId === "all"
+    ? media.length
+    : media.filter((entry) => entry.type === tabId.slice(0, -1)).length;
+
   return (
     <div className="view-stack">
-      <PageHeader title="Media" description={video.display_name} actions={<><Button variant="outline" isDisabled={busy} onPress={() => folderInput.current?.click()}><FolderSync size={17} />Sync folder</Button><Button variant="primary" isDisabled={busy} onPress={onFinalize}>Finalize selected</Button><input ref={folderInput} type="file" hidden multiple webkitdirectory="" onChange={(event) => onSync(event.target.files)} /></>} />
-      <nav className="studio-subtabs" aria-label="Media sections">{MEDIA_TABS.map((item) => <button key={item.id} type="button" className={tab === item.id ? "active" : ""} aria-current={tab === item.id ? "page" : undefined} onClick={() => setTab(item.id)}>{item.label}<span>{item.id === "all" ? media.length : media.filter((entry) => entry.type === item.id.slice(0, -1)).length}</span></button>)}</nav>
-      {visibleMedia.length ? <div className="media-grid">{visibleMedia.map((item) => <Card key={`${item.type}:${item.id}`} className="media-card" variant="secondary"><Card.Content>{item.type === "video" && item.video_url ? <video controls preload="metadata" src={item.video_url} /> : item.type === "image" ? <CachedPreviewImage value={item} alt={studioApi.sceneTitleFromFileName(item.prompt_file_name)} placeholderClassName="media-placeholder" /> : <span className="media-placeholder"><ImageIcon size={24} /></span>}<strong>{studioApi.sceneTitleFromFileName(item.prompt_file_name || item.output_file_name)}</strong><Chip size="sm" color={statusColor(item.is_selected ? "complete" : "draft")} variant="soft">{item.status_label}</Chip></Card.Content></Card>)}</div> : <EmptyState icon={LayoutGrid} title={`No ${tab === "all" ? "media" : tab} yet`} description={tab === "all" ? "Selected images and completed videos appear here." : `This video project has no ${tab} yet.`} />}
+      <PageHeader title="Media" description="Selected images and completed videos for this project." actions={<><Button variant="outline" isDisabled={busy} onPress={() => folderInput.current?.click()}><FolderSync size={17} />Sync Folder</Button><Button variant="primary" isDisabled={busy || !media.length} onPress={() => onDownloadAll(media)}><Download size={17} />Download All</Button><input ref={folderInput} type="file" hidden multiple webkitdirectory="" onChange={(event) => { onSync(event.target.files); event.target.value = ""; }} /></>} />
+      <nav className="studio-subtabs" aria-label="Media sections">{MEDIA_TABS.map((item) => <button key={item.id} type="button" className={tab === item.id ? "active" : ""} aria-current={tab === item.id ? "page" : undefined} onClick={() => setTab(item.id)}>{item.label}<span>{countForTab(item.id)}</span></button>)}</nav>
+      {visibleMedia.length ? <div className="media-grid">{visibleMedia.map((item) => {
+        const title = studioApi.sceneTitleFromFileName(item.prompt_file_name || item.output_file_name);
+        return <Card key={`${item.type}:${item.id}`} className="media-card" variant="secondary"><Card.Content>{item.type === "video" && item.video_url ? <video controls preload="metadata" src={item.video_url} /> : item.type === "image" ? <CachedPreviewImage value={item} alt={title} placeholderClassName="media-placeholder" /> : <span className="media-placeholder"><ImageIcon size={24} /></span>}<div className="media-card-copy"><strong>{title}</strong><Chip size="sm" color={statusColor(item.is_selected || item.type === "video" ? "complete" : "draft")} variant="soft">{item.status_label}</Chip></div><Button size="sm" variant="outline" isDisabled={busy} onPress={() => onDownload(item)}><Download size={15} />Download</Button></Card.Content></Card>;
+      })}</div> : <EmptyState icon={LayoutGrid} title={`No ${tab === "all" ? "media" : tab} yet`} description={tab === "all" ? "Selected images and completed videos appear here." : `This video project has no ${tab} yet.`} />}
     </div>
   );
 }
@@ -1201,7 +1211,7 @@ function StudioApp() {
   } else if (view === "video") {
     content = <VideoQueueView project={project} video={activeVideo} runner={runner} onRunAll={() => { const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "", promptIds: null }; setRunnerState(next); runNext(activeVideo.video_id); }} onRunSelected={(selectedPromptIds) => { const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "", promptIds: selectedPromptIds }; setRunnerState(next); runNext(activeVideo.video_id, selectedPromptIds); }} onPause={() => setRunnerState((current) => ({ ...current, status: "paused", error: "Paused after the current job." }))} onContinue={() => { setRunnerState((current) => ({ ...current, status: "running", error: "" })); runNext(activeVideo.video_id, runner.promptIds); }} onQueue={(promptId) => action("queue", () => studioApi.queuePromptVideo(promptId), "Added to queue")} onRun={(jobId) => action("run", () => studioApi.runVideoJob(jobId), "Video started")} onStop={stopVideo} onHold={(jobId) => action("hold", () => studioApi.holdVideoJob(jobId), "Video held")} onMove={(jobId, direction) => action(`move-${direction}`, () => studioApi.moveVideoJob(jobId, direction))} onRemove={(jobId) => action("remove", () => studioApi.removeVideoJob(jobId), "Removed from queue")} onOpenImages={() => setView("images")} />;
   } else if (view === "media") {
-    content = <MediaView project={project} video={activeVideo} busy={!!busy} onFinalize={() => action("finalize", () => studioApi.finalizeSelectedImages(), "Selected images finalized")} onSync={(files) => action("sync", () => studioApi.syncProjectMediaFromFiles(files), "Folder synced")} />;
+    content = <MediaView project={project} video={activeVideo} busy={!!busy} onSync={(files) => action("sync", () => studioApi.syncProjectMediaFromFiles(files), "Folder synced")} onDownload={(item) => action("download-media", () => studioApi.downloadMediaItem(item, { projectName: project.display_name, videoName: activeVideo.display_name }), "Download started")} onDownloadAll={(items) => action("download-all-media", () => studioApi.downloadMediaItems(items, { projectName: project.display_name, videoName: activeVideo.display_name }), "Downloads started")} />;
   } else if (view === "profile") {
     content = <ProfileView project={project} videos={videos} flowContext={snapshot.flowContext} />;
   } else {

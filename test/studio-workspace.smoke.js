@@ -576,6 +576,13 @@ async function run() {
   assert.match(studioSource, /Generate images<\/Button>/);
   assert.match(studioSource, /<span>Images per prompt<\/span>/);
   assert.match(studioSource, /Flow connection/);
+  assert.match(studioSource, />Download All<\/Button>/);
+  assert.match(studioSource, /onDownloadAll/);
+  assert.match(studioSource, /onDownload\(item\)/);
+  assert.match(studioSource, />Download<\/Button>/);
+  assert.match(studioSource, /item\.type === "video" \|\| item\.is_selected/);
+  assert.match(studioSource, /studioApi\.downloadMediaItem/);
+  assert.match(studioSource, /studioApi\.downloadMediaItems/);
   assert.match(studioSource, /setView\("images"\)/);
   assert.match(studioSource, /getViewFromLocationHash/);
   assert.match(studioSource, /useState\(\(\) => getViewFromLocationHash\(\)\)/);
