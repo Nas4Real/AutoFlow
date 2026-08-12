@@ -41,9 +41,9 @@
 
 ## Superdesign V2 Studio Integration
 
-- [ ] Lock V2 routing, token, and checkpoint contracts in tests
-- [ ] Port the shared V2 shell, sidebar, header, status cards, and project tabs
-- [ ] Wire Dashboard, Imports, Logs, and local Profile
-- [ ] Wire Overview, Image Review, Video Queue, and Media
-- [ ] Exclude Settings from extension navigation and routing
+- [x] Lock V2 routing, token, and checkpoint contracts in tests
+- [x] Port the shared V2 shell, sidebar, header, status cards, and project tabs
+- [x] Wire Dashboard, Imports, Logs, and local Profile
+- [x] Wire Overview, Image Review, Video Queue, and Media
+- [x] Exclude Settings from extension navigation, routing, and bundle source
 - [ ] Build, verify in Chrome, review, commit atomically, and push

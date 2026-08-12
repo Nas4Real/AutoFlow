@@ -35,7 +35,6 @@ import {
   Save,
   Search,
   ScrollText,
-  Settings,
   Sparkles,
   Square,
   Trash2,
@@ -66,13 +65,6 @@ const IMPORT_TABS = [
   { id: "history", label: "Import History" },
   { id: "references", label: "Needs References" },
   { id: "library", label: "Assets" },
-];
-
-const SETTINGS_TABS = [
-  { id: "channel", label: "Channel" },
-  { id: "defaults", label: "Generation Defaults" },
-  { id: "connection", label: "Flow Connection" },
-  { id: "diagnostics", label: "Diagnostics" },
 ];
 
 const IMAGE_REVIEW_TABS = [
@@ -566,11 +558,12 @@ function ReferenceProjectOverviewView({ project, video, onNavigate }) {
   const activeIndex = Math.max(0, phases.findIndex(([id]) => id === progress.phase));
   const imageComplete = progress.generated_count >= progress.prompt_count && progress.prompt_count > 0;
   const selectionComplete = progress.selected_count >= progress.prompt_count && progress.prompt_count > 0;
-  const videoComplete = progress.video_complete_count >= progress.prompt_count && progress.prompt_count > 0;
+  const videoPromptCount = studioApi.getVideoQueueItems(project, video.video_id).filter((item) => !!item.animation_prompt).length;
+  const videoComplete = progress.video_complete_count >= videoPromptCount && videoPromptCount > 0;
   const cards = [
     { label: "Image Generation", value: `${progress.generated_count}/${progress.prompt_count}`, description: imageComplete ? "All scene variants generated." : `${Math.max(0, progress.prompt_count - progress.generated_count)} scenes still need images.`, action: "Review", target: "images", Icon: Sparkles, tone: imageComplete ? "complete" : "ready", badge: imageComplete ? "Complete" : "Ready" },
     { label: "Variant Selection", value: `${progress.selected_count}/${progress.prompt_count}`, description: selectionComplete ? "A variant is selected for every scene." : `${Math.max(0, progress.prompt_count - progress.selected_count)} scenes need selection.`, action: selectionComplete ? "Review" : "Select Missing", target: "images", Icon: CheckSquare, tone: selectionComplete ? "complete" : "attention", badge: selectionComplete ? "Complete" : "Attention" },
-    { label: "Video Queue", value: `${progress.video_complete_count}/${progress.prompt_count}`, description: videoComplete ? "All videos are complete." : selectionComplete ? "Prepared for manual launch." : "Select every scene before launch.", action: "Open Queue", target: "video", Icon: PlayCircle, tone: videoComplete ? "complete" : "ready", badge: videoComplete ? "Complete" : "Ready" },
+    { label: "Video Queue", value: `${progress.video_complete_count}/${videoPromptCount}`, description: !videoPromptCount ? "No scenes require animation." : videoComplete ? "All videos are complete." : selectionComplete ? "Prepared for manual launch." : "Select required scenes before launch.", action: "Open Queue", target: "video", Icon: PlayCircle, tone: videoComplete ? "complete" : "ready", badge: videoComplete ? "Complete" : "Ready" },
   ];
   return (
     <div className="reference-project-overview">
@@ -581,7 +574,6 @@ function ReferenceProjectOverviewView({ project, video, onNavigate }) {
             <div key={id} className={`reference-milestone ${index < activeIndex ? "complete" : index === activeIndex ? "current" : "pending"}`}><span className="reference-milestone-dot">{index < activeIndex ? <Check size={17} /> : index === activeIndex ? <i /> : label === "Complete" ? <Trophy size={14} /> : <i />}</span><strong>{label}</strong></div>
           ))}
         </div>
-        <div className="reference-overall-progress"><span><span style={{ width: `${progress.percentage}%` }} /></span><strong>Overall Completion: {progress.percentage}%</strong></div>
       </section>
       <section className="reference-production-grid" aria-label="Production status">
         {cards.map(({ label, value, description, action, target, Icon, tone, badge }) => (
@@ -689,28 +681,7 @@ function getProjectImageSettings(project) {
   };
 }
 
-function SettingsView({ project, flowContext, logs, busy, onUpdateProject, onRefreshConnection, onClearLogs }) {
-  const [tab, setTab] = useState("channel");
-  const [channelName, setChannelName] = useState(project?.display_name || "");
-  const [defaults, setDefaults] = useState(() => getProjectImageSettings(project));
-  useEffect(() => {
-    setChannelName(project?.display_name || "");
-    setDefaults(getProjectImageSettings(project));
-  }, [project?.project_id, project?.display_name]);
-  const flowStatus = String(flowContext?.status || "disconnected").toLowerCase();
-  const connected = flowStatus === "connected";
-  const saveDefaults = () => onUpdateProject({ settings: { ...(project?.settings || {}), image_model: defaults.imageModel, image_ratio: defaults.imageRatio, image_count: Number(defaults.imageCount), image_speed_mode: defaults.speedMode } });
-  return (
-    <div className="view-stack">
-      <PageHeader title="Settings" description="Channel-level Studio preferences and operational diagnostics." />
-      <nav className="studio-subtabs" aria-label="Settings sections">{SETTINGS_TABS.map((item) => <button key={item.id} type="button" className={tab === item.id ? "active" : ""} aria-current={tab === item.id ? "page" : undefined} onClick={() => setTab(item.id)}>{item.label}</button>)}</nav>
-      {tab === "channel" ? <section className="settings-grid"><article className="studio-surface-panel settings-card"><span className="eyebrow">Active channel</span><h2>{project?.display_name || "No active channel"}</h2><p>Projects, imports, assets, and references remain scoped to this channel.</p><label className="field-label">Channel name<input value={channelName} onChange={(event) => setChannelName(event.target.value)} disabled={!project} /></label><Button variant="primary" isDisabled={!project || !channelName.trim() || channelName.trim() === project?.display_name || busy} onPress={() => onUpdateProject({ display_name: channelName.trim() })}><Save size={17} />Save channel</Button></article><article className="studio-surface-panel settings-card"><span className="eyebrow">Channel summary</span><div className="settings-metrics"><div><strong>{studioApi.getProjectVideos(project).length}</strong><span>Video projects</span></div><div><strong>{studioApi.getActiveAssets(project).length}</strong><span>Reference assets</span></div><div><strong>{studioApi.getProjectPromptRecords(project).length}</strong><span>Imported scenes</span></div></div></article></section> : null}
-      {tab === "defaults" ? <section className="studio-surface-panel settings-card settings-form"><div><span className="eyebrow">Manual checkpoint defaults</span><h2>Generation Defaults</h2><p>These values prefill Image Review. They never begin a run without your confirmation.</p></div><div className="settings-controls"><label className="field-label">Image model<select value={defaults.imageModel} onChange={(event) => setDefaults((current) => ({ ...current, imageModel: event.target.value }))}><option value="NARWHAL">NARWHAL</option><option value="GEM_PIX_2">GEM PIX 2</option></select></label><label className="field-label">Aspect ratio<select value={defaults.imageRatio} onChange={(event) => setDefaults((current) => ({ ...current, imageRatio: event.target.value }))}><option value="IMAGE_ASPECT_RATIO_LANDSCAPE">Landscape</option><option value="IMAGE_ASPECT_RATIO_SQUARE">Square</option><option value="IMAGE_ASPECT_RATIO_PORTRAIT">Portrait</option></select></label><label className="field-label">Images per prompt<select value={defaults.imageCount} onChange={(event) => setDefaults((current) => ({ ...current, imageCount: Number(event.target.value) }))}><option value={1}>1</option><option value={2}>2</option><option value={3}>3</option><option value={4}>4</option></select></label><label className="field-label">Speed mode<select value={defaults.speedMode} onChange={(event) => setDefaults((current) => ({ ...current, speedMode: event.target.value }))}><option value="fast">Fast</option><option value="balanced">Balanced</option></select></label></div><Button variant="primary" isDisabled={!project || busy} onPress={saveDefaults}><Save size={17} />Save defaults</Button></section> : null}
-      {tab === "connection" ? <section className="settings-grid"><article className="studio-surface-panel settings-card"><span className="eyebrow">Flow connection</span><h2>{connected ? "Connected" : "Disconnected"}</h2><p>{flowContext?.flow_context_id ? `Context: ${flowContext.flow_context_id}` : "No Flow context is currently available."}</p><Chip color={connected ? "success" : "warning"} variant="soft">{flowStatus}</Chip><Button variant="secondary" isDisabled={busy} onPress={onRefreshConnection}><RefreshCw size={17} />Refresh connection</Button></article><article className="studio-surface-panel settings-card"><span className="eyebrow">Generation safety</span><h2>Manual confirmation enabled</h2><p>Image generation and video generation remain separate, explicit checkpoints. Saving defaults or refreshing Flow never starts a paid run.</p></article></section> : null}
-      {tab === "diagnostics" ? <section className="studio-surface-panel settings-card diagnostics-panel"><div className="section-heading"><div><span className="eyebrow">Studio activity</span><h2>Diagnostics</h2><p>Recent Studio and generation events for the active channel.</p></div><Button variant="ghost" onPress={onClearLogs}>Clear logs</Button></div>{logs.length ? <div className="log-list">{logs.slice().reverse().map((entry) => <div className={`log-row log-${entry.type}`} key={entry.id}><span>{entry.time || ""}</span><Chip size="sm" color={statusColor(entry.type === "error" ? "failed" : entry.type === "warn" ? "paused" : "draft")} variant="soft">{entry.type}</Chip><p>{entry.message}</p></div>)}</div> : <EmptyState icon={Activity} title="No diagnostics yet" description="Studio events will appear here as you import and generate media." />}</section> : null}
-    </div>
-  );
-}
+
 
 function ImageReviewView({ project, video, flowContext, busy, onRefreshConnection, onGenerate, onStop, onRetry, onSelect }) {
   const [settings, setSettings] = useState(() => getProjectImageSettings(project));
@@ -739,7 +710,7 @@ function ImageReviewView({ project, video, flowContext, busy, onRefreshConnectio
   })).filter((row) => row.variants.length);
   return (
     <div className="view-stack">
-      <PageHeader title="Image Review" description={video.display_name} actions={
+      <PageHeader title="Image Review" description="Review and select one generated image per scene. Selection never starts video generation." actions={
         <div className="flow-connection" aria-live="polite">
           <span className={`connection-dot ${connected ? "connected" : "disconnected"}`} aria-hidden="true" />
           <span><strong>Flow connection</strong>{connected ? "Connected" : "Disconnected"}</span>
@@ -844,7 +815,7 @@ function VideoQueueView({ project, video, runner, onRunAll, onRunSelected, onPau
 
   return (
     <div className="view-stack">
-      <PageHeader title="Video Queue" description={video.display_name} actions={<>{selectionControls}{runnerControl}</>} />
+      <PageHeader title="Video Queue" description="Production queue for the current active project." actions={<>{selectionControls}{runnerControl}</>} />
       {activeRunner && runner.status !== "idle" ? (
         <div className={`runner-banner ${runner.status}`}>
           {runner.status === "running" ? <LoaderCircle className="spin" size={18} /> : <AlertCircle size={18} />}
@@ -908,9 +879,15 @@ function MediaView({ project, video, onSync, onDownload, onDownloadAll, busy }) 
 function LogsView({ logs, onClear }) {
   const [query, setQuery] = useState("");
   const filtered = logs.filter((entry) => !query || String(entry.message || "").toLowerCase().includes(query.toLowerCase()));
+  const recentErrorCount = logs.filter((entry) => entry.type === "error").length;
+  const warningCount = logs.filter((entry) => entry.type === "warn" || entry.type === "warning").length;
   return (
-    <div className="view-stack">
+    <div className="view-stack logs-view">
       <PageHeader title="Logs" description="Recent Studio and generation activity." actions={<Button variant="ghost" onPress={onClear}>Clear</Button>} />
+      <section className="log-summary" aria-label="Log summary">
+        <article className="log-summary-card errors"><AlertCircle size={20} /><div><h2>Recent errors</h2><strong>{recentErrorCount}</strong><p>Errors that may need your attention.</p></div></article>
+        <article className="log-summary-card warnings"><AlertCircle size={20} /><div><h2>Warnings</h2><strong>{warningCount}</strong><p>Non-blocking issues worth reviewing.</p></div></article>
+      </section>
       <label className="search-box"><Search size={17} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search logs" /></label>
       {filtered.length ? <div className="log-list">{filtered.slice().reverse().map((entry) => <div className={`log-row log-${entry.type}`} key={entry.id}><span>{entry.time || ""}</span><Chip size="sm" color={statusColor(entry.type === "error" ? "failed" : entry.type === "warn" ? "paused" : "draft")} variant="soft">{entry.type}</Chip><p>{entry.message}</p></div>)}</div> : <EmptyState icon={Activity} title="No matching logs" />}
     </div>
@@ -1201,7 +1178,7 @@ function StudioApp() {
   if (view === "channels") {
     content = <ReferenceDashboardView project={project} videos={videos} onAddChannel={() => setDialog({ type: "channel-add" })} onAddVideo={() => setDialog({ type: "video-add" })} onOpenVideo={(videoId, target = "overview") => { setActiveVideoId(videoId); setView(target); }} />;
   } else if (view === "overview") {
-    content = <ReferenceProjectOverviewView project={project} video={activeVideo} onNavigate={setView} />;
+    content = <div className="view-stack"><PageHeader title="Overview" description="Monitor production progress and continue from the next manual checkpoint." /><ReferenceProjectOverviewView project={project} video={activeVideo} onNavigate={setView} /></div>;
   } else if (view === "assets") {
     content = <AssetsView project={project} onAdd={() => setDialog({ type: "asset-add" })} onEdit={(asset) => setDialog({ type: "asset-edit", asset })} onDelete={(asset) => setDialog({ type: "asset-delete", asset })} />;
   } else if (view === "import") {

@@ -34544,30 +34544,21 @@
     const activeIndex = Math.max(0, phases.findIndex(([id]) => id === progress.phase));
     const imageComplete = progress.generated_count >= progress.prompt_count && progress.prompt_count > 0;
     const selectionComplete = progress.selected_count >= progress.prompt_count && progress.prompt_count > 0;
-    const videoComplete = progress.video_complete_count >= progress.prompt_count && progress.prompt_count > 0;
+    const videoPromptCount = studioApi.getVideoQueueItems(project, video.video_id).filter((item) => !!item.animation_prompt).length;
+    const videoComplete = progress.video_complete_count >= videoPromptCount && videoPromptCount > 0;
     const cards = [
       { label: "Image Generation", value: `${progress.generated_count}/${progress.prompt_count}`, description: imageComplete ? "All scene variants generated." : `${Math.max(0, progress.prompt_count - progress.generated_count)} scenes still need images.`, action: "Review", target: "images", Icon: Sparkles, tone: imageComplete ? "complete" : "ready", badge: imageComplete ? "Complete" : "Ready" },
       { label: "Variant Selection", value: `${progress.selected_count}/${progress.prompt_count}`, description: selectionComplete ? "A variant is selected for every scene." : `${Math.max(0, progress.prompt_count - progress.selected_count)} scenes need selection.`, action: selectionComplete ? "Review" : "Select Missing", target: "images", Icon: SquareCheckBig, tone: selectionComplete ? "complete" : "attention", badge: selectionComplete ? "Complete" : "Attention" },
-      { label: "Video Queue", value: `${progress.video_complete_count}/${progress.prompt_count}`, description: videoComplete ? "All videos are complete." : selectionComplete ? "Prepared for manual launch." : "Select every scene before launch.", action: "Open Queue", target: "video", Icon: CirclePlay, tone: videoComplete ? "complete" : "ready", badge: videoComplete ? "Complete" : "Ready" }
+      { label: "Video Queue", value: `${progress.video_complete_count}/${videoPromptCount}`, description: !videoPromptCount ? "No scenes require animation." : videoComplete ? "All videos are complete." : selectionComplete ? "Prepared for manual launch." : "Select required scenes before launch.", action: "Open Queue", target: "video", Icon: CirclePlay, tone: videoComplete ? "complete" : "ready", badge: videoComplete ? "Complete" : "Ready" }
     ];
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-overview", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "reference-milestone-section", "aria-label": "Video project production phases", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-milestones", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "reference-milestone-lines", "aria-hidden": "true", children: phases.slice(1).map((phase, index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: index < activeIndex ? "complete" : index === activeIndex ? "current" : "" }, phase[0])) }),
-          phases.map(([id, label], index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `reference-milestone ${index < activeIndex ? "complete" : index === activeIndex ? "current" : "pending"}`, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "reference-milestone-dot", children: index < activeIndex ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Check, { size: 17 }) : index === activeIndex ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}) : label === "Complete" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Trophy, { size: 14 }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}) }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: label })
-          ] }, id))
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-overall-progress", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { style: { width: `${progress.percentage}%` } }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
-            "Overall Completion: ",
-            progress.percentage,
-            "%"
-          ] })
-        ] })
-      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("section", { className: "reference-milestone-section", "aria-label": "Video project production phases", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-milestones", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "reference-milestone-lines", "aria-hidden": "true", children: phases.slice(1).map((phase, index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: index < activeIndex ? "complete" : index === activeIndex ? "current" : "" }, phase[0])) }),
+        phases.map(([id, label], index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `reference-milestone ${index < activeIndex ? "complete" : index === activeIndex ? "current" : "pending"}`, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "reference-milestone-dot", children: index < activeIndex ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Check, { size: 17 }) : index === activeIndex ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}) : label === "Complete" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Trophy, { size: 14 }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}) }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: label })
+        ] }, id))
+      ] }) }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("section", { className: "reference-production-grid", "aria-label": "Production status", children: cards.map(({ label, value, description, action, target, Icon: Icon2, tone, badge }) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: `reference-compact-card tone-${tone}`, children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Icon2, { size: 19 }),
@@ -34806,7 +34797,7 @@
       variants: variants.filter((variant) => variant.prompt_id === record.prompt_id).sort((left, right) => Number(left.variant_index || 0) - Number(right.variant_index || 0))
     })).filter((row) => row.variants.length);
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Image Review", description: video.display_name, actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "flow-connection", "aria-live": "polite", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Image Review", description: "Review and select one generated image per scene. Selection never starts video generation.", actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "flow-connection", "aria-live": "polite", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: `connection-dot ${connected ? "connected" : "disconnected"}`, "aria-hidden": "true" }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "Flow connection" }),
@@ -34987,7 +34978,7 @@
       ] })
     ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { className: "queue-select-videos", variant: "secondary", isDisabled: !hasRunnableWork || activeRunner && runner.status !== "idle", onPress: () => setSelectionMode(true), children: "Select Videos" });
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Video Queue", description: video.display_name, actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Video Queue", description: "Production queue for the current active project.", actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
         selectionControls,
         runnerControl
       ] }) }),
@@ -35090,8 +35081,28 @@
   function LogsView({ logs, onClear }) {
     const [query, setQuery] = (0, import_react73.useState)("");
     const filtered = logs.filter((entry) => !query || String(entry.message || "").toLowerCase().includes(query.toLowerCase()));
-    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
+    const recentErrorCount = logs.filter((entry) => entry.type === "error").length;
+    const warningCount = logs.filter((entry) => entry.type === "warn" || entry.type === "warning").length;
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack logs-view", children: [
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Logs", description: "Recent Studio and generation activity.", actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "ghost", onPress: onClear, children: "Clear" }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "log-summary", "aria-label": "Log summary", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "log-summary-card errors", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CircleAlert, { size: 20 }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Recent errors" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: recentErrorCount }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Errors that may need your attention." })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "log-summary-card warnings", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CircleAlert, { size: 20 }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Warnings" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: warningCount }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Non-blocking issues worth reviewing." })
+          ] })
+        ] })
+      ] }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "search-box", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Search, { size: 17 }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: query, onChange: (event) => setQuery(event.target.value), placeholder: "Search logs" })
@@ -35439,7 +35450,10 @@
         setView(target);
       } });
     } else if (view === "overview") {
-      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ReferenceProjectOverviewView, { project, video: activeVideo, onNavigate: setView });
+      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Overview", description: "Monitor production progress and continue from the next manual checkpoint." }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ReferenceProjectOverviewView, { project, video: activeVideo, onNavigate: setView })
+      ] });
     } else if (view === "assets") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(AssetsView, { project, onAdd: () => setDialog({ type: "asset-add" }), onEdit: (asset) => setDialog({ type: "asset-edit", asset }), onDelete: (asset) => setDialog({ type: "asset-delete", asset }) });
     } else if (view === "import") {

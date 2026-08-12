@@ -1474,6 +1474,9 @@ async function downloadMediaItem(item, options = {}) {
     }
     const sourceUrl = item.type === "video" ? item.video_url : item.preview_url;
     if (!sourceUrl) throw new Error("This media item has no downloadable source.");
+    if (!/^(?:https?:|data:|blob:)/i.test(String(sourceUrl))) {
+      throw new Error("Unsupported download source.");
+    }
 
     const channelFolder = safeFolderName(options.projectName || studioState.activeProject?.display_name);
     const videoFolder = safeFolderName(options.videoName || "Video Project");

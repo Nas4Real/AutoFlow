@@ -55,7 +55,7 @@ class FakeFileReader {
   }
 }
 
-function createContext(storage, runtimeMessages) {
+function createContext(storage, runtimeMessages, downloadRequests = []) {
   let id = 0;
   const context = vm.createContext({
     Array,
@@ -80,6 +80,12 @@ function createContext(storage, runtimeMessages) {
     queueMicrotask,
     setTimeout,
     chrome: {
+      downloads: {
+        download(options, callback) {
+          downloadRequests.push(JSON.parse(JSON.stringify(options)));
+          queueMicrotask(() => callback(downloadRequests.length));
+        },
+      },
       runtime: {
         async sendMessage(message) {
           runtimeMessages.push(JSON.parse(JSON.stringify(message)));
@@ -113,11 +119,26 @@ function createContext(storage, runtimeMessages) {
 async function run() {
   const storage = createStorage();
   const runtimeMessages = [];
-  const context = createContext(storage, runtimeMessages);
+  const downloadRequests = [];
+  const context = createContext(storage, runtimeMessages, downloadRequests);
   const domain = context.TFProjectDomain;
   const importer = context.TFProjectPromptImport;
   const studio = context.TFProjectStudioState;
   domain.setStorageAdapter(storage);
+
+  await studio.downloadMediaItem(
+    { type: "image", preview_url: "https://example.invalid/image.png", prompt_file_name: "../../unsafe/name.png" },
+    { projectName: "Finance/Channel", videoName: "Budget: Basics" },
+  );
+  assert.deepEqual(downloadRequests[0], {
+    url: "https://example.invalid/image.png",
+    filename: "AutoFlow/Finance-Channel/Budget- Basics/media/image/unsafe/name.png",
+    saveAs: false,
+  });
+  await assert.rejects(
+    studio.downloadMediaItem({ type: "video", video_url: "javascript:alert(1)", output_file_name: "bad.mp4" }),
+    /unsupported download source/i,
+  );
 
   const created = await domain.createProject({
     display_name: "Finance Channel",
@@ -583,6 +604,18 @@ async function run() {
   assert.match(studioSource, /item\.type === "video" \|\| item\.is_selected/);
   assert.match(studioSource, /studioApi\.downloadMediaItem/);
   assert.match(studioSource, /studioApi\.downloadMediaItems/);
+  assert.doesNotMatch(studioSource, /Overall Completion/);
+  assert.doesNotMatch(studioSource, /reference-overall-progress/);
+  assert.match(studioSource, /title="Overview" description="Monitor production progress and continue from the next manual checkpoint\."/);
+  assert.match(studioSource, /title="Image Review" description="Review and select one generated image per scene\. Selection never starts video generation\."/);
+  assert.match(studioSource, /title="Video Queue" description="Production queue for the current active project\."/);
+  assert.match(studioSource, /const videoPromptCount = studioApi\.getVideoQueueItems\(project, video\.video_id\)\.filter\(\(item\) => !!item\.animation_prompt\)\.length/);
+  assert.match(studioSource, /Recent errors/);
+  assert.match(studioSource, /Warnings/);
+  assert.doesNotMatch(studioSource, /Last 24 hours|Run success rate/);
+  assert.match(studioCss, /\.variant-choice \{[\s\S]*?background: #080808;/);
+  assert.match(studioCss, /\.log-summary-card\.errors \{ border-left-color:/);
+  assert.match(studioCss, /\.log-summary-card\.warnings \{ border-left-color:/);
   assert.match(studioSource, /setView\("images"\)/);
   assert.match(studioSource, /getViewFromLocationHash/);
   assert.match(studioSource, /useState\(\(\) => getViewFromLocationHash\(\)\)/);
@@ -603,6 +636,7 @@ async function run() {
   assert.doesNotMatch(studioSource, /<span>Settings<\/span>/);
   assert.doesNotMatch(studioSource, /hash === "settings"/);
   assert.doesNotMatch(studioSource, /view === "settings"/);
+  assert.doesNotMatch(studioSource, /SettingsView|SETTINGS_TABS|\bSettings\b/);
   assert.match(
     studioSource,
     /\{ id: "overview", label: "Overview"[\s\S]*\{ id: "images", label: "Image Review"[\s\S]*\{ id: "video", label: "Video Queue"[\s\S]*\{ id: "media", label: "Media"/,

@@ -582,76 +582,6 @@ select:focus-visible {
   white-space: nowrap;
 }
 
-.settings-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.settings-card {
-  display: grid;
-  align-content: start;
-  gap: 14px;
-  padding: 20px;
-}
-
-.settings-card h2 {
-  color: var(--studio-text);
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.settings-card p {
-  color: var(--studio-text-muted);
-  font-size: 12px;
-  line-height: 1.55;
-}
-
-.settings-form {
-  width: min(760px, 100%);
-}
-
-.settings-controls {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.settings-controls .field-label {
-  display: grid;
-  gap: 6px;
-}
-
-.settings-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.settings-metrics > div {
-  display: grid;
-  gap: 4px;
-  border: 1px solid var(--studio-border);
-  border-radius: 8px;
-  background: rgba(15, 23, 42, 0.4);
-  padding: 12px;
-}
-
-.settings-metrics strong {
-  color: var(--studio-accent);
-  font-size: 20px;
-  font-variant-numeric: tabular-nums;
-}
-
-.settings-metrics span {
-  color: var(--studio-text-muted);
-  font-size: 10px;
-}
-
-.diagnostics-panel {
-  min-height: 360px;
-}
-
 .studio-subtabs {
   display: flex;
   align-items: center;
@@ -942,7 +872,7 @@ select:focus-visible {
   overflow: hidden;
   border: 1px solid var(--studio-border);
   border-radius: 8px;
-  background: #0b1016;
+  background: #080808;
   color: var(--studio-text-soft);
   padding: 0;
   text-align: left;
@@ -1225,6 +1155,56 @@ select:focus-visible {
 .log-list {
   gap: 0;
   border-top: 1px solid var(--studio-border);
+}
+
+.log-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.log-summary-card {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 1px solid var(--studio-border);
+  border-left-width: 3px;
+  border-radius: 8px;
+  background: var(--studio-surface);
+}
+
+.log-summary-card.errors { border-left-color: var(--studio-danger); }
+.log-summary-card.warnings { border-left-color: var(--studio-warning); }
+.log-summary-card.errors > svg { color: var(--studio-danger); }
+.log-summary-card.warnings > svg { color: var(--studio-warning); }
+
+.log-summary-card div {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 4px 16px;
+}
+
+.log-summary-card h2 {
+  color: var(--studio-text);
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.log-summary-card strong {
+  color: var(--studio-text);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.log-summary-card p {
+  grid-column: 1 / -1;
+  color: var(--studio-text-muted);
+  font-size: 11px;
 }
 
 .log-row {
@@ -1561,6 +1541,10 @@ select:focus-visible {
 }
 
 @media (max-width: 480px) {
+  .log-summary {
+    grid-template-columns: 1fr;
+  }
+
   .studio-toolbar {
     gap: 7px;
   }
@@ -2437,24 +2421,6 @@ select:focus-visible {
 .reference-milestone strong { color: #64748b; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .reference-milestone.complete strong { color: #fff; }
 .reference-milestone.current strong { color: #60a5fa; }
-
-.reference-overall-progress {
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-  margin-top: 40px;
-}
-
-.reference-overall-progress > span {
-  width: 256px;
-  height: 6px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #0f172a;
-}
-
-.reference-overall-progress > span > span { height: 100%; display: block; background: #3b82f6; }
-.reference-overall-progress strong { color: #64748b; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 
 .reference-production-grid {
   display: grid;
