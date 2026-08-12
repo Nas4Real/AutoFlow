@@ -621,6 +621,7 @@ async function run() {
   assert.match(studioSource, /useState\(\(\) => getViewFromLocationHash\(\)\)/);
   assert.match(studioSource, /hashchange/);
   assert.match(studioSource, /className="reference-dashboard"/);
+  assert.match(studioSource, /<Zap size=\{20\} \/>/);
   assert.match(studioSource, /function ReferenceEmptyDashboard/);
   assert.match(studioSource, /className="reference-empty-dashboard"/);
   assert.match(studioSource, /Create your first video project/);

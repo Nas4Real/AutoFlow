@@ -44,6 +44,7 @@ import {
   Video,
   VideoOff,
   X,
+  Zap,
 } from "lucide-react";
 
 const studioApi = globalThis.TFProjectStudioState;
@@ -923,7 +924,7 @@ function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, rec
   const flowLabel = flowStatus === "connected" ? "Flow connected" : flowStatus === "reconnect_required" ? "Reconnect required" : "Flow disconnected";
   return (
     <aside className="studio-sidebar">
-      <div className="studio-brand"><span className="brand-symbol"><Layers size={20} /></span><strong>AutoFlow</strong></div>
+      <div className="studio-brand"><span className="brand-symbol"><Zap size={20} /></span><strong>AutoFlow</strong></div>
       <nav aria-label="Studio navigation">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
