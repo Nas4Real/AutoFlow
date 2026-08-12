@@ -38,3 +38,12 @@
 - [x] Add Image Review Generate/Select sub-navigation without changing checkpoints
 - [x] Add Media All/Images/Videos sub-navigation and project-scoped filtering
 - [ ] Verify, review, commit, and push each completed slice
+
+## Superdesign V2 Studio Integration
+
+- [ ] Lock V2 routing, token, and checkpoint contracts in tests
+- [ ] Port the shared V2 shell, sidebar, header, status cards, and project tabs
+- [ ] Wire Dashboard, Imports, Logs, and local Profile
+- [ ] Wire Overview, Image Review, Video Queue, and Media
+- [ ] Exclude Settings from extension navigation and routing
+- [ ] Build, verify in Chrome, review, commit atomically, and push

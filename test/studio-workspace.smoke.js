@@ -548,12 +548,23 @@ async function run() {
   );
   assert.match(studioSource, /from "@heroui\/react"/);
   assert.doesNotMatch(studioSource, /Create Draft|Update Draft|Create New Draft|onDraft|create_label/);
-  assert.doesNotMatch(studioSource, /getVideoQueueItems\(project, video\.video_id\)\.filter\(\(item\) => !!item\.animation_prompt\)/);
+  assert.match(studioSource, /getVideoQueueItems\(project, video\.video_id\)\.filter\(\(item\) => !!item\.animation_prompt\)/);
   assert.match(studioSource, /item\.status === "not_ready"/);
   assert.match(studioSource, /studioApi\.holdVideoJob/);
   assert.match(studioSource, /studioApi\.moveVideoJob/);
   assert.match(studioSource, /item\.can_create_draft/);
   assert.match(studioSource, /studioApi\.queuePromptVideo/);
+  assert.match(studioSource, /const \[selectionMode, setSelectionMode\] = useState\(false\)/);
+  assert.match(studioSource, />Select Videos<\/Button>/);
+  assert.match(studioSource, />Cancel<\/Button>/);
+  assert.match(studioSource, /type="checkbox"/);
+  assert.match(studioSource, /selectedPromptIds/);
+  assert.match(studioSource, /Run \{selectedPromptIds\.size\}/);
+  assert.match(studioSource, /className="queue-run-all"/);
+  assert.match(studioSource, /const runnableItems = studioApi\.getVideoQueueItems\(project, video\.video_id\)\.filter\(\(item\) => !!item\.animation_prompt\)/);
+  assert.match(studioSource, /runnableItems\.map\(\(item\) =>/);
+  assert.match(studioSource, /promptIds: selectedPromptIds/);
+  assert.match(studioSource, /current\.promptIds/);
   assert.match(studioSource, /current\.currentJobId === jobId/);
   assert.match(studioSource, />Video<\/Chip>/);
   assert.match(studioSource, /items\.find\(\(item\) => item\.status === "ready"\)/);
@@ -574,14 +585,17 @@ async function run() {
   assert.match(studioSource, /const PROJECT_TABS = \[/);
   assert.match(
     studioSource,
-    /\{ id: "channels", label: "Dashboard"[\s\S]*\{ id: "import", label: "Imports"/,
+    /\{ id: "channels", label: "Dashboard"[\s\S]*\{ id: "import", label: "Imports"[\s\S]*\{ id: "logs", label: "Logs"/,
   );
   assert.match(studioSource, /<span>Video Projects<\/span>/);
   assert.doesNotMatch(studioSource, /View all projects/);
   assert.match(studioSource, /className="project-number"/);
   assert.match(studioSource, /videos\.findIndex\(\(entry\) => entry\.video_id === video\.video_id\) \+ 1/);
   assert.match(studioCss, /\.sidebar-project \{[^}]*display: flex;[^}]*align-items: center;/);
-  assert.match(studioSource, /<span>Settings<\/span>/);
+  assert.match(studioSource, /<span>Profile<\/span>/);
+  assert.doesNotMatch(studioSource, /<span>Settings<\/span>/);
+  assert.doesNotMatch(studioSource, /hash === "settings"/);
+  assert.doesNotMatch(studioSource, /view === "settings"/);
   assert.match(
     studioSource,
     /\{ id: "overview", label: "Overview"[\s\S]*\{ id: "images", label: "Image Review"[\s\S]*\{ id: "video", label: "Video Queue"[\s\S]*\{ id: "media", label: "Media"/,
@@ -592,15 +606,17 @@ async function run() {
   assert.match(studioSource, /const IMPORT_TABS = \[/);
   assert.match(
     studioSource,
-    /\{ id: "upload", label: "Import JSON"[\s\S]*\{ id: "references", label: "Needs References"[\s\S]*\{ id: "history", label: "Import History"[\s\S]*\{ id: "library", label: "Reference Library"/,
+    /\{ id: "history", label: "Import History"[\s\S]*\{ id: "references", label: "Needs References"[\s\S]*\{ id: "library", label: "Assets"/,
   );
+  assert.match(studioSource, /useState\("history"\)/);
+  assert.match(studioSource, />Import JSON<\/Button>/);
+  assert.match(studioSource, />Upload Asset<\/Button>/);
+  assert.match(studioSource, /Uploading an asset automatically rechecks unresolved references/);
   assert.match(studioSource, /Open Project Overview/);
-  assert.match(studioSource, /const SETTINGS_TABS = \[/);
-  assert.match(
-    studioSource,
-    /\{ id: "channel", label: "Channel"[\s\S]*\{ id: "defaults", label: "Generation Defaults"[\s\S]*\{ id: "connection", label: "Flow Connection"[\s\S]*\{ id: "diagnostics", label: "Diagnostics"/,
-  );
-  assert.match(studioSource, /function SettingsView/);
+  assert.match(studioSource, /function ProfileView/);
+  assert.match(studioSource, /function ProjectStatusCards/);
+  assert.match(studioSource, /<ProjectStatusCards project=\{project\} video=\{video\}/);
+  assert.doesNotMatch(studioSource, /reference-back-button/);
   assert.match(studioSource, /const IMAGE_REVIEW_TABS = \[/);
   assert.match(
     studioSource,
@@ -614,6 +630,12 @@ async function run() {
   );
   assert.match(studioSource, /aria-label="Media sections"/);
   assert.match(studioSource, /const visibleMedia = media\.filter/);
+  assert.match(studioCss, /--studio-bg:\s*#020202/);
+  assert.match(studioCss, /--studio-surface:\s*#080808/);
+  assert.match(studioCss, /--studio-border:\s*#111111/);
+  assert.match(studioCss, /\.reference-dashboard\s*\{[^}]*width:\s*100%/);
+  assert.match(studioCss, /\.reference-project-header-inner\s*\{[^}]*width:\s*100%/);
+  assert.match(studioCss, /\.reference-project-body\s*\{[^}]*width:\s*100%/);
   assert.doesNotMatch(studioSource, /<Modal\.Root\s+isOpen=/);
   assert.match(studioSource, /<Modal\.Backdrop\s+[^>]*isOpen=/);
   assert.match(studioHtml, /generated\/studio\.bundle\.js/);

@@ -33650,49 +33650,42 @@
   ];
   var ArrowDown = createLucideIcon("arrow-down", __iconNode2);
 
-  // node_modules/lucide-react/dist/esm/icons/arrow-left.mjs
-  var __iconNode3 = [
-    ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
-    ["path", { d: "M19 12H5", key: "x3x0zl" }]
-  ];
-  var ArrowLeft = createLucideIcon("arrow-left", __iconNode3);
-
   // node_modules/lucide-react/dist/esm/icons/arrow-up.mjs
-  var __iconNode4 = [
+  var __iconNode3 = [
     ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
     ["path", { d: "M12 19V5", key: "x0mq9r" }]
   ];
-  var ArrowUp = createLucideIcon("arrow-up", __iconNode4);
+  var ArrowUp = createLucideIcon("arrow-up", __iconNode3);
 
   // node_modules/lucide-react/dist/esm/icons/check.mjs
-  var __iconNode5 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-  var Check = createLucideIcon("check", __iconNode5);
+  var __iconNode4 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+  var Check = createLucideIcon("check", __iconNode4);
 
   // node_modules/lucide-react/dist/esm/icons/circle-alert.mjs
-  var __iconNode6 = [
+  var __iconNode5 = [
     ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
     ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
     ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
   ];
-  var CircleAlert = createLucideIcon("circle-alert", __iconNode6);
+  var CircleAlert = createLucideIcon("circle-alert", __iconNode5);
 
   // node_modules/lucide-react/dist/esm/icons/circle-check-big.mjs
-  var __iconNode7 = [
+  var __iconNode6 = [
     ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
     ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
   ];
-  var CircleCheckBig = createLucideIcon("circle-check-big", __iconNode7);
+  var CircleCheckBig = createLucideIcon("circle-check-big", __iconNode6);
 
   // node_modules/lucide-react/dist/esm/icons/circle-pause.mjs
-  var __iconNode8 = [
+  var __iconNode7 = [
     ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
     ["line", { x1: "10", x2: "10", y1: "15", y2: "9", key: "c1nkhi" }],
     ["line", { x1: "14", x2: "14", y1: "15", y2: "9", key: "h65svq" }]
   ];
-  var CirclePause = createLucideIcon("circle-pause", __iconNode8);
+  var CirclePause = createLucideIcon("circle-pause", __iconNode7);
 
   // node_modules/lucide-react/dist/esm/icons/circle-play.mjs
-  var __iconNode9 = [
+  var __iconNode8 = [
     [
       "path",
       {
@@ -33702,10 +33695,10 @@
     ],
     ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
   ];
-  var CirclePlay = createLucideIcon("circle-play", __iconNode9);
+  var CirclePlay = createLucideIcon("circle-play", __iconNode8);
 
   // node_modules/lucide-react/dist/esm/icons/clapperboard.mjs
-  var __iconNode10 = [
+  var __iconNode9 = [
     ["path", { d: "m12.296 3.464 3.02 3.956", key: "qash78" }],
     [
       "path",
@@ -33714,10 +33707,10 @@
     ["path", { d: "M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z", key: "4lm6w1" }],
     ["path", { d: "m6.18 5.276 3.1 3.899", key: "zjj9t3" }]
   ];
-  var Clapperboard = createLucideIcon("clapperboard", __iconNode10);
+  var Clapperboard = createLucideIcon("clapperboard", __iconNode9);
 
   // node_modules/lucide-react/dist/esm/icons/cpu.mjs
-  var __iconNode11 = [
+  var __iconNode10 = [
     ["path", { d: "M12 20v2", key: "1lh1kg" }],
     ["path", { d: "M12 2v2", key: "tus03m" }],
     ["path", { d: "M17 20v2", key: "1rnc9c" }],
@@ -33733,10 +33726,10 @@
     ["rect", { x: "4", y: "4", width: "16", height: "16", rx: "2", key: "1vbyd7" }],
     ["rect", { x: "8", y: "8", width: "8", height: "8", rx: "1", key: "z9xiuo" }]
   ];
-  var Cpu = createLucideIcon("cpu", __iconNode11);
+  var Cpu = createLucideIcon("cpu", __iconNode10);
 
   // node_modules/lucide-react/dist/esm/icons/file-braces.mjs
-  var __iconNode12 = [
+  var __iconNode11 = [
     [
       "path",
       {
@@ -33754,10 +33747,10 @@
       { d: "M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1", key: "mpwhp6" }
     ]
   ];
-  var FileBraces = createLucideIcon("file-braces", __iconNode12);
+  var FileBraces = createLucideIcon("file-braces", __iconNode11);
 
   // node_modules/lucide-react/dist/esm/icons/file-input.mjs
-  var __iconNode13 = [
+  var __iconNode12 = [
     [
       "path",
       {
@@ -33769,10 +33762,10 @@
     ["path", { d: "M2 15h10", key: "jfw4w8" }],
     ["path", { d: "m9 18 3-3-3-3", key: "112psh" }]
   ];
-  var FileInput = createLucideIcon("file-input", __iconNode13);
+  var FileInput = createLucideIcon("file-input", __iconNode12);
 
   // node_modules/lucide-react/dist/esm/icons/folder-kanban.mjs
-  var __iconNode14 = [
+  var __iconNode13 = [
     [
       "path",
       {
@@ -33784,10 +33777,10 @@
     ["path", { d: "M12 10v2", key: "hh53o1" }],
     ["path", { d: "M16 10v6", key: "1d6xys" }]
   ];
-  var FolderKanban = createLucideIcon("folder-kanban", __iconNode14);
+  var FolderKanban = createLucideIcon("folder-kanban", __iconNode13);
 
   // node_modules/lucide-react/dist/esm/icons/folder-open.mjs
-  var __iconNode15 = [
+  var __iconNode14 = [
     [
       "path",
       {
@@ -33796,10 +33789,10 @@
       }
     ]
   ];
-  var FolderOpen = createLucideIcon("folder-open", __iconNode15);
+  var FolderOpen = createLucideIcon("folder-open", __iconNode14);
 
   // node_modules/lucide-react/dist/esm/icons/folder-sync.mjs
-  var __iconNode16 = [
+  var __iconNode15 = [
     [
       "path",
       {
@@ -33812,27 +33805,27 @@
     ["path", { d: "M22 22v-4h-4", key: "1ewp4q" }],
     ["path", { d: "m22 18-1.535 1.605a5 5 0 0 1-8-1.5", key: "14ync0" }]
   ];
-  var FolderSync = createLucideIcon("folder-sync", __iconNode16);
+  var FolderSync = createLucideIcon("folder-sync", __iconNode15);
 
   // node_modules/lucide-react/dist/esm/icons/image.mjs
-  var __iconNode17 = [
+  var __iconNode16 = [
     ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2", key: "1m3agn" }],
     ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }],
     ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }]
   ];
-  var Image = createLucideIcon("image", __iconNode17);
+  var Image = createLucideIcon("image", __iconNode16);
 
   // node_modules/lucide-react/dist/esm/icons/images.mjs
-  var __iconNode18 = [
+  var __iconNode17 = [
     ["path", { d: "m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16", key: "9kzy35" }],
     ["path", { d: "M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2", key: "1t0f0t" }],
     ["circle", { cx: "13", cy: "7", r: "1", fill: "currentColor", key: "1obus6" }],
     ["rect", { x: "8", y: "2", width: "14", height: "14", rx: "2", key: "1gvhby" }]
   ];
-  var Images = createLucideIcon("images", __iconNode18);
+  var Images = createLucideIcon("images", __iconNode17);
 
   // node_modules/lucide-react/dist/esm/icons/layers.mjs
-  var __iconNode19 = [
+  var __iconNode18 = [
     [
       "path",
       {
@@ -33855,28 +33848,28 @@
       }
     ]
   ];
-  var Layers = createLucideIcon("layers", __iconNode19);
+  var Layers = createLucideIcon("layers", __iconNode18);
 
   // node_modules/lucide-react/dist/esm/icons/layout-dashboard.mjs
-  var __iconNode20 = [
+  var __iconNode19 = [
     ["rect", { width: "7", height: "9", x: "3", y: "3", rx: "1", key: "10lvy0" }],
     ["rect", { width: "7", height: "5", x: "14", y: "3", rx: "1", key: "16une8" }],
     ["rect", { width: "7", height: "9", x: "14", y: "12", rx: "1", key: "1hutg5" }],
     ["rect", { width: "7", height: "5", x: "3", y: "16", rx: "1", key: "ldoo1y" }]
   ];
-  var LayoutDashboard = createLucideIcon("layout-dashboard", __iconNode20);
+  var LayoutDashboard = createLucideIcon("layout-dashboard", __iconNode19);
 
   // node_modules/lucide-react/dist/esm/icons/layout-grid.mjs
-  var __iconNode21 = [
+  var __iconNode20 = [
     ["rect", { width: "7", height: "7", x: "3", y: "3", rx: "1", key: "1g98yp" }],
     ["rect", { width: "7", height: "7", x: "14", y: "3", rx: "1", key: "6d4xhi" }],
     ["rect", { width: "7", height: "7", x: "14", y: "14", rx: "1", key: "nxv5o0" }],
     ["rect", { width: "7", height: "7", x: "3", y: "14", rx: "1", key: "1bb6yr" }]
   ];
-  var LayoutGrid = createLucideIcon("layout-grid", __iconNode21);
+  var LayoutGrid = createLucideIcon("layout-grid", __iconNode20);
 
   // node_modules/lucide-react/dist/esm/icons/list-video.mjs
-  var __iconNode22 = [
+  var __iconNode21 = [
     ["path", { d: "M21 5H3", key: "1fi0y6" }],
     ["path", { d: "M10 12H3", key: "1ulcyk" }],
     ["path", { d: "M10 19H3", key: "108z41" }],
@@ -33888,14 +33881,14 @@
       }
     ]
   ];
-  var ListVideo = createLucideIcon("list-video", __iconNode22);
+  var ListVideo = createLucideIcon("list-video", __iconNode21);
 
   // node_modules/lucide-react/dist/esm/icons/loader-circle.mjs
-  var __iconNode23 = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-  var LoaderCircle = createLucideIcon("loader-circle", __iconNode23);
+  var __iconNode22 = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+  var LoaderCircle = createLucideIcon("loader-circle", __iconNode22);
 
   // node_modules/lucide-react/dist/esm/icons/mouse-pointer-click.mjs
-  var __iconNode24 = [
+  var __iconNode23 = [
     ["path", { d: "M14 4.1 12 6", key: "ita8i4" }],
     ["path", { d: "m5.1 8-2.9-.8", key: "1go3kf" }],
     ["path", { d: "m6 12-1.9 2", key: "mnht97" }],
@@ -33908,10 +33901,10 @@
       }
     ]
   ];
-  var MousePointerClick = createLucideIcon("mouse-pointer-click", __iconNode24);
+  var MousePointerClick = createLucideIcon("mouse-pointer-click", __iconNode23);
 
   // node_modules/lucide-react/dist/esm/icons/pencil.mjs
-  var __iconNode25 = [
+  var __iconNode24 = [
     [
       "path",
       {
@@ -33921,10 +33914,10 @@
     ],
     ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
   ];
-  var Pencil = createLucideIcon("pencil", __iconNode25);
+  var Pencil = createLucideIcon("pencil", __iconNode24);
 
   // node_modules/lucide-react/dist/esm/icons/play.mjs
-  var __iconNode26 = [
+  var __iconNode25 = [
     [
       "path",
       {
@@ -33933,26 +33926,26 @@
       }
     ]
   ];
-  var Play = createLucideIcon("play", __iconNode26);
+  var Play = createLucideIcon("play", __iconNode25);
 
   // node_modules/lucide-react/dist/esm/icons/plus.mjs
-  var __iconNode27 = [
+  var __iconNode26 = [
     ["path", { d: "M5 12h14", key: "1ays0h" }],
     ["path", { d: "M12 5v14", key: "s699le" }]
   ];
-  var Plus = createLucideIcon("plus", __iconNode27);
+  var Plus = createLucideIcon("plus", __iconNode26);
 
   // node_modules/lucide-react/dist/esm/icons/refresh-cw.mjs
-  var __iconNode28 = [
+  var __iconNode27 = [
     ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
     ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
     ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
     ["path", { d: "M8 16H3v5", key: "1cv678" }]
   ];
-  var RefreshCw = createLucideIcon("refresh-cw", __iconNode28);
+  var RefreshCw = createLucideIcon("refresh-cw", __iconNode27);
 
   // node_modules/lucide-react/dist/esm/icons/save.mjs
-  var __iconNode29 = [
+  var __iconNode28 = [
     [
       "path",
       {
@@ -33963,7 +33956,22 @@
     ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
     ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
   ];
-  var Save = createLucideIcon("save", __iconNode29);
+  var Save = createLucideIcon("save", __iconNode28);
+
+  // node_modules/lucide-react/dist/esm/icons/scroll-text.mjs
+  var __iconNode29 = [
+    ["path", { d: "M15 12h-5", key: "r7krc0" }],
+    ["path", { d: "M15 8h-5", key: "1khuty" }],
+    ["path", { d: "M19 17V5a2 2 0 0 0-2-2H4", key: "zz82l3" }],
+    [
+      "path",
+      {
+        d: "M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3",
+        key: "1ph1d7"
+      }
+    ]
+  ];
+  var ScrollText = createLucideIcon("scroll-text", __iconNode29);
 
   // node_modules/lucide-react/dist/esm/icons/search.mjs
   var __iconNode30 = [
@@ -33972,21 +33980,8 @@
   ];
   var Search = createLucideIcon("search", __iconNode30);
 
-  // node_modules/lucide-react/dist/esm/icons/settings.mjs
-  var __iconNode31 = [
-    [
-      "path",
-      {
-        d: "M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915",
-        key: "1i5ecw"
-      }
-    ],
-    ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
-  ];
-  var Settings = createLucideIcon("settings", __iconNode31);
-
   // node_modules/lucide-react/dist/esm/icons/sparkles.mjs
-  var __iconNode32 = [
+  var __iconNode31 = [
     [
       "path",
       {
@@ -33998,36 +33993,36 @@
     ["path", { d: "M22 4h-4", key: "gwowj6" }],
     ["circle", { cx: "4", cy: "20", r: "2", key: "6kqj1y" }]
   ];
-  var Sparkles = createLucideIcon("sparkles", __iconNode32);
+  var Sparkles = createLucideIcon("sparkles", __iconNode31);
 
   // node_modules/lucide-react/dist/esm/icons/square-check-big.mjs
-  var __iconNode33 = [
+  var __iconNode32 = [
     [
       "path",
       { d: "M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344", key: "2acyp4" }
     ],
     ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
   ];
-  var SquareCheckBig = createLucideIcon("square-check-big", __iconNode33);
+  var SquareCheckBig = createLucideIcon("square-check-big", __iconNode32);
 
   // node_modules/lucide-react/dist/esm/icons/square.mjs
-  var __iconNode34 = [
+  var __iconNode33 = [
     ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }]
   ];
-  var Square = createLucideIcon("square", __iconNode34);
+  var Square = createLucideIcon("square", __iconNode33);
 
   // node_modules/lucide-react/dist/esm/icons/trash-2.mjs
-  var __iconNode35 = [
+  var __iconNode34 = [
     ["path", { d: "M10 11v6", key: "nco0om" }],
     ["path", { d: "M14 11v6", key: "outv1u" }],
     ["path", { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6", key: "miytrc" }],
     ["path", { d: "M3 6h18", key: "d0wm0j" }],
     ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2", key: "e791ji" }]
   ];
-  var Trash2 = createLucideIcon("trash-2", __iconNode35);
+  var Trash2 = createLucideIcon("trash-2", __iconNode34);
 
   // node_modules/lucide-react/dist/esm/icons/trophy.mjs
-  var __iconNode36 = [
+  var __iconNode35 = [
     ["path", { d: "M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978", key: "1n3hpd" }],
     ["path", { d: "M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978", key: "rfe1zi" }],
     ["path", { d: "M18 9h1.5a1 1 0 0 0 0-5H18", key: "7xy6bh" }],
@@ -34035,15 +34030,22 @@
     ["path", { d: "M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z", key: "1mhfuq" }],
     ["path", { d: "M6 9H4.5a1 1 0 0 1 0-5H6", key: "tex48p" }]
   ];
-  var Trophy = createLucideIcon("trophy", __iconNode36);
+  var Trophy = createLucideIcon("trophy", __iconNode35);
 
   // node_modules/lucide-react/dist/esm/icons/upload.mjs
-  var __iconNode37 = [
+  var __iconNode36 = [
     ["path", { d: "M12 3v12", key: "1x0j5s" }],
     ["path", { d: "m17 8-5-5-5 5", key: "7q97r8" }],
     ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }]
   ];
-  var Upload = createLucideIcon("upload", __iconNode37);
+  var Upload = createLucideIcon("upload", __iconNode36);
+
+  // node_modules/lucide-react/dist/esm/icons/user-round.mjs
+  var __iconNode37 = [
+    ["circle", { cx: "12", cy: "8", r: "5", key: "1hypcn" }],
+    ["path", { d: "M20 21a8 8 0 0 0-16 0", key: "rfgkzh" }]
+  ];
+  var UserRound = createLucideIcon("user-round", __iconNode37);
 
   // node_modules/lucide-react/dist/esm/icons/x.mjs
   var __iconNode38 = [
@@ -34058,7 +34060,8 @@
   var domainApi = globalThis.TFProjectDomain;
   var NAV_ITEMS = [
     { id: "channels", label: "Dashboard", icon: LayoutDashboard },
-    { id: "import", label: "Imports", icon: FileInput }
+    { id: "import", label: "Imports", icon: FileInput },
+    { id: "logs", label: "Logs", icon: ScrollText }
   ];
   var PROJECT_TABS = [
     { id: "overview", label: "Overview" },
@@ -34067,16 +34070,9 @@
     { id: "media", label: "Media" }
   ];
   var IMPORT_TABS = [
-    { id: "upload", label: "Import JSON" },
-    { id: "references", label: "Needs References" },
     { id: "history", label: "Import History" },
-    { id: "library", label: "Reference Library" }
-  ];
-  var SETTINGS_TABS = [
-    { id: "channel", label: "Channel" },
-    { id: "defaults", label: "Generation Defaults" },
-    { id: "connection", label: "Flow Connection" },
-    { id: "diagnostics", label: "Diagnostics" }
+    { id: "references", label: "Needs References" },
+    { id: "library", label: "Assets" }
   ];
   var IMAGE_REVIEW_TABS = [
     { id: "generate", label: "Generate" },
@@ -34095,7 +34091,7 @@
     } catch (error) {
       hash = rawHash;
     }
-    return NAV_ITEMS.some((item) => item.id === hash) || PROJECT_TABS.some((item) => item.id === hash) || hash === "assets" || hash === "settings" || hash === "logs" ? hash : "channels";
+    return NAV_ITEMS.some((item) => item.id === hash) || PROJECT_TABS.some((item) => item.id === hash) || hash === "assets" || hash === "profile" ? hash : "channels";
   }
   var StudioErrorBoundary = class extends import_react73.default.Component {
     state = { error: null };
@@ -34666,44 +34662,66 @@
     const [file, setFile] = (0, import_react73.useState)(null);
     const [name, setName] = (0, import_react73.useState)("");
     const [mapping, setMapping] = (0, import_react73.useState)({});
-    const [tab, setTab] = (0, import_react73.useState)("upload");
+    const [tab, setTab] = (0, import_react73.useState)("history");
     const blockedRecords = studioApi.getProjectPromptRecords(project).filter((record) => record.status === "blocked");
     const assets = studioApi.getActiveAssets(project);
-    const importCount = videos.length;
-    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Imports", description: "Create video projects, resolve references, and manage your channel library." }),
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack imports-view", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Imports", description: "Import prompt JSON, resolve references, and manage reusable assets.", actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "page-action-row", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "outline", onPress: onAddAsset, children: "Upload Asset" }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "primary", onPress: () => setTab("upload"), children: "Import JSON" })
+      ] }) }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { className: "studio-subtabs", "aria-label": "Import workflow sections", children: IMPORT_TABS.map((item) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: tab === item.id ? "active" : "", "aria-current": tab === item.id ? "page" : void 0, onClick: () => setTab(item.id), children: [
         item.label,
         item.id === "references" && blockedRecords.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: blockedRecords.length }) : null
       ] }, item.id)) }),
-      !project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: FileBraces, title: "Add a channel before importing", description: "Imports and reference assets are stored in the active channel." }) : null,
-      project && tab === "upload" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "import-layout", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "import-form studio-surface-panel", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Create video project" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
-            "Video name ",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "optional", children: "Optional" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: name, onChange: (event) => setName(event.target.value) })
+      !project ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: FileBraces, title: "Add a channel before importing", description: "Imports and assets are stored in the active channel." }) : null,
+      project && tab === "upload" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "import-upload-panel studio-surface-panel", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "section-heading", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Import JSON" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Create one video project from a prompt-index JSON file." })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropZone, { file, onFile: setFile, accept: ".json,application/json", label: "Drop the video JSON here", hint: "file_name and image_prompt are required; animation_prompt is optional" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "muted-copy", children: "Reviewing or importing JSON never starts image generation. You will explicitly confirm that later in Image Review." }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", isDisabled: !file || busy, onPress: () => onImport(file, name.trim()), children: [
-            busy ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(LoaderCircle, { className: "spin", size: 17 }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Upload, { size: 17 }),
-            "Create video project"
-          ] })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "ghost", onPress: () => setTab("history"), children: "Cancel" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("aside", { className: "import-history studio-surface-panel", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Import summary" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { className: "import-summary-count", children: importCount }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "muted-copy", children: importCount === 1 ? "video project in this channel" : "video projects in this channel" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "muted-copy", children: "After import, resolve any missing references or open the project Overview." })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
+          "Video name ",
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "optional", children: "Optional" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: name, onChange: (event) => setName(event.target.value) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropZone, { file, onFile: setFile, accept: ".json,application/json", label: "Drop the video JSON here", hint: "file_name and image_prompt are required; animation_prompt is optional" }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "muted-copy", children: "Importing JSON never starts generation. Image Review remains the first manual checkpoint." }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", isDisabled: !file || busy, onPress: () => onImport(file, name.trim()), children: [
+          busy ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(LoaderCircle, { className: "spin", size: 17 }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Upload, { size: 17 }),
+          "Create video project"
         ] })
+      ] }) : null,
+      project && tab === "history" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "studio-surface-panel import-history-list", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "section-heading", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Import History" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Every JSON import creates a project-scoped video workspace." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Chip, { variant: "soft", children: videos.length })
+        ] }),
+        videos.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "compact-list", children: videos.map((video) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "compact-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(FileBraces, { size: 17 }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: video.display_name }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { children: [
+              video.source_name || "Imported JSON",
+              " \xB7 ",
+              video.prompt_count,
+              " scenes"
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", onPress: () => onOpenProject(video.video_id), children: "Open Project Overview" })
+        ] }, video.video_id)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: FileBraces, title: "No video projects yet", description: "Import a JSON file to create the first project.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "primary", onPress: () => setTab("upload"), children: "Import JSON" }) })
       ] }) : null,
       project && tab === "references" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "resolve-section studio-surface-panel", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "section-heading", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Needs References" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Map missing names to a reusable channel asset before generation." })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Uploading an asset automatically rechecks unresolved references and matches compatible names." })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Chip, { color: "warning", variant: "soft", children: blockedRecords.length })
         ] }),
@@ -34718,44 +34736,25 @@
               /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "", children: "Choose asset" }),
               assets.map((asset) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: asset.asset_id, children: asset.display_name }, asset.asset_id))
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", isDisabled: !mapping[key], onPress: () => onResolve(record.prompt_id, reference.reference_index, mapping[key]), children: "Use asset" })
-          ] }, key);
-        })) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: CircleCheckBig, title: "All references are resolved", description: "Every imported scene is ready for the next production step.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "secondary", onPress: () => setTab("library"), children: "Open Reference Library" }) })
-      ] }) : null,
-      project && tab === "history" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "studio-surface-panel import-history-list", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "section-heading", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Import History" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Each JSON import creates one project-scoped video workspace." })
-        ] }) }),
-        videos.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "compact-list", children: videos.map((video) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "compact-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(FileBraces, { size: 17 }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: video.display_name }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { children: [
-              video.source_name || "Imported JSON",
-              " \xB7 ",
-              video.prompt_count,
-              " scenes"
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "row-actions", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "outline", onPress: onAddAsset, children: "Upload Asset" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", isDisabled: !mapping[key], onPress: () => onResolve(record.prompt_id, reference.reference_index, mapping[key]), children: "Link Asset" })
             ] })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { size: "sm", variant: "secondary", onPress: () => onOpenProject(video.video_id), children: "Open Project Overview" })
-        ] }, video.video_id)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: FileBraces, title: "No video projects yet", description: "Import a JSON file to create the first one.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "primary", onPress: () => setTab("upload"), children: "Import JSON" }) })
+          ] }, key);
+        })) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: CircleCheckBig, title: "All references are resolved", description: "Uploaded assets are automatically rechecked against imported prompt references.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "secondary", onPress: () => setTab("library"), children: "Open Assets" }) })
       ] }) : null,
       project && tab === "library" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "studio-surface-panel import-library", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "section-heading", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Reference Library" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Reusable channel assets for resolving imported scene references." })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Assets" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Reusable channel assets used to resolve imported scene references." })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddAsset, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 17 }),
-            "Add reference"
-          ] })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "primary", onPress: onAddAsset, children: "Upload Asset" })
         ] }),
         assets.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "asset-grid", children: assets.map((asset) => {
-          const file2 = primaryAssetFile(asset);
+          const assetFile = primaryAssetFile(asset);
           return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { className: "asset-card", variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "asset-preview", children: file2?.data_url ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("img", { src: file2.data_url, alt: asset.display_name }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Image, { size: 26 }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "asset-preview", children: assetFile?.data_url ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("img", { src: assetFile.data_url, alt: asset.display_name }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Image, { size: 26 }) }),
             /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "asset-card-footer", children: [
               /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: asset.display_name }),
               /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "row-actions", children: [
@@ -34764,10 +34763,7 @@
               ] })
             ] })
           ] }) }, asset.asset_id);
-        }) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Image, title: "No reference assets yet", description: "Add a reusable image before mapping references.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onAddAsset, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Plus, { size: 17 }),
-          "Add reference"
-        ] }) })
+        }) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Image, title: "No assets yet", description: "Upload a reusable reference image for imported prompts.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "primary", onPress: onAddAsset, children: "Upload Asset" }) })
       ] }) : null
     ] });
   }
@@ -34779,130 +34775,6 @@
       imageCount: Number(settings.image_count || settings.imageCount || 2),
       speedMode: settings.image_speed_mode || settings.speedMode || "fast"
     };
-  }
-  function SettingsView({ project, flowContext, logs, busy, onUpdateProject, onRefreshConnection, onClearLogs }) {
-    const [tab, setTab] = (0, import_react73.useState)("channel");
-    const [channelName, setChannelName] = (0, import_react73.useState)(project?.display_name || "");
-    const [defaults, setDefaults] = (0, import_react73.useState)(() => getProjectImageSettings(project));
-    (0, import_react73.useEffect)(() => {
-      setChannelName(project?.display_name || "");
-      setDefaults(getProjectImageSettings(project));
-    }, [project?.project_id, project?.display_name]);
-    const flowStatus = String(flowContext?.status || "disconnected").toLowerCase();
-    const connected = flowStatus === "connected";
-    const saveDefaults = () => onUpdateProject({ settings: { ...project?.settings || {}, image_model: defaults.imageModel, image_ratio: defaults.imageRatio, image_count: Number(defaults.imageCount), image_speed_mode: defaults.speedMode } });
-    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Settings", description: "Channel-level Studio preferences and operational diagnostics." }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { className: "studio-subtabs", "aria-label": "Settings sections", children: SETTINGS_TABS.map((item) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: tab === item.id ? "active" : "", "aria-current": tab === item.id ? "page" : void 0, onClick: () => setTab(item.id), children: item.label }, item.id)) }),
-      tab === "channel" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "settings-grid", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "studio-surface-panel settings-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Active channel" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: project?.display_name || "No active channel" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Projects, imports, assets, and references remain scoped to this channel." }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
-            "Channel name",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: channelName, onChange: (event) => setChannelName(event.target.value), disabled: !project })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", isDisabled: !project || !channelName.trim() || channelName.trim() === project?.display_name || busy, onPress: () => onUpdateProject({ display_name: channelName.trim() }), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Save, { size: 17 }),
-            "Save channel"
-          ] })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "studio-surface-panel settings-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Channel summary" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "settings-metrics", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: studioApi.getProjectVideos(project).length }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Video projects" })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: studioApi.getActiveAssets(project).length }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Reference assets" })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: studioApi.getProjectPromptRecords(project).length }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Imported scenes" })
-            ] })
-          ] })
-        ] })
-      ] }) : null,
-      tab === "defaults" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "studio-surface-panel settings-card settings-form", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Manual checkpoint defaults" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Generation Defaults" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "These values prefill Image Review. They never begin a run without your confirmation." })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "settings-controls", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
-            "Image model",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: defaults.imageModel, onChange: (event) => setDefaults((current) => ({ ...current, imageModel: event.target.value })), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "NARWHAL", children: "NARWHAL" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "GEM_PIX_2", children: "GEM PIX 2" })
-            ] })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
-            "Aspect ratio",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: defaults.imageRatio, onChange: (event) => setDefaults((current) => ({ ...current, imageRatio: event.target.value })), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_LANDSCAPE", children: "Landscape" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_SQUARE", children: "Square" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "IMAGE_ASPECT_RATIO_PORTRAIT", children: "Portrait" })
-            ] })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
-            "Images per prompt",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: defaults.imageCount, onChange: (event) => setDefaults((current) => ({ ...current, imageCount: Number(event.target.value) })), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: 1, children: "1" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: 2, children: "2" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: 3, children: "3" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: 4, children: "4" })
-            ] })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "field-label", children: [
-            "Speed mode",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: defaults.speedMode, onChange: (event) => setDefaults((current) => ({ ...current, speedMode: event.target.value })), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "fast", children: "Fast" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "balanced", children: "Balanced" })
-            ] })
-          ] })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", isDisabled: !project || busy, onPress: saveDefaults, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Save, { size: 17 }),
-          "Save defaults"
-        ] })
-      ] }) : null,
-      tab === "connection" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "settings-grid", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "studio-surface-panel settings-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Flow connection" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: connected ? "Connected" : "Disconnected" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: flowContext?.flow_context_id ? `Context: ${flowContext.flow_context_id}` : "No Flow context is currently available." }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Chip, { color: connected ? "success" : "warning", variant: "soft", children: flowStatus }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "secondary", isDisabled: busy, onPress: onRefreshConnection, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(RefreshCw, { size: 17 }),
-            "Refresh connection"
-          ] })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: "studio-surface-panel settings-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Generation safety" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Manual confirmation enabled" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Image generation and video generation remain separate, explicit checkpoints. Saving defaults or refreshing Flow never starts a paid run." })
-        ] })
-      ] }) : null,
-      tab === "diagnostics" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "studio-surface-panel settings-card diagnostics-panel", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "section-heading", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "eyebrow", children: "Studio activity" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Diagnostics" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Recent Studio and generation events for the active channel." })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "ghost", onPress: onClearLogs, children: "Clear logs" })
-        ] }),
-        logs.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "log-list", children: logs.slice().reverse().map((entry) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `log-row log-${entry.type}`, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: entry.time || "" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Chip, { size: "sm", color: statusColor(entry.type === "error" ? "failed" : entry.type === "warn" ? "paused" : "draft"), variant: "soft", children: entry.type }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: entry.message })
-        ] }, entry.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Activity, title: "No diagnostics yet", description: "Studio events will appear here as you import and generate media." })
-      ] }) : null
-    ] });
   }
   function ImageReviewView({ project, video, flowContext, busy, onRefreshConnection, onGenerate, onStop, onRetry, onSelect }) {
     const [settings, setSettings] = (0, import_react73.useState)(() => getProjectImageSettings(project));
@@ -35056,39 +34928,81 @@
       ] }, record.prompt_id)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Images, title: "No generated images", description: "Generate images for this video, then review them here." }))
     ] });
   }
-  function VideoQueueView({ project, video, runner, onRunAll, onPause, onContinue, onQueue, onRun, onStop, onHold, onMove, onRemove, onOpenImages }) {
+  function VideoQueueView({ project, video, runner, onRunAll, onRunSelected, onPause, onContinue, onQueue, onRun, onStop, onHold, onMove, onRemove, onOpenImages }) {
+    const [selectionMode, setSelectionMode] = (0, import_react73.useState)(false);
+    const [selectedPromptIds, setSelectedPromptIds] = (0, import_react73.useState)(() => /* @__PURE__ */ new Set());
+    (0, import_react73.useEffect)(() => {
+      setSelectionMode(false);
+      setSelectedPromptIds(/* @__PURE__ */ new Set());
+    }, [video?.video_id]);
     if (!video) return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: ListVideo, title: "Choose a video", description: "Video Queue is organized one video at a time." });
-    const items = studioApi.getVideoQueueItems(project, video.video_id);
-    const runnableItems = items.filter((item) => !!item.animation_prompt);
+    const runnableItems = studioApi.getVideoQueueItems(project, video.video_id).filter((item) => !!item.animation_prompt);
     const completed = runnableItems.filter((item) => item.status === "complete").length;
     const hasRunnableWork = runnableItems.some((item) => {
-      return item.status === "draft" && item.selected_variant_id || item.can_run;
+      return item.status === "draft" && item.selected_variant_id || item.can_run || item.can_retry || item.can_queue || item.can_create_draft;
     });
     const activeRunner = runner.videoId === video.video_id;
-    const runnerAction = activeRunner && runner.status === "running" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "outline", onPress: onPause, children: [
+    const toggleSelected = (promptId) => {
+      setSelectedPromptIds((current) => {
+        const next = new Set(current);
+        if (next.has(promptId)) next.delete(promptId);
+        else next.add(promptId);
+        return next;
+      });
+    };
+    const cancelSelection = () => {
+      setSelectionMode(false);
+      setSelectedPromptIds(/* @__PURE__ */ new Set());
+    };
+    const runSelected = () => {
+      const promptIds = [...selectedPromptIds];
+      if (!promptIds.length) return;
+      cancelSelection();
+      onRunSelected(promptIds);
+    };
+    const runnerControl = activeRunner && runner.status === "running" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "outline", onPress: onPause, children: [
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CirclePause, { size: 17 }),
       "Pause after current"
     ] }) : activeRunner && runner.status === "paused" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", onPress: onContinue, children: [
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Play, { size: 17 }),
       "Continue"
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { variant: "primary", isDisabled: !hasRunnableWork || runnableItems.length > 0 && completed === runnableItems.length, onPress: onRunAll, children: [
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { className: "queue-run-all", variant: "primary", isDisabled: !hasRunnableWork || runnableItems.length > 0 && completed === runnableItems.length, onPress: onRunAll, children: [
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Play, { size: 17 }),
       "Run all"
     ] });
+    const selectionControls = selectionMode ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "outline", onPress: cancelSelection, children: "Cancel" }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Button2, { className: "queue-run-selected", variant: "primary", isDisabled: !selectedPromptIds.size, onPress: runSelected, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Play, { size: 17 }),
+        "Run ",
+        selectedPromptIds.size
+      ] })
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { className: "queue-select-videos", variant: "secondary", isDisabled: !hasRunnableWork || activeRunner && runner.status !== "idle", onPress: () => setSelectionMode(true), children: "Select Videos" });
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "view-stack", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Video Queue", description: video.display_name, actions: runnerAction }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Video Queue", description: video.display_name, actions: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+        selectionControls,
+        runnerControl
+      ] }) }),
       activeRunner && runner.status !== "idle" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `runner-banner ${runner.status}`, children: [
         runner.status === "running" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(LoaderCircle, { className: "spin", size: 18 }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CircleAlert, { size: 18 }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: runner.status === "running" ? "Running sequentially" : "Queue paused" }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: runner.error || `${completed} of ${items.length} complete` })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: runner.error || `${completed} of ${runnableItems.length} complete` })
         ] })
       ] }) : null,
-      items.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "queue-list", children: items.map((item) => {
+      runnableItems.length ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "queue-list", children: runnableItems.map((item) => {
         const canQueue = item.can_queue || item.can_create_draft;
+        const isSelectable = !!(item.status === "draft" && item.selected_variant_id || item.can_run || item.can_retry || canQueue);
         const showReason = item.status === "not_ready" || item.status === "needs_review" || item.status === "failed";
         const detailText = showReason ? item.reason : item.animation_prompt || item.reason;
-        return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { className: `queue-card status-${item.status}`, variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { className: "queue-card-content", children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Card, { className: `queue-card status-${item.status} ${selectedPromptIds.has(item.prompt_id) ? "is-selected" : ""}`, variant: "secondary", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(Card.Content, { className: "queue-card-content", children: [
+          selectionMode ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "queue-selection", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { type: "checkbox", checked: selectedPromptIds.has(item.prompt_id), disabled: !isSelectable, onChange: () => toggleSelected(item.prompt_id) }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { className: "sr-only", children: [
+              "Select ",
+              item.scene_title
+            ] })
+          ] }) : null,
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "queue-preview", children: item.selected_variant_id ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CachedPreviewImage, { value: { preview_url: item.selected_preview_url, cache_key: item.selected_cache_key, cached_file_name: item.selected_cached_file_name, generated_file_name: item.selected_file_name, media_id: item.selected_media_id, fife_url: item.selected_fife_url }, alt: item.scene_title }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "preview-placeholder", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Image, { size: 24 }) }) }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "queue-main", children: [
             /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "queue-title-row", children: [
@@ -35118,7 +35032,7 @@
             item.can_remove ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { isIconOnly: true, size: "sm", variant: "ghost", "aria-label": `Remove ${item.scene_title} from queue`, onPress: () => onRemove(item.job_id), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Trash2, { size: 15 }) }) : null
           ] })
         ] }) }, item.prompt_id);
-      }) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: ListVideo, title: "No video-ready scenes", description: "Scenes need an optional animation_prompt and a selected image before they can run.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "outline", onPress: onOpenImages, children: "Open Image Review" }) })
+      }) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: ListVideo, title: "No video-ready scenes", description: "Only scenes with an animation prompt appear in Video Queue.", action: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Button2, { variant: "outline", onPress: onOpenImages, children: "Open Image Review" }) })
     ] });
   }
   function MediaView({ project, video, onFinalize, onSync, busy }) {
@@ -35164,26 +35078,23 @@
       ] }, entry.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(EmptyState, { icon: Activity, title: "No matching logs" })
     ] });
   }
-  function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, onNavigate, onOpenVideo, onAddVideo, onRefresh }) {
+  function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, recentErrorCount, onNavigate, onOpenVideo, onAddVideo }) {
     const [query, setQuery] = (0, import_react73.useState)("");
     const normalizedQuery = query.trim().toLowerCase();
-    const recentProjects = videos.filter((video) => !normalizedQuery || video.display_name.toLowerCase().includes(normalizedQuery)).slice(0, 4);
-    const flowConnected = String(flowContext?.status || "disconnected").toLowerCase() === "connected";
-    const channelName = project?.display_name || "Studio workspace";
-    const initials = channelName.split(/\s+/).filter(Boolean).slice(0, 2).map((word) => word[0]).join("").toUpperCase() || "AF";
+    const recentProjects = videos.filter((video) => !normalizedQuery || video.display_name.toLowerCase().includes(normalizedQuery)).slice(0, 8);
+    const flowStatus = String(flowContext?.status || "disconnected").toLowerCase();
+    const flowLabel = flowStatus === "connected" ? "Flow connected" : flowStatus === "reconnect_required" ? "Reconnect required" : "Flow disconnected";
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("aside", { className: "studio-sidebar", children: [
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "studio-brand", children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "brand-symbol", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Layers, { size: 20 }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
-          "AUTOFLOW ",
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "STUDIO" })
-        ] })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "AutoFlow" })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { "aria-label": "Studio navigation", children: NAV_ITEMS.map((item) => {
         const Icon2 = item.icon;
         return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `studio-nav-item ${view === item.id ? "active" : ""}`, onClick: () => onNavigate(item.id), title: item.label, children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Icon2, { size: 18 }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: item.label })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: item.label }),
+          item.id === "logs" && recentErrorCount > 0 ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("em", { className: "sidebar-error-count", "aria-label": `${recentErrorCount} recent errors`, children: recentErrorCount }) : null
         ] }, item.id);
       }) }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "sidebar-projects", "aria-label": "Video projects", children: [
@@ -35207,17 +35118,13 @@
         }) })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("footer", { className: "studio-sidebar-footer", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `studio-nav-item ${view === "settings" ? "active" : ""}`, onClick: () => onNavigate("settings"), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Settings, { size: 18 }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Settings" })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `sidebar-flow-status status-${flowStatus}`, role: "status", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { "aria-hidden": "true" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: flowLabel })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "studio-channel-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "studio-channel-avatar", children: initials }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: channelName }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: flowConnected ? "Flow Connected" : "Flow Disconnected" })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", onClick: onRefresh, "aria-label": "Refresh Studio", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(RefreshCw, { size: 15 }) })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("button", { type: "button", className: `studio-nav-item ${view === "profile" ? "active" : ""}`, onClick: () => onNavigate("profile"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(UserRound, { size: 18 }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Profile" })
         ] })
       ] })
     ] });
@@ -35239,34 +35146,110 @@
     anchor.click();
     URL.revokeObjectURL(url);
   }
-  function ProjectWorkspaceHeader({ project, video, view, onBack, onNavigate }) {
+  function ProfileView({ project, videos, flowContext }) {
+    const flowConnected = String(flowContext?.status || "disconnected").toLowerCase() === "connected";
+    const channelName = project?.display_name || "Local Studio";
+    const initials = channelName.split(/\s+/).filter(Boolean).slice(0, 2).map((word) => word[0]).join("").toUpperCase() || "AF";
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "profile-view", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PageHeader, { title: "Profile", description: "Local workspace identity and browser-session details." }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "profile-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "profile-card profile-identity", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "profile-avatar", children: initials }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: channelName }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "Chrome extension profile" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("dl", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dt", { children: "Workspace" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dd", { children: "Local Studio" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dt", { children: "Projects" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dd", { children: videos.length })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dt", { children: "Last active" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dd", { children: "Now" })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "profile-card profile-details", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Local identity" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "AutoFlow keeps project data, media references, and workflow state on this device." }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("dl", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dt", { children: "Active channel" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dd", { children: channelName })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dt", { children: "Storage" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dd", { children: "Chrome local storage" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dt", { children: "Account model" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("dd", { children: "Single-user workspace" })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "profile-card profile-flow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: `connection-dot ${flowConnected ? "connected" : "disconnected"}` }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "Flow session" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: flowConnected ? "Connected to Google Flow" : "Open Google Flow to reconnect" })
+          ] })
+        ] })
+      ] })
+    ] });
+  }
+  function ProjectStatusCards({ project, video, onNavigate }) {
+    if (!video) return null;
+    const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+    const eligibleVideos = studioApi.getVideoQueueItems(project, video.video_id).filter((item) => !!item.animation_prompt);
+    const completedVideos = eligibleVideos.filter((item) => item.status === "complete").length;
+    const imageComplete = progress.prompt_count > 0 && progress.generated_count >= progress.prompt_count;
+    const selectionComplete = progress.prompt_count > 0 && progress.selected_count >= progress.prompt_count;
+    const videoComplete = eligibleVideos.length > 0 && completedVideos >= eligibleVideos.length;
+    const cards = [
+      { label: "Image Generation", value: `${progress.generated_count}/${progress.prompt_count}`, detail: imageComplete ? "All scene variants generated." : `${Math.max(0, progress.prompt_count - progress.generated_count)} scenes still need images.`, tone: imageComplete ? "complete" : "ready", badge: imageComplete ? "Complete" : "Ready", target: "images", Icon: Sparkles },
+      { label: "Variant Selection", value: `${progress.selected_count}/${progress.prompt_count}`, detail: selectionComplete ? "A variant is selected for every scene." : `${Math.max(0, progress.prompt_count - progress.selected_count)} scenes need selection.`, tone: selectionComplete ? "complete" : "attention", badge: selectionComplete ? "Complete" : "Attention", target: "images", Icon: SquareCheckBig },
+      { label: "Video Queue", value: String(eligibleVideos.length), detail: videoComplete ? "All eligible videos are complete." : `${completedVideos}/${eligibleVideos.length} eligible videos complete.`, tone: videoComplete ? "complete" : "ready", badge: videoComplete ? "Complete" : "Ready", target: "video", Icon: CirclePlay }
+    ];
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("section", { className: "project-status-cards", "aria-label": "Project production status", children: cards.map(({ label, value, detail, tone, badge, target, Icon: Icon2 }) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("article", { className: `project-status-card tone-${tone}`, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Icon2, { size: 19 }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: badge })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: value }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: detail }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", onClick: () => onNavigate(target), children: target === "video" ? "Open Queue" : "Review" })
+    ] }, label)) });
+  }
+  function ProjectWorkspaceHeader({ project, video, view, onNavigate }) {
     if (!video) return null;
     const progress = studioApi.getVideoProjectProgress(project, video.video_id);
     const phaseLabel = { imported: "Imported", image_generation: "Image Generation", image_selection: "Image Selection", video_generation: "Video Generation", complete: "Complete" }[progress.phase] || "Imported";
     const manageTarget = progress.phase === "video_generation" ? "video" : progress.phase === "complete" ? "media" : "images";
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("header", { className: "reference-project-header", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-header-inner", children: [
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-heading-row", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-heading", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "reference-back-button", onClick: onBack, "aria-label": "Back to all video projects", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ArrowLeft, { size: 20 }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h1", { children: video.display_name }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
-                video.prompt_count,
-                " scenes"
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: phaseLabel }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Updated recently" })
-            ] })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "reference-project-heading", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h1", { children: video.display_name }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
+              video.prompt_count,
+              " scenes"
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: phaseLabel }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", {}),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Updated recently" })
           ] })
-        ] }),
+        ] }) }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-actions", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", onClick: () => exportVideoProject(project, video), children: "Export Data" }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", onClick: () => onNavigate(manageTarget), children: "Manage Project" })
         ] })
       ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProjectStatusCards, { project, video, onNavigate }),
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("nav", { className: "reference-project-tabs", "aria-label": "Video project sections", children: PROJECT_TABS.map((tab) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: view === tab.id ? "active" : "", "aria-current": view === tab.id ? "page" : void 0, onClick: () => onNavigate(tab.id), children: tab.label }, tab.id)) })
     ] }) });
   }
@@ -35276,7 +35259,7 @@
     const [activeVideoId, setActiveVideoId] = (0, import_react73.useState)("");
     const [busy, setBusy] = (0, import_react73.useState)("");
     const [dialog, setDialog] = (0, import_react73.useState)(null);
-    const [runner, setRunner] = (0, import_react73.useState)({ status: "idle", videoId: "", currentJobId: "", error: "" });
+    const [runner, setRunner] = (0, import_react73.useState)({ status: "idle", videoId: "", currentJobId: "", error: "", promptIds: null });
     const runnerRef = (0, import_react73.useRef)(runner);
     const runNextRef = (0, import_react73.useRef)(null);
     const capture = (0, import_react73.useCallback)(() => setSnapshot(captureStudioState()), []);
@@ -35300,6 +35283,7 @@
     const projects = snapshot.domainState?.projects || [];
     const videos = (0, import_react73.useMemo)(() => project ? studioApi.getProjectVideos(project) : [], [project]);
     const activeVideo = videos.find((video) => video.video_id === activeVideoId) || videos[0] || null;
+    const recentErrorCount = (snapshot.logs || []).filter((entry) => entry.type === "error").slice(-99).length;
     (0, import_react73.useEffect)(() => {
       if (!activeVideoId || !videos.some((video) => video.video_id === activeVideoId)) {
         setActiveVideoId(videos[0]?.video_id || "");
@@ -35322,11 +35306,15 @@
       capture();
       toast.danger("Video queue paused", { description: message });
     }, [capture, setRunnerState]);
-    const runNext = (0, import_react73.useCallback)(async (videoId) => {
+    const runNext = (0, import_react73.useCallback)(async (videoId, promptIds = null) => {
       try {
         await studioApi.loadProjectState();
         let currentProject = studioApi.getState().activeProject;
-        let items = studioApi.getVideoQueueItems(currentProject, videoId).filter((item) => !!item.animation_prompt);
+        const selectedIds = promptIds?.length ? new Set(promptIds) : null;
+        const eligibleItems = (items2) => items2.filter((item) => {
+          return !!item.animation_prompt && (!selectedIds || selectedIds.has(item.prompt_id));
+        });
+        let items = eligibleItems(studioApi.getVideoQueueItems(currentProject, videoId));
         for (const item of items) {
           if (item.status === "draft" && item.selected_variant_id || item.can_create_draft) {
             await studioApi.queuePromptVideo(item.prompt_id);
@@ -35334,16 +35322,16 @@
         }
         await studioApi.loadProjectState();
         currentProject = studioApi.getState().activeProject;
-        items = studioApi.getVideoQueueItems(currentProject, videoId).filter((item) => !!item.animation_prompt);
+        items = eligibleItems(studioApi.getVideoQueueItems(currentProject, videoId));
         const next = items.find((item) => item.status === "ready");
         if (!next) {
-          setRunnerState({ status: "idle", videoId, currentJobId: "", error: "" });
+          setRunnerState({ status: "idle", videoId, currentJobId: "", error: "", promptIds: null });
           capture();
           toast.success("Video queue complete");
           return;
         }
         const job = await studioApi.runVideoJob(next.job_id);
-        setRunnerState({ status: "running", videoId, currentJobId: job.job_id, error: "" });
+        setRunnerState({ status: "running", videoId, currentJobId: job.job_id, error: "", promptIds });
         capture();
       } catch (error) {
         await pauseRunner(error);
@@ -35365,7 +35353,7 @@
           if (!complete) return;
           const shouldContinue = current.status === "running";
           setRunnerState((value) => ({ ...value, currentJobId: "" }));
-          if (shouldContinue) await runNextRef.current?.(current.videoId);
+          if (shouldContinue) await runNextRef.current?.(current.videoId, current.promptIds);
         }).catch((error) => toast.danger(error.message));
       };
       chrome.runtime?.onMessage?.addListener(runtimeListener);
@@ -35438,33 +35426,37 @@
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ImageReviewView, { project, video: activeVideo, flowContext: snapshot.flowContext, busy, onRefreshConnection: () => action("flow-refresh", () => studioApi.refreshFlowContext(), "Flow connection refreshed"), onGenerate: (settings) => action("generate-images", () => studioApi.startImageGenerationRun(activeVideo.video_id, settings), "Image generation started"), onStop: (runId) => action("stop-images", () => studioApi.stopImageGenerationRun(runId), "Image generation stopped"), onRetry: (runId) => action("retry-images", () => studioApi.retryImageGenerationRun(runId), "Retry started"), onSelect: (promptId, variantId) => action("select-image", () => studioApi.selectImageVariant(promptId, variantId), "Image selected") });
     } else if (view === "video") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(VideoQueueView, { project, video: activeVideo, runner, onRunAll: () => {
-        const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "" };
+        const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "", promptIds: null };
         setRunnerState(next);
         runNext(activeVideo.video_id);
+      }, onRunSelected: (selectedPromptIds) => {
+        const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "", promptIds: selectedPromptIds };
+        setRunnerState(next);
+        runNext(activeVideo.video_id, selectedPromptIds);
       }, onPause: () => setRunnerState((current) => ({ ...current, status: "paused", error: "Paused after the current job." })), onContinue: () => {
         setRunnerState((current) => ({ ...current, status: "running", error: "" }));
-        runNext(activeVideo.video_id);
+        runNext(activeVideo.video_id, runner.promptIds);
       }, onQueue: (promptId) => action("queue", () => studioApi.queuePromptVideo(promptId), "Added to queue"), onRun: (jobId) => action("run", () => studioApi.runVideoJob(jobId), "Video started"), onStop: stopVideo, onHold: (jobId) => action("hold", () => studioApi.holdVideoJob(jobId), "Video held"), onMove: (jobId, direction) => action(`move-${direction}`, () => studioApi.moveVideoJob(jobId, direction)), onRemove: (jobId) => action("remove", () => studioApi.removeVideoJob(jobId), "Removed from queue"), onOpenImages: () => setView("images") });
     } else if (view === "media") {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(MediaView, { project, video: activeVideo, busy: !!busy, onFinalize: () => action("finalize", () => studioApi.finalizeSelectedImages(), "Selected images finalized"), onSync: (files) => action("sync", () => studioApi.syncProjectMediaFromFiles(files), "Folder synced") });
-    } else if (view === "settings") {
-      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(SettingsView, { project, flowContext: snapshot.flowContext, logs: snapshot.logs, busy: !!busy, onUpdateProject: (updates) => action("settings-save", () => studioApi.updateActiveProject(updates), "Settings saved"), onRefreshConnection: () => action("flow-refresh", () => studioApi.refreshFlowContext(), "Flow connection refreshed"), onClearLogs: () => action("clear-logs", () => studioApi.clearStudioLogs(), "Logs cleared") });
+    } else if (view === "profile") {
+      content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProfileView, { project, videos, flowContext: snapshot.flowContext });
     } else {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(LogsView, { logs: snapshot.logs, onClear: () => action("clear-logs", () => studioApi.clearStudioLogs(), "Logs cleared") });
     }
     const isProjectView = PROJECT_TABS.some((tab) => tab.id === view) && !!activeVideo;
     if (isProjectView) {
       content = /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "reference-project-workspace", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProjectWorkspaceHeader, { project, video: activeVideo, view, onBack: () => setView("channels"), onNavigate: setView }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ProjectWorkspaceHeader, { project, video: activeVideo, view, onNavigate: setView }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: `reference-project-body ${view === "overview" ? "overview" : ""}`, children: content })
       ] });
     }
     return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "studio-shell", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ReferenceSidebar, { project, videos, activeVideo, view, flowContext: snapshot.flowContext, onNavigate: setView, onOpenVideo: (videoId, target = "overview") => {
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ReferenceSidebar, { project, videos, activeVideo, view, flowContext: snapshot.flowContext, recentErrorCount, onNavigate: setView, onOpenVideo: (videoId, target = "overview") => {
           setActiveVideoId(videoId);
           setView(target);
-        }, onAddVideo: () => setDialog({ type: "video-add" }), onRefresh: () => refresh() }),
+        }, onAddVideo: () => setDialog({ type: "video-add" }) }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "studio-main", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("main", { className: `studio-content ${view === "channels" ? "reference-surface" : ""} ${isProjectView ? "reference-project-surface" : ""}`, children: snapshot.lastError ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "fatal-banner", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CircleAlert, { size: 18 }),
           snapshot.lastError.message

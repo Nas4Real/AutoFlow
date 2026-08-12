@@ -240,3 +240,35 @@ Make Project Studio the complete daily workflow for importing prompt JSON, gener
 | Shared extraction changes legacy behavior | High | Characterization tests before adapting the side panel |
 | Studio reload loses progress | Medium | Persist run state and reconcile it with background stats/events |
 | UI change becomes a redesign | Medium | Extend existing Image Review components and CSS patterns only |
+
+---
+
+# Implementation Plan: Superdesign V2 Studio Integration
+
+## Objective
+
+Port the approved AutoFlow Studio V2 UI into the Chrome extension and connect it to the existing project-domain and runtime capabilities. Settings remains a Superdesign draft and is not exposed by the extension.
+
+## Ordered Slices
+
+1. Lock the V2 navigation, token, and manual-checkpoint contracts in focused tests.
+2. Port the shared V2 shell, sidebar, project header, status cards, and tabs.
+3. Wire Dashboard, Imports, Logs, and a local Profile screen to existing state and actions.
+4. Wire Overview, Image Review, Video Queue, and Media to the shared project workspace without changing generation contracts.
+5. Rebuild generated assets, run full checks, verify in Chrome, review, commit atomically, and push.
+
+## Boundaries
+
+- Keep Settings out of extension navigation and hash routing.
+- Preserve the approved Poppins, `#020202`, `#080808`, `#111111`, blue, green, and amber system.
+- Preserve explicit image-generation, image-selection, and video-generation checkpoints.
+- Do not redesign the side panel or duplicate background/runtime orchestration.
+- Do not add subscription, account, team, or billing features in this integration.
+
+## Acceptance Criteria
+
+- All canonical Studio screens use one consistent shared shell and project workspace.
+- Existing project/import/reference/image/video/media/log behavior is reachable from the new UI.
+- Video Queue contains only prompts with `animation_prompt` and retains selection-mode controls.
+- Settings is not reachable or visible in the extension.
+- Focused tests, full suite, build, syntax, architecture checks, and Chrome verification pass.

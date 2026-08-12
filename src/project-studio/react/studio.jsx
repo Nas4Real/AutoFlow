@@ -5,7 +5,6 @@ import { Button, Card, Chip, Modal, ProgressBar, Toast, toast } from "@heroui/re
 import {
   Activity,
   AlertCircle,
-  ArrowLeft,
   ArrowDown,
   ArrowUp,
   Check,
@@ -34,12 +33,14 @@ import {
   RefreshCw,
   Save,
   Search,
+  ScrollText,
   Settings,
   Sparkles,
   Square,
   Trash2,
   Trophy,
   Upload,
+  UserRound,
   Video,
   X,
 } from "lucide-react";
@@ -50,6 +51,7 @@ const domainApi = globalThis.TFProjectDomain;
 const NAV_ITEMS = [
   { id: "channels", label: "Dashboard", icon: LayoutDashboard },
   { id: "import", label: "Imports", icon: FileInput },
+  { id: "logs", label: "Logs", icon: ScrollText },
 ];
 
 const PROJECT_TABS = [
@@ -60,10 +62,9 @@ const PROJECT_TABS = [
 ];
 
 const IMPORT_TABS = [
-  { id: "upload", label: "Import JSON" },
-  { id: "references", label: "Needs References" },
   { id: "history", label: "Import History" },
-  { id: "library", label: "Reference Library" },
+  { id: "references", label: "Needs References" },
+  { id: "library", label: "Assets" },
 ];
 
 const SETTINGS_TABS = [
@@ -92,7 +93,7 @@ function getViewFromLocationHash() {
   } catch (error) {
     hash = rawHash;
   }
-  return NAV_ITEMS.some((item) => item.id === hash) || PROJECT_TABS.some((item) => item.id === hash) || hash === "assets" || hash === "settings" || hash === "logs" ? hash : "channels";
+  return NAV_ITEMS.some((item) => item.id === hash) || PROJECT_TABS.some((item) => item.id === hash) || hash === "assets" || hash === "profile" ? hash : "channels";
 }
 
 class StudioErrorBoundary extends React.Component {
@@ -633,53 +634,44 @@ function ImportView({ project, videos, onImport, onResolve, onOpenProject, onAdd
   const [file, setFile] = useState(null);
   const [name, setName] = useState("");
   const [mapping, setMapping] = useState({});
-  const [tab, setTab] = useState("upload");
+  const [tab, setTab] = useState("history");
   const blockedRecords = studioApi.getProjectPromptRecords(project).filter((record) => record.status === "blocked");
   const assets = studioApi.getActiveAssets(project);
-  const importCount = videos.length;
   return (
-    <div className="view-stack">
-      <PageHeader title="Imports" description="Create video projects, resolve references, and manage your channel library." />
+    <div className="view-stack imports-view">
+      <PageHeader title="Imports" description="Import prompt JSON, resolve references, and manage reusable assets." actions={<div className="page-action-row"><Button variant="outline" onPress={onAddAsset}>Upload Asset</Button><Button variant="primary" onPress={() => setTab("upload")}>Import JSON</Button></div>} />
       <nav className="studio-subtabs" aria-label="Import workflow sections">
         {IMPORT_TABS.map((item) => <button key={item.id} type="button" className={tab === item.id ? "active" : ""} aria-current={tab === item.id ? "page" : undefined} onClick={() => setTab(item.id)}>{item.label}{item.id === "references" && blockedRecords.length ? <span>{blockedRecords.length}</span> : null}</button>)}
       </nav>
-      {!project ? <EmptyState icon={FileJson} title="Add a channel before importing" description="Imports and reference assets are stored in the active channel." /> : null}
+      {!project ? <EmptyState icon={FileJson} title="Add a channel before importing" description="Imports and assets are stored in the active channel." /> : null}
       {project && tab === "upload" ? (
-        <section className="import-layout">
-          <div className="import-form studio-surface-panel">
-            <span className="eyebrow">Create video project</span>
-            <label className="field-label">Video name <span className="optional">Optional</span><input value={name} onChange={(event) => setName(event.target.value)} /></label>
-            <DropZone file={file} onFile={setFile} accept=".json,application/json" label="Drop the video JSON here" hint="file_name and image_prompt are required; animation_prompt is optional" />
-            <p className="muted-copy">Reviewing or importing JSON never starts image generation. You will explicitly confirm that later in Image Review.</p>
-            <Button variant="primary" isDisabled={!file || busy} onPress={() => onImport(file, name.trim())}>{busy ? <LoaderCircle className="spin" size={17} /> : <Upload size={17} />}Create video project</Button>
-          </div>
-          <aside className="import-history studio-surface-panel">
-            <span className="eyebrow">Import summary</span>
-            <strong className="import-summary-count">{importCount}</strong>
-            <p className="muted-copy">{importCount === 1 ? "video project in this channel" : "video projects in this channel"}</p>
-            <p className="muted-copy">After import, resolve any missing references or open the project Overview.</p>
-          </aside>
-        </section>
-      ) : null}
-      {project && tab === "references" ? (
-        <section className="resolve-section studio-surface-panel">
-          <div className="section-heading"><div><h2>Needs References</h2><p>Map missing names to a reusable channel asset before generation.</p></div><Chip color="warning" variant="soft">{blockedRecords.length}</Chip></div>
-          {blockedRecords.length ? <div className="resolve-list">{blockedRecords.flatMap((record) => (record.blocked_references || []).map((reference) => {
-            const key = `${record.prompt_id}:${reference.reference_index}`;
-            return <div className="resolve-row" key={key}><div><strong>{studioApi.sceneTitleFromFileName(record.file_name)}</strong><span>{reference.name || "Unnamed reference"}</span></div><select value={mapping[key] || ""} onChange={(event) => setMapping((current) => ({ ...current, [key]: event.target.value }))}><option value="">Choose asset</option>{assets.map((asset) => <option key={asset.asset_id} value={asset.asset_id}>{asset.display_name}</option>)}</select><Button size="sm" variant="secondary" isDisabled={!mapping[key]} onPress={() => onResolve(record.prompt_id, reference.reference_index, mapping[key])}>Use asset</Button></div>;
-          }))}</div> : <EmptyState icon={CheckCircle} title="All references are resolved" description="Every imported scene is ready for the next production step." action={<Button variant="secondary" onPress={() => setTab("library")}>Open Reference Library</Button>} />}
+        <section className="import-upload-panel studio-surface-panel">
+          <div className="section-heading"><div><h2>Import JSON</h2><p>Create one video project from a prompt-index JSON file.</p></div><Button variant="ghost" onPress={() => setTab("history")}>Cancel</Button></div>
+          <label className="field-label">Video name <span className="optional">Optional</span><input value={name} onChange={(event) => setName(event.target.value)} /></label>
+          <DropZone file={file} onFile={setFile} accept=".json,application/json" label="Drop the video JSON here" hint="file_name and image_prompt are required; animation_prompt is optional" />
+          <p className="muted-copy">Importing JSON never starts generation. Image Review remains the first manual checkpoint.</p>
+          <Button variant="primary" isDisabled={!file || busy} onPress={() => onImport(file, name.trim())}>{busy ? <LoaderCircle className="spin" size={17} /> : <Upload size={17} />}Create video project</Button>
         </section>
       ) : null}
       {project && tab === "history" ? (
         <section className="studio-surface-panel import-history-list">
-          <div className="section-heading"><div><h2>Import History</h2><p>Each JSON import creates one project-scoped video workspace.</p></div></div>
-          {videos.length ? <div className="compact-list">{videos.map((video) => <div className="compact-row" key={video.video_id}><FileJson size={17} /><div><strong>{video.display_name}</strong><small>{video.source_name || "Imported JSON"} · {video.prompt_count} scenes</small></div><Button size="sm" variant="secondary" onPress={() => onOpenProject(video.video_id)}>Open Project Overview</Button></div>)}</div> : <EmptyState icon={FileJson} title="No video projects yet" description="Import a JSON file to create the first one." action={<Button variant="primary" onPress={() => setTab("upload")}>Import JSON</Button>} />}
+          <div className="section-heading"><div><h2>Import History</h2><p>Every JSON import creates a project-scoped video workspace.</p></div><Chip variant="soft">{videos.length}</Chip></div>
+          {videos.length ? <div className="compact-list">{videos.map((video) => <div className="compact-row" key={video.video_id}><FileJson size={17} /><div><strong>{video.display_name}</strong><small>{video.source_name || "Imported JSON"} · {video.prompt_count} scenes</small></div><Button size="sm" variant="secondary" onPress={() => onOpenProject(video.video_id)}>Open Project Overview</Button></div>)}</div> : <EmptyState icon={FileJson} title="No video projects yet" description="Import a JSON file to create the first project." action={<Button variant="primary" onPress={() => setTab("upload")}>Import JSON</Button>} />}
+        </section>
+      ) : null}
+      {project && tab === "references" ? (
+        <section className="resolve-section studio-surface-panel">
+          <div className="section-heading"><div><h2>Needs References</h2><p>Uploading an asset automatically rechecks unresolved references and matches compatible names.</p></div><Chip color="warning" variant="soft">{blockedRecords.length}</Chip></div>
+          {blockedRecords.length ? <div className="resolve-list">{blockedRecords.flatMap((record) => (record.blocked_references || []).map((reference) => {
+            const key = `${record.prompt_id}:${reference.reference_index}`;
+            return <div className="resolve-row" key={key}><div><strong>{studioApi.sceneTitleFromFileName(record.file_name)}</strong><span>{reference.name || "Unnamed reference"}</span></div><select value={mapping[key] || ""} onChange={(event) => setMapping((current) => ({ ...current, [key]: event.target.value }))}><option value="">Choose asset</option>{assets.map((asset) => <option key={asset.asset_id} value={asset.asset_id}>{asset.display_name}</option>)}</select><div className="row-actions"><Button size="sm" variant="outline" onPress={onAddAsset}>Upload Asset</Button><Button size="sm" variant="secondary" isDisabled={!mapping[key]} onPress={() => onResolve(record.prompt_id, reference.reference_index, mapping[key])}>Link Asset</Button></div></div>;
+          }))}</div> : <EmptyState icon={CheckCircle} title="All references are resolved" description="Uploaded assets are automatically rechecked against imported prompt references." action={<Button variant="secondary" onPress={() => setTab("library")}>Open Assets</Button>} />}
         </section>
       ) : null}
       {project && tab === "library" ? (
         <section className="studio-surface-panel import-library">
-          <div className="section-heading"><div><h2>Reference Library</h2><p>Reusable channel assets for resolving imported scene references.</p></div><Button variant="primary" onPress={onAddAsset}><Plus size={17} />Add reference</Button></div>
-          {assets.length ? <div className="asset-grid">{assets.map((asset) => { const file = primaryAssetFile(asset); return <Card key={asset.asset_id} className="asset-card" variant="secondary"><Card.Content><div className="asset-preview">{file?.data_url ? <img src={file.data_url} alt={asset.display_name} /> : <ImageIcon size={26} />}</div><div className="asset-card-footer"><strong>{asset.display_name}</strong><div className="row-actions"><Button isIconOnly size="sm" variant="ghost" aria-label={`Edit ${asset.display_name}`} onPress={() => onEditAsset(asset)}><Pencil size={16} /></Button><Button isIconOnly size="sm" variant="ghost" aria-label={`Delete ${asset.display_name}`} onPress={() => onDeleteAsset(asset)}><Trash2 size={16} /></Button></div></div></Card.Content></Card>; })}</div> : <EmptyState icon={ImageIcon} title="No reference assets yet" description="Add a reusable image before mapping references." action={<Button variant="primary" onPress={onAddAsset}><Plus size={17} />Add reference</Button>} />}
+          <div className="section-heading"><div><h2>Assets</h2><p>Reusable channel assets used to resolve imported scene references.</p></div><Button variant="primary" onPress={onAddAsset}>Upload Asset</Button></div>
+          {assets.length ? <div className="asset-grid">{assets.map((asset) => { const assetFile = primaryAssetFile(asset); return <Card key={asset.asset_id} className="asset-card" variant="secondary"><Card.Content><div className="asset-preview">{assetFile?.data_url ? <img src={assetFile.data_url} alt={asset.display_name} /> : <ImageIcon size={26} />}</div><div className="asset-card-footer"><strong>{asset.display_name}</strong><div className="row-actions"><Button isIconOnly size="sm" variant="ghost" aria-label={`Edit ${asset.display_name}`} onPress={() => onEditAsset(asset)}><Pencil size={16} /></Button><Button isIconOnly size="sm" variant="ghost" aria-label={`Delete ${asset.display_name}`} onPress={() => onDeleteAsset(asset)}><Trash2 size={16} /></Button></div></div></Card.Content></Card>; })}</div> : <EmptyState icon={ImageIcon} title="No assets yet" description="Upload a reusable reference image for imported prompts." action={<Button variant="primary" onPress={onAddAsset}>Upload Asset</Button>} />}
         </section>
       ) : null}
     </div>
@@ -805,36 +797,68 @@ function ImageReviewView({ project, video, flowContext, busy, onRefreshConnectio
   );
 }
 
-function VideoQueueView({ project, video, runner, onRunAll, onPause, onContinue, onQueue, onRun, onStop, onHold, onMove, onRemove, onOpenImages }) {
+function VideoQueueView({ project, video, runner, onRunAll, onRunSelected, onPause, onContinue, onQueue, onRun, onStop, onHold, onMove, onRemove, onOpenImages }) {
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedPromptIds, setSelectedPromptIds] = useState(() => new Set());
+
+  useEffect(() => {
+    setSelectionMode(false);
+    setSelectedPromptIds(new Set());
+  }, [video?.video_id]);
+
   if (!video) return <EmptyState icon={ListVideo} title="Choose a video" description="Video Queue is organized one video at a time." />;
-  const items = studioApi.getVideoQueueItems(project, video.video_id);
-  const runnableItems = items.filter((item) => !!item.animation_prompt);
+
+  const runnableItems = studioApi.getVideoQueueItems(project, video.video_id).filter((item) => !!item.animation_prompt);
   const completed = runnableItems.filter((item) => item.status === "complete").length;
   const hasRunnableWork = runnableItems.some((item) => {
-    return (item.status === "draft" && item.selected_variant_id) || item.can_run;
+    return (item.status === "draft" && item.selected_variant_id) || item.can_run || item.can_retry || item.can_queue || item.can_create_draft;
   });
   const activeRunner = runner.videoId === video.video_id;
-  const runnerAction = activeRunner && runner.status === "running"
+  const toggleSelected = (promptId) => {
+    setSelectedPromptIds((current) => {
+      const next = new Set(current);
+      if (next.has(promptId)) next.delete(promptId);
+      else next.add(promptId);
+      return next;
+    });
+  };
+  const cancelSelection = () => {
+    setSelectionMode(false);
+    setSelectedPromptIds(new Set());
+  };
+  const runSelected = () => {
+    const promptIds = [...selectedPromptIds];
+    if (!promptIds.length) return;
+    cancelSelection();
+    onRunSelected(promptIds);
+  };
+  const runnerControl = activeRunner && runner.status === "running"
     ? <Button variant="outline" onPress={onPause}><CirclePause size={17} />Pause after current</Button>
     : activeRunner && runner.status === "paused"
       ? <Button variant="primary" onPress={onContinue}><Play size={17} />Continue</Button>
-      : <Button variant="primary" isDisabled={!hasRunnableWork || (runnableItems.length > 0 && completed === runnableItems.length)} onPress={onRunAll}><Play size={17} />Run all</Button>;
+      : <Button className="queue-run-all" variant="primary" isDisabled={!hasRunnableWork || (runnableItems.length > 0 && completed === runnableItems.length)} onPress={onRunAll}><Play size={17} />Run all</Button>;
+  const selectionControls = selectionMode
+    ? <><Button variant="outline" onPress={cancelSelection}>Cancel</Button><Button className="queue-run-selected" variant="primary" isDisabled={!selectedPromptIds.size} onPress={runSelected}><Play size={17} />Run {selectedPromptIds.size}</Button></>
+    : <Button className="queue-select-videos" variant="secondary" isDisabled={!hasRunnableWork || (activeRunner && runner.status !== "idle")} onPress={() => setSelectionMode(true)}>Select Videos</Button>;
+
   return (
     <div className="view-stack">
-      <PageHeader title="Video Queue" description={video.display_name} actions={runnerAction} />
+      <PageHeader title="Video Queue" description={video.display_name} actions={<>{selectionControls}{runnerControl}</>} />
       {activeRunner && runner.status !== "idle" ? (
         <div className={`runner-banner ${runner.status}`}>
           {runner.status === "running" ? <LoaderCircle className="spin" size={18} /> : <AlertCircle size={18} />}
-          <div><strong>{runner.status === "running" ? "Running sequentially" : "Queue paused"}</strong><span>{runner.error || `${completed} of ${items.length} complete`}</span></div>
+          <div><strong>{runner.status === "running" ? "Running sequentially" : "Queue paused"}</strong><span>{runner.error || `${completed} of ${runnableItems.length} complete`}</span></div>
         </div>
       ) : null}
-      {items.length ? <div className="queue-list">{items.map((item) => {
+      {runnableItems.length ? <div className="queue-list">{runnableItems.map((item) => {
         const canQueue = item.can_queue || item.can_create_draft;
+        const isSelectable = !!((item.status === "draft" && item.selected_variant_id) || item.can_run || item.can_retry || canQueue);
         const showReason = item.status === "not_ready" || item.status === "needs_review" || item.status === "failed";
         const detailText = showReason ? item.reason : item.animation_prompt || item.reason;
         return (
-          <Card key={item.prompt_id} className={`queue-card status-${item.status}`} variant="secondary">
+          <Card key={item.prompt_id} className={`queue-card status-${item.status} ${selectedPromptIds.has(item.prompt_id) ? "is-selected" : ""}`} variant="secondary">
             <Card.Content className="queue-card-content">
+              {selectionMode ? <label className="queue-selection"><input type="checkbox" checked={selectedPromptIds.has(item.prompt_id)} disabled={!isSelectable} onChange={() => toggleSelected(item.prompt_id)} /><span className="sr-only">Select {item.scene_title}</span></label> : null}
               <div className="queue-preview">{item.selected_variant_id ? <CachedPreviewImage value={{ preview_url: item.selected_preview_url, cache_key: item.selected_cache_key, cached_file_name: item.selected_cached_file_name, generated_file_name: item.selected_file_name, media_id: item.selected_media_id, fife_url: item.selected_fife_url }} alt={item.scene_title} /> : <span className="preview-placeholder"><ImageIcon size={24} /></span>}</div>
               <div className="queue-main"><div className="queue-title-row"><h3>{item.scene_title}</h3><Chip size="sm" color="accent" variant="soft">Video</Chip><Chip size="sm" color={statusColor(item.status)} variant="soft">{item.status_label}</Chip></div><p className={showReason ? "queue-error" : ""}>{detailText}</p></div>
               <div className="queue-actions">
@@ -850,7 +874,7 @@ function VideoQueueView({ project, video, runner, onRunAll, onPause, onContinue,
             </Card.Content>
           </Card>
         );
-      })}</div> : <EmptyState icon={ListVideo} title="No video-ready scenes" description="Scenes need an optional animation_prompt and a selected image before they can run." action={<Button variant="outline" onPress={onOpenImages}>Open Image Review</Button>} />}
+      })}</div> : <EmptyState icon={ListVideo} title="No video-ready scenes" description="Only scenes with an animation prompt appear in Video Queue." action={<Button variant="outline" onPress={onOpenImages}>Open Image Review</Button>} />}
     </div>
   );
 }
@@ -883,20 +907,19 @@ function LogsView({ logs, onClear }) {
   );
 }
 
-function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, onNavigate, onOpenVideo, onAddVideo, onRefresh }) {
+function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, recentErrorCount, onNavigate, onOpenVideo, onAddVideo }) {
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLowerCase();
-  const recentProjects = videos.filter((video) => !normalizedQuery || video.display_name.toLowerCase().includes(normalizedQuery)).slice(0, 4);
-  const flowConnected = String(flowContext?.status || "disconnected").toLowerCase() === "connected";
-  const channelName = project?.display_name || "Studio workspace";
-  const initials = channelName.split(/\s+/).filter(Boolean).slice(0, 2).map((word) => word[0]).join("").toUpperCase() || "AF";
+  const recentProjects = videos.filter((video) => !normalizedQuery || video.display_name.toLowerCase().includes(normalizedQuery)).slice(0, 8);
+  const flowStatus = String(flowContext?.status || "disconnected").toLowerCase();
+  const flowLabel = flowStatus === "connected" ? "Flow connected" : flowStatus === "reconnect_required" ? "Reconnect required" : "Flow disconnected";
   return (
     <aside className="studio-sidebar">
-      <div className="studio-brand"><span className="brand-symbol"><Layers size={20} /></span><strong>AUTOFLOW <span>STUDIO</span></strong></div>
+      <div className="studio-brand"><span className="brand-symbol"><Layers size={20} /></span><strong>AutoFlow</strong></div>
       <nav aria-label="Studio navigation">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
-          return <button key={item.id} type="button" className={`studio-nav-item ${view === item.id ? "active" : ""}`} onClick={() => onNavigate(item.id)} title={item.label}><Icon size={18} /><span>{item.label}</span></button>;
+          return <button key={item.id} type="button" className={`studio-nav-item ${view === item.id ? "active" : ""}`} onClick={() => onNavigate(item.id)} title={item.label}><Icon size={18} /><span>{item.label}</span>{item.id === "logs" && recentErrorCount > 0 ? <em className="sidebar-error-count" aria-label={`${recentErrorCount} recent errors`}>{recentErrorCount}</em> : null}</button>;
         })}
       </nav>
       <section className="sidebar-projects" aria-label="Video projects">
@@ -913,8 +936,8 @@ function ReferenceSidebar({ project, videos, activeVideo, view, flowContext, onN
         </div>
       </section>
       <footer className="studio-sidebar-footer">
-        <button type="button" className={`studio-nav-item ${view === "settings" ? "active" : ""}`} onClick={() => onNavigate("settings")}><Settings size={18} /><span>Settings</span></button>
-        <div className="studio-channel-card"><span className="studio-channel-avatar">{initials}</span><div><strong>{channelName}</strong><span>{flowConnected ? "Flow Connected" : "Flow Disconnected"}</span></div><button type="button" onClick={onRefresh} aria-label="Refresh Studio"><RefreshCw size={15} /></button></div>
+        <div className={`sidebar-flow-status status-${flowStatus}`} role="status"><span aria-hidden="true" /><strong>{flowLabel}</strong></div>
+        <button type="button" className={`studio-nav-item ${view === "profile" ? "active" : ""}`} onClick={() => onNavigate("profile")}><UserRound size={18} /><span>Profile</span></button>
       </footer>
     </aside>
   );
@@ -938,7 +961,39 @@ function exportVideoProject(project, video) {
   URL.revokeObjectURL(url);
 }
 
-function ProjectWorkspaceHeader({ project, video, view, onBack, onNavigate }) {
+function ProfileView({ project, videos, flowContext }) {
+  const flowConnected = String(flowContext?.status || "disconnected").toLowerCase() === "connected";
+  const channelName = project?.display_name || "Local Studio";
+  const initials = channelName.split(/\s+/).filter(Boolean).slice(0, 2).map((word) => word[0]).join("").toUpperCase() || "AF";
+  return (
+    <div className="profile-view">
+      <PageHeader title="Profile" description="Local workspace identity and browser-session details." />
+      <div className="profile-grid">
+        <section className="profile-card profile-identity"><span className="profile-avatar">{initials}</span><h2>{channelName}</h2><p>Chrome extension profile</p><dl><div><dt>Workspace</dt><dd>Local Studio</dd></div><div><dt>Projects</dt><dd>{videos.length}</dd></div><div><dt>Last active</dt><dd>Now</dd></div></dl></section>
+        <section className="profile-card profile-details"><h2>Local identity</h2><p>AutoFlow keeps project data, media references, and workflow state on this device.</p><dl><div><dt>Active channel</dt><dd>{channelName}</dd></div><div><dt>Storage</dt><dd>Chrome local storage</dd></div><div><dt>Account model</dt><dd>Single-user workspace</dd></div></dl></section>
+        <section className="profile-card profile-flow"><span className={`connection-dot ${flowConnected ? "connected" : "disconnected"}`} /><div><h2>Flow session</h2><p>{flowConnected ? "Connected to Google Flow" : "Open Google Flow to reconnect"}</p></div></section>
+      </div>
+    </div>
+  );
+}
+
+function ProjectStatusCards({ project, video, onNavigate }) {
+  if (!video) return null;
+  const progress = studioApi.getVideoProjectProgress(project, video.video_id);
+  const eligibleVideos = studioApi.getVideoQueueItems(project, video.video_id).filter((item) => !!item.animation_prompt);
+  const completedVideos = eligibleVideos.filter((item) => item.status === "complete").length;
+  const imageComplete = progress.prompt_count > 0 && progress.generated_count >= progress.prompt_count;
+  const selectionComplete = progress.prompt_count > 0 && progress.selected_count >= progress.prompt_count;
+  const videoComplete = eligibleVideos.length > 0 && completedVideos >= eligibleVideos.length;
+  const cards = [
+    { label: "Image Generation", value: `${progress.generated_count}/${progress.prompt_count}`, detail: imageComplete ? "All scene variants generated." : `${Math.max(0, progress.prompt_count - progress.generated_count)} scenes still need images.`, tone: imageComplete ? "complete" : "ready", badge: imageComplete ? "Complete" : "Ready", target: "images", Icon: Sparkles },
+    { label: "Variant Selection", value: `${progress.selected_count}/${progress.prompt_count}`, detail: selectionComplete ? "A variant is selected for every scene." : `${Math.max(0, progress.prompt_count - progress.selected_count)} scenes need selection.`, tone: selectionComplete ? "complete" : "attention", badge: selectionComplete ? "Complete" : "Attention", target: "images", Icon: CheckSquare },
+    { label: "Video Queue", value: String(eligibleVideos.length), detail: videoComplete ? "All eligible videos are complete." : `${completedVideos}/${eligibleVideos.length} eligible videos complete.`, tone: videoComplete ? "complete" : "ready", badge: videoComplete ? "Complete" : "Ready", target: "video", Icon: PlayCircle },
+  ];
+  return <section className="project-status-cards" aria-label="Project production status">{cards.map(({ label, value, detail, tone, badge, target, Icon }) => <article key={label} className={`project-status-card tone-${tone}`}><div><Icon size={19} /><span>{badge}</span></div><strong>{value}</strong><h2>{label}</h2><p>{detail}</p><button type="button" onClick={() => onNavigate(target)}>{target === "video" ? "Open Queue" : "Review"}</button></article>)}</section>;
+}
+
+function ProjectWorkspaceHeader({ project, video, view, onNavigate }) {
   if (!video) return null;
   const progress = studioApi.getVideoProjectProgress(project, video.video_id);
   const phaseLabel = ({ imported: "Imported", image_generation: "Image Generation", image_selection: "Image Selection", video_generation: "Video Generation", complete: "Complete" })[progress.phase] || "Imported";
@@ -948,11 +1003,11 @@ function ProjectWorkspaceHeader({ project, video, view, onBack, onNavigate }) {
       <div className="reference-project-header-inner">
         <div className="reference-project-heading-row">
           <div className="reference-project-heading">
-            <button type="button" className="reference-back-button" onClick={onBack} aria-label="Back to all video projects"><ArrowLeft size={20} /></button>
             <div><h1>{video.display_name}</h1><p><span>{video.prompt_count} scenes</span><i /><strong>{phaseLabel}</strong><i /><span>Updated recently</span></p></div>
           </div>
           <div className="reference-project-actions"><button type="button" onClick={() => exportVideoProject(project, video)}>Export Data</button><button type="button" onClick={() => onNavigate(manageTarget)}>Manage Project</button></div>
         </div>
+        <ProjectStatusCards project={project} video={video} onNavigate={onNavigate} />
         <nav className="reference-project-tabs" aria-label="Video project sections">
           {PROJECT_TABS.map((tab) => <button type="button" key={tab.id} className={view === tab.id ? "active" : ""} aria-current={view === tab.id ? "page" : undefined} onClick={() => onNavigate(tab.id)}>{tab.label}</button>)}
         </nav>
@@ -967,7 +1022,7 @@ function StudioApp() {
   const [activeVideoId, setActiveVideoId] = useState("");
   const [busy, setBusy] = useState("");
   const [dialog, setDialog] = useState(null);
-  const [runner, setRunner] = useState({ status: "idle", videoId: "", currentJobId: "", error: "" });
+  const [runner, setRunner] = useState({ status: "idle", videoId: "", currentJobId: "", error: "", promptIds: null });
   const runnerRef = useRef(runner);
   const runNextRef = useRef(null);
 
@@ -993,6 +1048,7 @@ function StudioApp() {
   const projects = snapshot.domainState?.projects || [];
   const videos = useMemo(() => (project ? studioApi.getProjectVideos(project) : []), [project]);
   const activeVideo = videos.find((video) => video.video_id === activeVideoId) || videos[0] || null;
+  const recentErrorCount = (snapshot.logs || []).filter((entry) => entry.type === "error").slice(-99).length;
 
   useEffect(() => {
     if (!activeVideoId || !videos.some((video) => video.video_id === activeVideoId)) {
@@ -1020,11 +1076,15 @@ function StudioApp() {
     toast.danger("Video queue paused", { description: message });
   }, [capture, setRunnerState]);
 
-  const runNext = useCallback(async (videoId) => {
+  const runNext = useCallback(async (videoId, promptIds = null) => {
     try {
       await studioApi.loadProjectState();
       let currentProject = studioApi.getState().activeProject;
-      let items = studioApi.getVideoQueueItems(currentProject, videoId).filter((item) => !!item.animation_prompt);
+      const selectedIds = promptIds?.length ? new Set(promptIds) : null;
+      const eligibleItems = (items) => items.filter((item) => {
+        return !!item.animation_prompt && (!selectedIds || selectedIds.has(item.prompt_id));
+      });
+      let items = eligibleItems(studioApi.getVideoQueueItems(currentProject, videoId));
       for (const item of items) {
         if ((item.status === "draft" && item.selected_variant_id) || item.can_create_draft) {
           await studioApi.queuePromptVideo(item.prompt_id);
@@ -1032,16 +1092,16 @@ function StudioApp() {
       }
       await studioApi.loadProjectState();
       currentProject = studioApi.getState().activeProject;
-      items = studioApi.getVideoQueueItems(currentProject, videoId).filter((item) => !!item.animation_prompt);
+      items = eligibleItems(studioApi.getVideoQueueItems(currentProject, videoId));
       const next = items.find((item) => item.status === "ready");
       if (!next) {
-        setRunnerState({ status: "idle", videoId, currentJobId: "", error: "" });
+        setRunnerState({ status: "idle", videoId, currentJobId: "", error: "", promptIds: null });
         capture();
         toast.success("Video queue complete");
         return;
       }
       const job = await studioApi.runVideoJob(next.job_id);
-      setRunnerState({ status: "running", videoId, currentJobId: job.job_id, error: "" });
+      setRunnerState({ status: "running", videoId, currentJobId: job.job_id, error: "", promptIds });
       capture();
     } catch (error) {
       await pauseRunner(error);
@@ -1066,7 +1126,7 @@ function StudioApp() {
         if (!complete) return;
         const shouldContinue = current.status === "running";
         setRunnerState((value) => ({ ...value, currentJobId: "" }));
-        if (shouldContinue) await runNextRef.current?.(current.videoId);
+        if (shouldContinue) await runNextRef.current?.(current.videoId, current.promptIds);
       }).catch((error) => toast.danger(error.message));
     };
     chrome.runtime?.onMessage?.addListener(runtimeListener);
@@ -1139,24 +1199,24 @@ function StudioApp() {
   } else if (view === "images") {
     content = <ImageReviewView project={project} video={activeVideo} flowContext={snapshot.flowContext} busy={busy} onRefreshConnection={() => action("flow-refresh", () => studioApi.refreshFlowContext(), "Flow connection refreshed")} onGenerate={(settings) => action("generate-images", () => studioApi.startImageGenerationRun(activeVideo.video_id, settings), "Image generation started")} onStop={(runId) => action("stop-images", () => studioApi.stopImageGenerationRun(runId), "Image generation stopped")} onRetry={(runId) => action("retry-images", () => studioApi.retryImageGenerationRun(runId), "Retry started")} onSelect={(promptId, variantId) => action("select-image", () => studioApi.selectImageVariant(promptId, variantId), "Image selected")} />;
   } else if (view === "video") {
-    content = <VideoQueueView project={project} video={activeVideo} runner={runner} onRunAll={() => { const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "" }; setRunnerState(next); runNext(activeVideo.video_id); }} onPause={() => setRunnerState((current) => ({ ...current, status: "paused", error: "Paused after the current job." }))} onContinue={() => { setRunnerState((current) => ({ ...current, status: "running", error: "" })); runNext(activeVideo.video_id); }} onQueue={(promptId) => action("queue", () => studioApi.queuePromptVideo(promptId), "Added to queue")} onRun={(jobId) => action("run", () => studioApi.runVideoJob(jobId), "Video started")} onStop={stopVideo} onHold={(jobId) => action("hold", () => studioApi.holdVideoJob(jobId), "Video held")} onMove={(jobId, direction) => action(`move-${direction}`, () => studioApi.moveVideoJob(jobId, direction))} onRemove={(jobId) => action("remove", () => studioApi.removeVideoJob(jobId), "Removed from queue")} onOpenImages={() => setView("images")} />;
+    content = <VideoQueueView project={project} video={activeVideo} runner={runner} onRunAll={() => { const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "", promptIds: null }; setRunnerState(next); runNext(activeVideo.video_id); }} onRunSelected={(selectedPromptIds) => { const next = { status: "running", videoId: activeVideo.video_id, currentJobId: "", error: "", promptIds: selectedPromptIds }; setRunnerState(next); runNext(activeVideo.video_id, selectedPromptIds); }} onPause={() => setRunnerState((current) => ({ ...current, status: "paused", error: "Paused after the current job." }))} onContinue={() => { setRunnerState((current) => ({ ...current, status: "running", error: "" })); runNext(activeVideo.video_id, runner.promptIds); }} onQueue={(promptId) => action("queue", () => studioApi.queuePromptVideo(promptId), "Added to queue")} onRun={(jobId) => action("run", () => studioApi.runVideoJob(jobId), "Video started")} onStop={stopVideo} onHold={(jobId) => action("hold", () => studioApi.holdVideoJob(jobId), "Video held")} onMove={(jobId, direction) => action(`move-${direction}`, () => studioApi.moveVideoJob(jobId, direction))} onRemove={(jobId) => action("remove", () => studioApi.removeVideoJob(jobId), "Removed from queue")} onOpenImages={() => setView("images")} />;
   } else if (view === "media") {
     content = <MediaView project={project} video={activeVideo} busy={!!busy} onFinalize={() => action("finalize", () => studioApi.finalizeSelectedImages(), "Selected images finalized")} onSync={(files) => action("sync", () => studioApi.syncProjectMediaFromFiles(files), "Folder synced")} />;
-  } else if (view === "settings") {
-    content = <SettingsView project={project} flowContext={snapshot.flowContext} logs={snapshot.logs} busy={!!busy} onUpdateProject={(updates) => action("settings-save", () => studioApi.updateActiveProject(updates), "Settings saved")} onRefreshConnection={() => action("flow-refresh", () => studioApi.refreshFlowContext(), "Flow connection refreshed")} onClearLogs={() => action("clear-logs", () => studioApi.clearStudioLogs(), "Logs cleared")} />;
+  } else if (view === "profile") {
+    content = <ProfileView project={project} videos={videos} flowContext={snapshot.flowContext} />;
   } else {
     content = <LogsView logs={snapshot.logs} onClear={() => action("clear-logs", () => studioApi.clearStudioLogs(), "Logs cleared")} />;
   }
 
   const isProjectView = PROJECT_TABS.some((tab) => tab.id === view) && !!activeVideo;
   if (isProjectView) {
-    content = <div className="reference-project-workspace"><ProjectWorkspaceHeader project={project} video={activeVideo} view={view} onBack={() => setView("channels")} onNavigate={setView} /><div className={`reference-project-body ${view === "overview" ? "overview" : ""}`}>{content}</div></div>;
+    content = <div className="reference-project-workspace"><ProjectWorkspaceHeader project={project} video={activeVideo} view={view} onNavigate={setView} /><div className={`reference-project-body ${view === "overview" ? "overview" : ""}`}>{content}</div></div>;
   }
 
   return (
     <>
       <div className="studio-shell">
-        <ReferenceSidebar project={project} videos={videos} activeVideo={activeVideo} view={view} flowContext={snapshot.flowContext} onNavigate={setView} onOpenVideo={(videoId, target = "overview") => { setActiveVideoId(videoId); setView(target); }} onAddVideo={() => setDialog({ type: "video-add" })} onRefresh={() => refresh()} />
+        <ReferenceSidebar project={project} videos={videos} activeVideo={activeVideo} view={view} flowContext={snapshot.flowContext} recentErrorCount={recentErrorCount} onNavigate={setView} onOpenVideo={(videoId, target = "overview") => { setActiveVideoId(videoId); setView(target); }} onAddVideo={() => setDialog({ type: "video-add" })} />
         <div className="studio-main">
           <main className={`studio-content ${view === "channels" ? "reference-surface" : ""} ${isProjectView ? "reference-project-surface" : ""}`}>{snapshot.lastError ? <div className="fatal-banner"><AlertCircle size={18} />{snapshot.lastError.message}</div> : content}</main>
         </div>
